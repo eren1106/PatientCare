@@ -1,10 +1,11 @@
-import './App.css'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import DoctorDashboardPage from './pages/DoctorDashboardPage';
+import { ThemeProvider } from './components/theme-provider';
+import { ModeToggle } from './components/mode-toggle';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ModeToggle />
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </>
   )
 }
