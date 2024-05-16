@@ -1,8 +1,8 @@
-import React from 'react'
-
 const DoctorDashboardPage = () => {
   return (
-    <div>DoctorDashboardPage</div>
+    <div>
+      Dashboard Page
+    </div>
   )
 }
 
