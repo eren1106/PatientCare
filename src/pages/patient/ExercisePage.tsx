@@ -1,6 +1,8 @@
 const ExercisePage = () => {
   return (
-    <div>ExercisePage</div>
+    <div>
+      <h1>Exercises that are assigned to you</h1>
+    </div>
   )
 }
 
