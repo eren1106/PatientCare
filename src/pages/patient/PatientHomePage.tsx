@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { DASHBOARD_ROOT_PATH } from '@/constants'
 import { Link } from 'react-router-dom'
 
-const HomePage = () => {
+const PatientHomePage = () => {
   return (
     <div className=''>
       <Link to={DASHBOARD_ROOT_PATH}>
@@ -14,4 +14,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default PatientHomePage

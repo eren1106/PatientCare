@@ -3,15 +3,16 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import HomePage from './pages/HomePage';
-import DoctorDashboardPage from './pages/DoctorDashboardPage';
+import PatientHomePage from './pages/patient/PatientHomePage';
+import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
 import { ThemeProvider } from './components/theme-provider';
 import Topbar from "./components/topbar";
 import Footer from "./components/footer";
-import PatientListPage from "./pages/PatientListPage";
+import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
-import AppointmentPage from "./pages/AppointmentPage";
+import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
+import ExercisePage from "./pages/patient/exercise/ExercisePage";
 
 const MainWrapper = () => {
   return (
@@ -30,6 +31,17 @@ const MainWrapper = () => {
 const DoctorDashboardWrapper = () => {
   return (
     <div className="flex">
+      <Sidebar isDoctor />
+      <div className="container p-6">
+        <Outlet />
+      </div>
+    </div>
+  )
+}
+
+const PatientWrapper = () => {
+  return (
+    <div className="flex">
       <Sidebar />
       <div className="container p-6">
         <Outlet />
@@ -45,7 +57,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <HomePage />,
+        element: <PatientWrapper />,
+        children: [
+          {
+            path: "",
+            element: <PatientHomePage />,
+          },
+          {
+            path: "exercises",
+            element: <ExercisePage />,
+          },
+          {
+            path: "appointments",
+            element: <AppointmentPage />,
+          },
+        ]
       },
       {
         path: DASHBOARD_ROOT_PATH,
