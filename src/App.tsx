@@ -12,7 +12,7 @@ import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
-import ExercisePage from "./pages/patient/ExercisePage";
+import ExercisePage from "./pages/patient/exercise/ExercisePage";
 
 const MainWrapper = () => {
   return (

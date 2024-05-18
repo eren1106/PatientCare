@@ -50,7 +50,7 @@ export const MOCK_EXERCISES: Exercise[] = [
 ];
 
 // Mock patient exercises
-const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
+export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
   {
     id: "1",
     exercise: MOCK_EXERCISES[0],
