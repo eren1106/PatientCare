@@ -1,6 +1,5 @@
 import { BarChart2, Calendar, Dumbbell, Home, Users } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
-import { Button } from "./ui/button"
 import { cn } from "@/lib/utils"
 import { DASHBOARD_ROOT_PATH } from "@/constants"
 
@@ -44,15 +43,18 @@ interface SidebarProps {
   isDoctor?: boolean;
 }
 
-const Sidebar = ({ isDoctor=false }: SidebarProps) => {
+const Sidebar = ({ isDoctor = false }: SidebarProps) => {
   const location = useLocation();
   const navItems = isDoctor ? DASHBOARD_NAV_ITEMS : PATIENT_NAV_ITEMS;
+  
   const checkIsSelected = (to: string): boolean => {
-    if (isDoctor) {
-      const isDashboardRoot = location.pathname === `/${DASHBOARD_ROOT_PATH}`;
-      return isDashboardRoot && to === "" || location.pathname === `/${DASHBOARD_ROOT_PATH}/${to}`;
+    if (to === "") {
+      // Check if the current path is exactly the root or dashboard root
+      return location.pathname === (isDoctor ? `/${DASHBOARD_ROOT_PATH}` : "/");
     }
-    return location.pathname === `/${to}` || (location.pathname === to && to==="")
+    // Check if the current path matches the tab's path or starts with the tab's path
+    const pathPrefix = isDoctor ? `/${DASHBOARD_ROOT_PATH}/${to}` : `/${to}`;
+    return location.pathname.startsWith(`${pathPrefix}`);
   }
 
   return (
