@@ -3,6 +3,7 @@ export interface Exercise {
   thumnbailUrl: string;
   title: string;
   description: string;
+  content?: string;
   videoUrl: string;
   createdDateTime: Date;
   updatedDateTime: Date;

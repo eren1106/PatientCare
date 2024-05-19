@@ -7,13 +7,13 @@ const ExercisesPage = () => {
       <h1>Exercises that are assigned to you</h1>
       <div className="flex flex-wrap gap-4">
         {
-          MOCK_PATIENT_EXERCISES.map((exercise) => (
+          MOCK_PATIENT_EXERCISES.map((patientExercise) => (
             <ExerciseCard
-              id={exercise.id}
-              title={exercise.exercise.title}
-              description={exercise.exercise.description}
-              thumbnailUrl={exercise.exercise.thumnbailUrl}
-              isCompleted={exercise.isCompleted}
+              id={patientExercise.id}
+              title={patientExercise.exercise.title}
+              description={patientExercise.exercise.description}
+              thumbnailUrl={patientExercise.exercise.thumnbailUrl}
+              isCompleted={patientExercise.isCompleted}
             />
           ))
         }
