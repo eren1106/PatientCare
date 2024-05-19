@@ -8,6 +8,7 @@ interface ExerciseCardProps {
   description: string;
   thumbnailUrl: string;
   isCompleted: boolean;
+  to?: string;
 }
 
 const ExerciseCard = ({
@@ -16,6 +17,7 @@ const ExerciseCard = ({
   description,
   thumbnailUrl,
   isCompleted,
+  to
 }: ExerciseCardProps) => {
   const handleMarkComplete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent the event from bubbling up to parent elements
@@ -23,7 +25,7 @@ const ExerciseCard = ({
   };
 
   return (
-    <Link to={id}>
+    <Link to={to || id}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
