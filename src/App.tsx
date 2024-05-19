@@ -15,50 +15,57 @@ import { DASHBOARD_ROOT_PATH } from "./constants";
 import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
 import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 
-const MainWrapper = () => {
+const AppWrapper = () => {
   return (
-    <div className="min-h-screen relative flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      <Outlet />
+    </div>
+  )
+}
+
+const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
+  return (
+    <>
       <Topbar />
-      <div className='flex-1 flex flex-col items-center pt-16'>
-        <main className='w-full'>
-          <Outlet />
-        </main>
-      </div>
+      <Sidebar isDoctor={isDoctor} />
+      <div className='flex-1 p-8 ml-60 mt-16'>
+        <Outlet />
+      </div >
       <Footer />
-    </div>
+    </>
   )
 }
 
-const DoctorDashboardWrapper = () => {
-  return (
-    <div className="flex">
-      <Sidebar isDoctor />
-      <div className="container p-6">
-        <Outlet />
-      </div>
-    </div>
-  )
-}
+// const DoctorDashboardWrapper = () => {
+//   return (
+//     <div className="flex">
+//       <Sidebar isDoctor />
+//       <div className="container p-6">
+//         <Outlet />
+//       </div>
+//     </div>
+//   )
+// }
 
-const PatientWrapper = () => {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <div className="container p-6">
-        <Outlet />
-      </div>
-    </div>
-  )
-}
+// const PatientWrapper = () => {
+//   return (
+//     <div className="flex">
+//       <Sidebar />
+//       <div className="container p-6">
+//         <Outlet />
+//       </div>
+//     </div>
+//   )
+// }
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainWrapper />,
+    element: <AppWrapper />,
     children: [
       {
         path: "",
-        element: <PatientWrapper />,
+        element: <MainWrapper />,
         children: [
           {
             path: "",
@@ -85,7 +92,7 @@ const router = createBrowserRouter([
       },
       {
         path: DASHBOARD_ROOT_PATH,
-        element: <DoctorDashboardWrapper />,
+        element: <MainWrapper isDoctor />,
         children: [
           {
             path: "",

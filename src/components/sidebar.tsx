@@ -46,19 +46,25 @@ interface SidebarProps {
 const Sidebar = ({ isDoctor = false }: SidebarProps) => {
   const location = useLocation();
   const navItems = isDoctor ? DASHBOARD_NAV_ITEMS : PATIENT_NAV_ITEMS;
-  
+
   const checkIsSelected = (to: string): boolean => {
+    const normalizePath = (path: string): string => path.replace(/\/+$/, ""); // Remove trailing slashes
+
+    const currentPath = normalizePath(location.pathname);
+    const rootPath = normalizePath(isDoctor ? `/${DASHBOARD_ROOT_PATH}` : "/");
+    
     if (to === "") {
       // Check if the current path is exactly the root or dashboard root
-      return location.pathname === (isDoctor ? `/${DASHBOARD_ROOT_PATH}` : "/");
+      return currentPath === rootPath;
     }
+
     // Check if the current path matches the tab's path or starts with the tab's path
-    const pathPrefix = isDoctor ? `/${DASHBOARD_ROOT_PATH}/${to}` : `/${to}`;
-    return location.pathname.startsWith(`${pathPrefix}`);
+    const pathPrefix = normalizePath(isDoctor ? `/${DASHBOARD_ROOT_PATH}/${to}` : `/${to}`);
+    return currentPath.startsWith(pathPrefix);
   }
 
   return (
-    <div className='h-full w-60 flex flex-col items-center p-6 gap-3 border-r'>
+    <div className='h-full w-60 flex flex-col items-center p-6 gap-3 border-r fixed mt-16 bg-background'>
       {
         navItems.map((item) => {
           // to make selected tab have color
