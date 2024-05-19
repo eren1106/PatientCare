@@ -12,7 +12,8 @@ import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
-import ExercisePage from "./pages/patient/exercise/ExercisePage";
+import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
+import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 
 const MainWrapper = () => {
   return (
@@ -65,7 +66,16 @@ const router = createBrowserRouter([
           },
           {
             path: "exercises",
-            element: <ExercisePage />,
+            children: [
+              {
+                path: "",
+                element: <ExercisesPage />,
+              },
+              {
+                path: ":id",
+                element: <ExerciseDetailPage />,
+              }
+            ]
           },
           {
             path: "appointments",
