@@ -62,3 +62,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+h1 {
+  @apply text-4xl;
+  @apply font-extrabold;
+}
+
+h2 {
+  @apply text-2xl;
+  @apply font-semibold;
+}

@@ -3,53 +3,96 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import HomePage from './pages/HomePage';
-import DoctorDashboardPage from './pages/DoctorDashboardPage';
+import PatientHomePage from './pages/patient/PatientHomePage';
+import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
 import { ThemeProvider } from './components/theme-provider';
 import Topbar from "./components/topbar";
 import Footer from "./components/footer";
-import PatientListPage from "./pages/PatientListPage";
+import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
-import AppointmentPage from "./pages/AppointmentPage";
+import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
+import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
+import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 
-const MainWrapper = () => {
+const AppWrapper = () => {
   return (
-    <div className="min-h-screen relative flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      <Outlet />
+    </div>
+  )
+}
+
+const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
+  return (
+    <>
       <Topbar />
-      <div className='flex-1 flex flex-col items-center pt-16'>
-        <main className='w-full'>
-          <Outlet />
-        </main>
-      </div>
+      <Sidebar isDoctor={isDoctor} />
+      <div className='flex-1 p-8 ml-60 mt-16'>
+        <Outlet />
+      </div >
       <Footer />
-    </div>
+    </>
   )
 }
 
-const DoctorDashboardWrapper = () => {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <div className="container p-6">
-        <Outlet />
-      </div>
-    </div>
-  )
-}
+// const DoctorDashboardWrapper = () => {
+//   return (
+//     <div className="flex">
+//       <Sidebar isDoctor />
+//       <div className="container p-6">
+//         <Outlet />
+//       </div>
+//     </div>
+//   )
+// }
+
+// const PatientWrapper = () => {
+//   return (
+//     <div className="flex">
+//       <Sidebar />
+//       <div className="container p-6">
+//         <Outlet />
+//       </div>
+//     </div>
+//   )
+// }
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainWrapper />,
+    element: <AppWrapper />,
     children: [
       {
         path: "",
-        element: <HomePage />,
+        element: <MainWrapper />,
+        children: [
+          {
+            path: "",
+            element: <PatientHomePage />,
+          },
+          {
+            path: "exercises",
+            children: [
+              {
+                path: "",
+                element: <ExercisesPage />,
+              },
+              {
+                path: ":id",
+                element: <ExerciseDetailPage />,
+              }
+            ]
+          },
+          {
+            path: "appointments",
+            element: <AppointmentPage />,
+          },
+        ]
       },
       {
         path: DASHBOARD_ROOT_PATH,
-        element: <DoctorDashboardWrapper />,
+        element: <MainWrapper isDoctor />,
         children: [
           {
             path: "",
