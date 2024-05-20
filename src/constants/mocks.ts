@@ -1,5 +1,5 @@
 import { Exercise, PatientExercise } from "@/interfaces/exercise";
-
+import { Patient } from "@/interfaces/dashboard"
 export const MOCK_EXERCISES: Exercise[] = [
   {
     id: "1",
@@ -81,3 +81,23 @@ export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
   },
   // Add more patient exercises here if needed
 ];
+
+
+export const MOCK_PATIENT_LIST: Patient[] = [
+  {
+    id: "1",
+    patient: "James Johnson",
+    contactNumber: "+60112345781",
+    email: "jamesjohnson123@gmail.com",
+    upcomingAppointments: "No Appointments",
+    dateCreated: "Dec 14, 2021",
+  },
+  {
+    id: "2",
+    patient: "Sarah Williams",
+    contactNumber: "+60112345782",
+    email: "sarahwilliams456@gmail.com",
+    upcomingAppointments: "May 20, 2024",
+    dateCreated: "Jan 10, 2022",
+  },
+]
