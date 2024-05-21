@@ -3,7 +3,7 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import PatientHomePage from './pages/patient/PatientHomePage';
+import PatientHomePage from './pages/patient/home/PatientHomePage';
 import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
 import { ThemeProvider } from './components/theme-provider';
 import Topbar from "./components/topbar";
@@ -14,6 +14,7 @@ import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
 import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
 import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
+import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
 
 const AppWrapper = () => {
   return (
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
             path: "appointments",
             element: <AppointmentPage />,
           },
+          {
+            path: "questionnaire/:id",
+            element: <PatientQuestionnairePage />
+          }
         ]
       },
       {
