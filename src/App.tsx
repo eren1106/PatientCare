@@ -15,7 +15,7 @@ import { DASHBOARD_ROOT_PATH } from "./constants";
 import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
 import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
-
+import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -107,6 +107,11 @@ const router = createBrowserRouter([
             path: "patients",
             element: <PatientListPage />,
           },
+          {
+            path: "patients/:id",
+            element: <PatientDetailPage />,  
+          },
+      
           {
             path: "appointments",
             element: <AppointmentPage />

@@ -11,8 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { Eye, Trash } from "lucide-react";
 import  InsertPatientRecordModal  from "./dashboard/components/InsertPatientRecordModal";
+import { useParams } from 'react-router-dom';
 
 const DoctorDashboardPage = () => {
+  const id = useParams();
   return (
     <div>
       <span className="text-4xl font-semibold">Welcome back, Dr. Samiha </span>
@@ -43,7 +45,7 @@ const DoctorDashboardPage = () => {
                 <TableCell>{patient.upcomingAppointments}</TableCell>
                 <TableCell>{patient.dateCreated}</TableCell>
                 <TableCell className="flex items-center justify-start gap-3 ">
-                  <Link to="/patient/{id}">
+                  <Link to={`patients/${id}`}>
                     <Eye
                       size={36}
                       className="hover:bg-table-100 p-2 rounded-full"

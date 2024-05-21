@@ -55,6 +55,10 @@ module.exports = {
           100: "hsl(var(--table-light-100))",
           200: "hsl(var(--table-light-200))",
         },
+        message: {
+          DEFAULT: '#143c74',
+          foreground: '#a6b8cb'
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
