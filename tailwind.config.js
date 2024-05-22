@@ -58,6 +58,15 @@ module.exports = {
         message: {
           DEFAULT: '#143c74',
           foreground: '#a6b8cb'
+        },
+        light: {
+          DEFAULT: '#C5D0E6',
+          foreground: '#606D93',
+          blue: '#DDFEFD'
+        },
+        badge : {
+          light: '#7BD7AB',
+          moderate: '#FFD250'
         }
       },
       borderRadius: {

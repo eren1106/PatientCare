@@ -16,10 +16,12 @@ import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
 import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
 import PatientDetailPage from "./pages/doctor/PatientDetailPage";
+import { Toaster } from "@/components/toaster";
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Outlet />
+      <Toaster />
     </div>
   )
 }
