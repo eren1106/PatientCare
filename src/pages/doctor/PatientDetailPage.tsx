@@ -3,15 +3,47 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, MessageCircle, Pencil, Trash } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Badge } from "@/components/ui/badge";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+
 const PatientDetailPage = () => {
   const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
   const [copyStatus, setCopyStatus] = useState(false); // To indicate if the text was copied
-
+  const { toast } = useToast();
   const onCopyText = () => {
     setCopyStatus(true);
     setTimeout(() => setCopyStatus(false), 2000); // Reset status after 2 seconds
+  };
+
+  const patientDetails = [
+    { label: "Weight", value: "80 kg" },
+    { label: "Height", value: "1.78 m" },
+    { label: "Blood Type", value: "O+" },
+    { label: "Blood Pressure", value: "124/79 mmHg" },
+  ];
+  // Mild moderate severe
+  const patientInjury = [
+    { label: "Injury Type", value: "Rotator Cuff Injury" },
+    { label: "Severity", value: "Light" },
+  ];
+
+  const vitalSigns = [
+    { label: "Heart Rate", value: "72 bpm" },
+    { label: "Blood Pressure", value: "120/80 mmHg" },
+    { label: "Respiratory Rate", value: "16 breaths/min" },
+    { label: "Body Temperature", value: "98.6 °F" },
+    { label: "Oxygen Saturation", value: "98%" },
+  ];
+
+  const displayToastMessage = () => {
+    toast({
+      variant: "success",
+      title: "Copied",
+      description: "Copied text to your clipboard",
+    });
   };
 
   return (
@@ -38,10 +70,14 @@ const PatientDetailPage = () => {
                     s2132122@gmail.com
                   </a>
                   <CopyToClipboard text={textToCopy} onCopy={onCopyText}>
-                    <Copy className="hover:bg-gray-100" size={14} />
+                    <Copy
+                      className=" block hover:bg-gray-100"
+                      size={14}
+                      onClick={displayToastMessage}
+                    />
                   </CopyToClipboard>
                   {/* TODO: Change to sonner message*/}
-                  {copyStatus && <p>Text copied to clipboard!</p>}
+                  {/* {copyStatus && displayToastMessage} */}
                 </div>
               </div>
             </div>
@@ -70,7 +106,77 @@ const PatientDetailPage = () => {
           <TabsTrigger value="Rehabilitation">Rehabilitation</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="Overview">Patient Overview</TabsContent>
+        <TabsContent value="Overview">
+          <section>
+            <Card className="flex flex-col p-4 gap-8 w-2/4">
+              <div className=" flex flex-col gap-5">
+                <h3 className="font-semibold">Patient Information</h3>
+                <ul>
+                  {patientDetails.map((item, index) => (
+                    <li key={index} className="flex justify-between">
+                      <span className="text-light-foreground">
+                        {item.label} :
+                      </span>
+                      <span className="font-semibold">{item.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex flex-col gap-5">
+                <h3 className="font-semibold">Injury Details</h3>
+                <ul className="flex flex-col gap-3">
+                  {patientInjury.map((item, index) =>
+                    item.label === "Severity" ? (
+                      <li key={index} className="flex justify-between">
+                        <span className="text-light-foreground">
+                          {item.label} :
+                        </span>
+                        {item.value === "Severe" && (
+                          <Badge variant="destructive">{item.value}</Badge>
+                        )}
+
+                        {item.value === "Moderate" && (
+                          <Badge variant="secondary">{item.value}</Badge>
+                        )}
+
+                        {item.value === "Light" && <Badge>{item.value}</Badge>}
+                      </li>
+                    ) : (
+                      <li key={index} className="flex justify-between">
+                        <span className="text-light-foreground">
+                          {item.label} :
+                        </span>
+                        <span className="font-semibold">{item.value}</span>
+                      </li>
+                    )
+                  )}
+                  <li className="flex flex-col gap-2">
+                    <span className="text-light-foreground">Cause</span>
+                    <span className="text-sm rounded-md bg-light-blue font-light p-2 ">
+                      Injured when collding with other players in a football
+                      match
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex flex-col gap-5">
+                <h3 className="font-semibold">Vital Signs</h3>
+                <ul>
+                  {vitalSigns.map((item, index) => (
+                    <li key={index} className="flex justify-between">
+                      <span className="text-light-foreground">
+                        {item.label} :
+                      </span>
+                      <span className="font-semibold">{item.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Card>
+          </section>
+        </TabsContent>
         <TabsContent value="Assessment">
           View and assign assessment here
         </TabsContent>
