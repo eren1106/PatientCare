@@ -6,8 +6,26 @@ import { Copy, MessageCircle, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const PatientDetailPage = () => {
   const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
@@ -36,6 +54,31 @@ const PatientDetailPage = () => {
     { label: "Respiratory Rate", value: "16 breaths/min" },
     { label: "Body Temperature", value: "98.6 °F" },
     { label: "Oxygen Saturation", value: "98%" },
+  ];
+
+  const mockCompletedAssessments = [
+    {
+      name: "Knee Injury and Osteoarthritis Outcome Score",
+      status: "Completed",
+      review: "Good",
+      dateCreated: "2024-01-15",
+      dateCompleted: "2024-01-15"
+    },
+    {
+      name: "Knee Injury and Osteoarthritis Outcome Score",
+      status: "Assigned",
+      review: "Good",
+      dateCreated: "2024-02-20",
+      dateCompleted: "2024-01-15"
+    },
+    // Add more completed assessments here
+  ];
+  
+  const mockExercises = [
+    "Exercise 1",
+    "Exercise 2",
+    "Exercise 3",
+    // Add more exercises here
   ];
 
   const displayToastMessage = () => {
@@ -108,8 +151,8 @@ const PatientDetailPage = () => {
 
         <TabsContent value="Overview">
           <section>
-            <Card className="flex flex-col p-4 gap-8 w-2/4">
-              <div className=" flex flex-col gap-5">
+            <Card className="flex  flex-col p-4 gap-8 w-full">
+              <div className="flex flex-col gap-5">
                 <h3 className="font-semibold">Patient Information</h3>
                 <ul>
                   {patientDetails.map((item, index) => (
@@ -178,7 +221,63 @@ const PatientDetailPage = () => {
           </section>
         </TabsContent>
         <TabsContent value="Assessment">
-          View and assign assessment here
+          <div className="p-4">
+         
+            <div className="flex items-center space-x-4 mb-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Select Exercise</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>Select Exercise</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    {mockExercises.map((exercise, index) => (
+                      <DropdownMenuItem key={index}>
+                        {exercise}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Card className="flex flex-col p-4 gap-4 w-full">
+
+            <h3 className="font-semibold">Assessments</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Questionnaire</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Review</TableHead>
+                  <TableHead>Date Assigned</TableHead>
+                  <TableHead>Date Completed</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockCompletedAssessments.map((assessment, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      {assessment.name}
+                    </TableCell>
+                    <TableCell>{assessment.status}</TableCell>
+                    <TableCell>{assessment.review}</TableCell>
+                    <TableCell>{assessment.dateCreated}</TableCell>
+                    <TableCell>{assessment.dateCompleted}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    Total: {mockCompletedAssessments.length} assessments
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+            </Card>
+           
+          </div>
         </TabsContent>
         <TabsContent value="Rehabilitation">
           Rehabilitation Exercises Here
