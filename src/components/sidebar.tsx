@@ -71,7 +71,7 @@ const Sidebar = ({ isDoctor = false }: SidebarProps) => {
           const selectedClassname = checkIsSelected(item.to) ? "bg-secondary" : "";
 
           return (
-            <Link to={item.to} className="w-full">
+            <Link to={item.to} className="w-full" key={item.title}>
               <div className={cn("flex items-center justify-start gap-3 p-3 w-full rounded-lg", selectedClassname)}>
                 {item.icon}
                 <p>{item.title}</p>
