@@ -5,29 +5,51 @@ import ProfileAvatar from "@/components/ProfileAvatar"
 import { Button } from "@/components/ui/button"
 import { CircleUser, Send } from "lucide-react"
 import { Link } from "react-router-dom"
+import useLoading from "@/hooks/useLoading.hook"
+import { useEffect, useState } from "react"
+import { PatientExercise } from "@/interfaces/exercise"
+import SkeletonCard from "@/components/SkeletonCard"
+import { getPatientExercises } from "@/services/patientExercise.service"
 
 const PatientHomePage = () => {
+  const { isLoading, withLoading } = useLoading();
+  const [patientExercises, setPatientExercises] = useState<PatientExercise[]>([]);
+
+  const getData = async () => {
+    const data = await getPatientExercises();
+    setPatientExercises(data);
+  }
+
+  useEffect(() => {
+    withLoading(getData);
+  }, []);
+
   return (
     <div className='flex flex-col gap-6'>
       <h1>Welcome, Ali</h1>
       <section className="flex flex-col gap-4">
         <h2>Your pending exercises</h2>
-        <div className="flex flex-wrap gap-4">
-          {
-            MOCK_PATIENT_EXERCISES
-              .filter((patientExercise) => !patientExercise.isCompleted) // Filter out completed exercises
-              .map((patientExercise) => (
-                <ExerciseCard
-                  id={patientExercise.id}
-                  title={patientExercise.exercise.title}
-                  description={patientExercise.exercise.description}
-                  thumbnailUrl={patientExercise.exercise.thumnbailUrl}
-                  isCompleted={patientExercise.isCompleted}
-                  to={`exercises/${patientExercise.id}`}
-                />
-              ))
-          }
-        </div>
+        {
+          isLoading ? <SkeletonCard /> : (
+            <div className="flex flex-wrap gap-4">
+              {
+                patientExercises
+                  .filter((patientExercise) => !patientExercise.isCompleted) // Filter out completed exercises
+                  .map((patientExercise) => (
+                    <ExerciseCard
+                      key={patientExercise.id}
+                      id={patientExercise.id}
+                      title={patientExercise.exercise.title}
+                      description={patientExercise.exercise.description}
+                      thumbnailUrl={patientExercise.exercise.thumnbailUrl}
+                      isCompleted={patientExercise.isCompleted}
+                      to={`exercises/${patientExercise.id}`}
+                    />
+                  ))
+              }
+            </div>
+          )
+        }
       </section>
       <section className="flex flex-col gap-4">
         <h2>Your pending assessment</h2>

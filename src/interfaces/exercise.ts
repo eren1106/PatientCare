@@ -1,5 +1,5 @@
 export interface Exercise {
-  id: string;
+  id: number;
   thumnbailUrl: string;
   title: string;
   description: string;
@@ -10,8 +10,9 @@ export interface Exercise {
 }
 
 export interface PatientExercise {
-  id: string;
+  id: number;
   exercise: Exercise;
   isCompleted: boolean;
+  createdDateTime: Date;
   completedDateTime?: Date;
 }
