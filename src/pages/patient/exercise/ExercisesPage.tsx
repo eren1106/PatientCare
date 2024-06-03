@@ -1,19 +1,18 @@
-import { MOCK_PATIENT_EXERCISES } from "@/constants"
 import ExerciseCard from "./components/ExerciseCard"
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { apiCaller } from "@/utils";
 import SkeletonCard from "@/components/SkeletonCard";
-import { PatientExercise } from "@/interfaces/exercise";
+import { DailyPatientExercise } from "@/interfaces/exercise";
+import { getDailyPatientExercises } from "@/services/patientExercise.service";
 
 const ExercisesPage = () => {
   const { isLoading, withLoading } = useLoading();
-  const [patientExercises, setPatientExercises] = useState<PatientExercise[]>([]);
+  const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
 
   const getData = async () => {
-    const MOCK_PATIENT_ID = "5b6a2166-a05e-423a-bf62-00e556543477";
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises`);
-    setPatientExercises(res.data.data);
+    const data = await getDailyPatientExercises();
+    setDailyPatientExercises(data);
   }
 
   useEffect(() => {
@@ -27,14 +26,14 @@ const ExercisesPage = () => {
         isLoading ? <SkeletonCard /> : (
           <div className="flex flex-wrap gap-4">
             {
-              patientExercises
+              dailyPatientExercises
                 .map((patientExercise) => (
                   <ExerciseCard
                     key={patientExercise.id}
                     id={patientExercise.id}
-                    title={patientExercise.exercise.title}
-                    description={patientExercise.exercise.description}
-                    thumbnailUrl={patientExercise.exercise.thumnbailUrl}
+                    title={patientExercise.patientExercise.exercise.title}
+                    description={patientExercise.patientExercise.exercise.description}
+                    thumbnailUrl={patientExercise.patientExercise.exercise.thumbnailUrl}
                     isCompleted={patientExercise.isCompleted}
                     to={`${patientExercise.id}`}
                   />
