@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
-import { MOCK_PATIENT_EXERCISES } from "@/constants"
+import { MOCK_DAILY_PATIENT_EXERCISES } from "@/constants"
 
 const ExerciseDetailPage = () => {
-  const patientExercise = MOCK_PATIENT_EXERCISES[0];
-  const handleMarkComplete = () => {};
+  const dailyPatientExercise = MOCK_DAILY_PATIENT_EXERCISES[0];
+  const handleMarkComplete = () => { };
 
   return (
     <div className="flex flex-col gap-4">
-      <h1>{patientExercise.exercise.title}</h1>
-      <p>{patientExercise.exercise.description}</p>
-      <YouTubeEmbed url={patientExercise.exercise.videoUrl} />
-      <p>{patientExercise.exercise.content}</p>
+      <h1>{dailyPatientExercise.patientExercise.exercise.title}</h1>
+      <p>{dailyPatientExercise.patientExercise.exercise.description}</p>
+      {dailyPatientExercise.patientExercise.exercise.videoUrl && <YouTubeEmbed url={dailyPatientExercise.patientExercise.exercise.videoUrl} />}
+      <p>{dailyPatientExercise.patientExercise.exercise.content}</p>
       {
-        patientExercise.isCompleted
+        dailyPatientExercise.isCompleted
           ? <p>Completed</p>
           : <Button onClick={handleMarkComplete} className="w-min">Mark as complete</Button>
       }
