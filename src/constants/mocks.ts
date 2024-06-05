@@ -1,5 +1,5 @@
 import { Exercise, PatientExercise } from "@/interfaces/exercise";
-import { Patient } from "@/interfaces/dashboard"
+import { PatientRecord } from "@/interfaces/dashboard"
 export const MOCK_EXERCISES: Exercise[] = [
   {
     id: 1,
@@ -86,57 +86,6 @@ export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
   // Add more patient exercises here if needed
 ];
 
-
-export const MOCK_PATIENT_LIST: Patient[] = [
-  {
-    id: "1",
-    patient: "James Johnson",
-    contactNumber: "+60112345781",
-    email: "jamesjohnson123@gmail.com",
-    upcomingAppointments: "No Appointments",
-    dateCreated: "Dec 14, 2021",
-  },
-  {
-    id: "2",
-    patient: "Sarah Williams",
-    contactNumber: "+60112345782",
-    email: "sarahwilliams456@gmail.com",
-    upcomingAppointments: "May 20, 2024",
-    dateCreated: "Jan 10, 2022",
-  },
-  {
-    id: "3",
-    patient: "Zheng Wu Bang",
-    contactNumber: "+60112345782",
-    email: "wbzheng@gmail.com",
-    upcomingAppointments: "May 20, 2024",
-    dateCreated: "Jan 10, 2022",
-  },
-  {
-    id: "4",
-    patient: "Kuek Zi Lii",
-    contactNumber: "+60112345782",
-    email: "eren@gmail.com",
-    upcomingAppointments: "May 20, 2024",
-    dateCreated: "Jan 10, 2022",
-  },
-  {
-    id: "5",
-    patient: "Chee Zing",
-    contactNumber: "+60112345782",
-    email: "nasuha456@gmail.com",
-    upcomingAppointments: "May 20, 2024",
-    dateCreated: "Jan 10, 2022",
-  },
-  {
-    id: "6",
-    patient: "Nur Nasuha",
-    contactNumber: "+60112345782",
-    email: "sarahwilliams456@gmail.com",
-    upcomingAppointments: "May 20, 2024",
-    dateCreated: "Jan 10, 2022",
-  },
-]
 
 export const MOCK_QUESTIONNAIRE: Questionnaire = {
   title: "Knee Injury and Osteoarthritis Outcome Score (KOOS)",
