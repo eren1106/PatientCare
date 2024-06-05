@@ -138,7 +138,6 @@ export const MOCK_DAILY_PATIENT_EXERCISES: DailyPatientExercise[] = [
   },
 ];
 
-
 export const MOCK_PATIENT_LIST: Patient[] = [
   {
     id: "1",
