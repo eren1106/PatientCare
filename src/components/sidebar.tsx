@@ -33,6 +33,11 @@ const DASHBOARD_NAV_ITEMS = [
     icon: <Users />
   },
   {
+    to: "exercises",
+    title: "Exercises",
+    icon: <Dumbbell />
+  },
+  {
     to: "appointments",
     title: "Appointments",
     icon: <Calendar />

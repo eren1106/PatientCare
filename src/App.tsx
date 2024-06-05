@@ -12,11 +12,12 @@ import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
-import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
+import PatientExercisesPage from "./pages/patient/exercise/PatientExercisesPage";
 import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
 import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
 import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
+import ExercisesPage from "./pages/doctor/ExercisesPage";
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <ExercisesPage />,
+                element: <PatientExercisesPage />,
               },
               {
                 path: ":id",
@@ -97,6 +98,8 @@ const router = createBrowserRouter([
           }
         ]
       },
+
+      // DOCTOR DASHBOARD ROUTES
       {
         path: DASHBOARD_ROOT_PATH,
         element: <MainWrapper isDoctor />,
@@ -113,7 +116,10 @@ const router = createBrowserRouter([
             path: "patients/:id",
             element: <PatientDetailPage />,  
           },
-      
+          {
+            path: "exercises",
+            element: <ExercisesPage />,  
+          },
           {
             path: "appointments",
             element: <AppointmentPage />

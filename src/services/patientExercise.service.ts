@@ -5,6 +5,7 @@ const MOCK_PATIENT_ID = "clwyqwafm0002570bgxcr8wwd";
 
 export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
   try {
+    // const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
     const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
     return res.data.data;
   } catch (e) {
