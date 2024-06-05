@@ -27,14 +27,52 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import React from "react";
+
 const PatientDetailPage = () => {
-  const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
-  const [copyStatus, setCopyStatus] = useState(false); // To indicate if the text was copied
-  const { toast } = useToast();
+
+  // Edit Modal
+  const [editModal, setEditModal] = React.useState(false);
+  const openEditModal = () => {
+    setEditModal(true);
+  }
+  
+  // Delete Modal
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  }
+
+  // Text Copy Logic
+  const [textToCopy, setTextToCopy] = useState("");
+  const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
     setCopyStatus(true);
     setTimeout(() => setCopyStatus(false), 2000); // Reset status after 2 seconds
   };
+
+  // Edit modal
+  
+
+  const { toast } = useToast();
+  const displayToastMessage = () => {
+    toast({
+      variant: "success",
+      title: "Copied",
+      description: "Copied text to your clipboard",
+    });
+  };
+
 
   const patientDetails = [
     { label: "Weight", value: "80 kg" },
@@ -81,13 +119,6 @@ const PatientDetailPage = () => {
     // Add more exercises here
   ];
 
-  const displayToastMessage = () => {
-    toast({
-      variant: "success",
-      title: "Copied",
-      description: "Copied text to your clipboard",
-    });
-  };
 
   return (
     <Card className="p-4">
@@ -119,8 +150,6 @@ const PatientDetailPage = () => {
                       onClick={displayToastMessage}
                     />
                   </CopyToClipboard>
-                  {/* TODO: Change to sonner message*/}
-                  {/* {copyStatus && displayToastMessage} */}
                 </div>
               </div>
             </div>
@@ -131,11 +160,11 @@ const PatientDetailPage = () => {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button className="flex gap-2" variant="outline">
+          <Button className="flex gap-2" variant="outline" onClick={openEditModal}>
             <Pencil size={20} />
             Edit
           </Button>
-          <Button className="flex gap-2" variant="outline">
+          <Button className="flex gap-2" variant="outline" onClick={openDeleteModal}>
             <Trash size={20} />
             Delete
           </Button>
@@ -283,6 +312,27 @@ const PatientDetailPage = () => {
           Rehabilitation Exercises Here
         </TabsContent>
       </Tabs>
+
+      <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader >
+            <DialogTitle>Remove Patient</DialogTitle>
+            <p className="text-center p-2">Are you sure to remove this patient?</p>
+          </DialogHeader>
+          <DialogFooter className="w-full">
+              <Button className="w-1/2" variant="destructive" type="submit">
+                Remove
+              </Button>
+              <DialogClose asChild>
+                <Button className="w-1/2" type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      
     </Card>
   );
 };
