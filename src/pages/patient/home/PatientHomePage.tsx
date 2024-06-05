@@ -7,17 +7,17 @@ import { CircleUser, Send } from "lucide-react"
 import { Link } from "react-router-dom"
 import useLoading from "@/hooks/useLoading.hook"
 import { useEffect, useState } from "react"
-import { PatientExercise } from "@/interfaces/exercise"
+import { DailyPatientExercise } from "@/interfaces/exercise"
 import SkeletonCard from "@/components/SkeletonCard"
-import { getPatientExercises } from "@/services/patientExercise.service"
+import { getDailyPatientExercises } from "@/services/patientExercise.service"
 
 const PatientHomePage = () => {
   const { isLoading, withLoading } = useLoading();
-  const [patientExercises, setPatientExercises] = useState<PatientExercise[]>([]);
+  const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
 
   const getData = async () => {
-    const data = await getPatientExercises();
-    setPatientExercises(data);
+    const data = await getDailyPatientExercises();
+    setDailyPatientExercises(data);
   }
 
   useEffect(() => {
@@ -33,17 +33,17 @@ const PatientHomePage = () => {
           isLoading ? <SkeletonCard /> : (
             <div className="flex flex-wrap gap-4">
               {
-                patientExercises
-                  .filter((patientExercise) => !patientExercise.isCompleted) // Filter out completed exercises
-                  .map((patientExercise) => (
+                dailyPatientExercises
+                  .filter((dailyPatientExercise) => !dailyPatientExercise.isCompleted) // Filter out completed exercises
+                  .map((dailyPatientExercise) => (
                     <ExerciseCard
-                      key={patientExercise.id}
-                      id={patientExercise.id}
-                      title={patientExercise.exercise.title}
-                      description={patientExercise.exercise.description}
-                      thumbnailUrl={patientExercise.exercise.thumnbailUrl}
-                      isCompleted={patientExercise.isCompleted}
-                      to={`exercises/${patientExercise.id}`}
+                      key={dailyPatientExercise.id}
+                      id={dailyPatientExercise.id}
+                      title={dailyPatientExercise.patientExercise.exercise.title}
+                      description={dailyPatientExercise.patientExercise.exercise.description}
+                      thumbnailUrl={dailyPatientExercise.patientExercise.exercise.thumbnailUrl}
+                      isCompleted={dailyPatientExercise.isCompleted}
+                      to={`exercises/${dailyPatientExercise.id}`}
                     />
                   ))
               }

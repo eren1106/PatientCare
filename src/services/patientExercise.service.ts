@@ -1,12 +1,11 @@
-import { PatientExercise } from "@/interfaces/exercise";
+import { DailyPatientExercise } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
 
-const MOCK_PATIENT_ID = "5b6a2166-a05e-423a-bf62-00e556543477";
+const MOCK_PATIENT_ID = "clwyqwafm0002570bgxcr8wwd";
 
-export const getPatientExercises = async (): Promise<PatientExercise[]> => {
+export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises`);
-    console.log(res.data.data)
+    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -14,7 +13,7 @@ export const getPatientExercises = async (): Promise<PatientExercise[]> => {
   }
 };
 
-export const completePatientExercise = async (patientExerciseId: number) => {
+export const completePatientExercise = async (patientExerciseId: string) => {
   try {
     await apiCaller.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}/complete-exercise`);
   } catch (e) {

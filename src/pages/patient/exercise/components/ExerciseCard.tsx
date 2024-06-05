@@ -6,11 +6,11 @@ import { completePatientExercise } from "@/services/patientExercise.service";
 import { Link } from "react-router-dom";
 
 interface ExerciseCardProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  thumbnailUrl: string;
   isCompleted: boolean;
+  thumbnailUrl?: string;
   to?: string;
 }
 
@@ -44,14 +44,14 @@ const ExerciseCard = ({
   };
 
   return (
-    <Link to={to || String(id)}>
+    <Link to={to || id}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <img src={thumbnailUrl || MOCK_EXERCISES[0].thumnbailUrl} alt="exercise thumbnail" />
+          <img src={thumbnailUrl || MOCK_EXERCISES[0].thumbnailUrl} alt="exercise thumbnail" />
         </CardContent>
         <CardFooter>
           {
