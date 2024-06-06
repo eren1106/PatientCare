@@ -1,13 +1,15 @@
 import DialogButton from "@/components/DialogButton";
-import { MOCK_EXERCISES } from "@/constants"
 import ExerciseForm from "./exercises/components/ExerciseForm";
 import ExercisesTable from "./exercises/components/ExercisesTable";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { Exercise } from "@/interfaces/exercise";
-import { getExercises } from "@/services/exercise.service";
+import { deleteExerciseById, getExercises } from "@/services/exercise.service";
+import { useToast } from "@/components/ui/use-toast";
 
 const ExercisesPage = () => {
+  const { toast } = useToast();
+
   const { isLoading, withLoading } = useLoading();
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
@@ -19,6 +21,25 @@ const ExercisesPage = () => {
   useEffect(() => {
     withLoading(getData);
   }, []);
+
+  const handleClickDelete = async (id: string) => {
+    try {
+      await deleteExerciseById(id);
+
+      toast({
+        variant: "success",
+        title: "Exercise Deleted Successfully",
+      });
+    }
+    catch (e: any) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: `${e.response.data.message}`,
+      });
+    }
+  }
 
   return (
     <div>
@@ -38,6 +59,7 @@ const ExercisesPage = () => {
         <ExercisesTable
           exercises={exercises}
           loading={isLoading}
+          onDelete={handleClickDelete}
         />
       </div>
     </div>

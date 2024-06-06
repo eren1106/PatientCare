@@ -40,3 +40,13 @@ export const createExercise = async ({
     throw e;
   }
 };
+
+export const deleteExerciseById = async (id: string) => {
+  try {
+    const res = await apiCaller.delete(`exercises/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};

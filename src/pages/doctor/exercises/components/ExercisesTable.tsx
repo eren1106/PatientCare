@@ -3,11 +3,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Exercise } from '@/interfaces/exercise';
 import { Eye, Trash } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from 'react';
 
 interface ExercisesTableProps {
   exercises: Exercise[];
   loading?: boolean;
-  onDelete?: () => void;
+  onDelete?: (id: string) => Promise<void>;
 }
 
 const ExercisesTable = ({
@@ -15,6 +18,19 @@ const ExercisesTable = ({
   loading = false,
   onDelete,
 }: ExercisesTableProps) => {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+
+  const handleClickDeleteIcon = (exercise: Exercise) => {
+    setSelectedExercise(exercise);
+    setShowConfirmDialog(true);
+  }
+
+  const handleClickConfirmDelete = async () => {
+    await onDelete?.(selectedExercise!.id);
+    setShowConfirmDialog(false);
+  }
+
   return (
     <>
       {
@@ -46,7 +62,7 @@ const ExercisesTable = ({
                   <Trash
                     size={36}
                     className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                    onClick={onDelete}
+                    onClick={() => handleClickDeleteIcon(exercise)}
                   />
                 </TableCell>
               </TableRow>
@@ -54,6 +70,22 @@ const ExercisesTable = ({
           </TableBody>
         </Table>
       }
+
+      {/* CONFIRM DELETE DIALOG */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            {`Are you sure you want to delete this exercise - ${selectedExercise?.title}?`}
+          </DialogDescription>
+          <div></div>
+          <DialogFooter>
+            <Button variant="destructive" onClick={handleClickConfirmDelete}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
