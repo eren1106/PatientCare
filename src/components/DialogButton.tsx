@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Button } from './ui/button';
 
 interface DialogButtonProps {
@@ -9,16 +9,20 @@ interface DialogButtonProps {
   description?: string;
   className?: string;
   variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost";
+  hasSubmitBtn?: boolean;
+  submitBtnText?: string;
 }
 
 const DialogButton = ({
-    children,
-    content,
-    title,
-    description,
-    className,
-    variant,
-  }: DialogButtonProps) => {
+  children,
+  content,
+  title,
+  description,
+  className,
+  variant,
+  // hasSubmitBtn=true,
+  // submitBtnText="Submit"
+}: DialogButtonProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -32,6 +36,13 @@ const DialogButton = ({
           </DialogDescription>
         </DialogHeader>
         {content}
+        {/* {
+          hasSubmitBtn && (
+            <DialogFooter>
+              <Button type="submit">{submitBtnText}</Button>
+            </DialogFooter>
+          )
+        } */}
         {/* <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button type="button" variant="secondary">

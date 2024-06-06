@@ -3,19 +3,13 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/f
 import { Input } from './ui/input';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { SelectItem as Option } from '@/interfaces/select-items';
 
-// Define a type for the options used in the select input
-interface Option {
-  value: string;
-  label: string;
-}
-
-// Props definition for the GenericFormField component
 interface GenericFormFieldProps {
   control: any;
   name: string;
   label: string;
-  type?: 'input' | 'textarea' | 'select';
+  type?: 'input' | 'textarea' | 'select' | 'number';
   placeholder?: string;
   options?: Option[];
   minRows?: number;
@@ -45,6 +39,9 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
         switch (type) {
           case 'input':
             res = <Input placeholder={placeholder} {...field} />;
+            break;
+          case 'number':
+            res = <Input placeholder={placeholder} {...field} type="number" />;
             break;
           case 'textarea':
             res = <AutoResizeTextarea placeholder={placeholder} minRows={minRows!} {...field} />;

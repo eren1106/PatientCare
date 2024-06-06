@@ -8,6 +8,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import PatientRecordExerciseTabContent from "./exercises/components/PatientRecordExerciseTabContent";
 
 const PatientDetailPage = () => {
   const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
@@ -181,7 +182,7 @@ const PatientDetailPage = () => {
           View and assign assessment here
         </TabsContent>
         <TabsContent value="Rehabilitation">
-          Rehabilitation Exercises Here
+          <PatientRecordExerciseTabContent />
         </TabsContent>
       </Tabs>
     </Card>

@@ -45,7 +45,7 @@ const DoctorDashboardPage = () => {
                 <TableCell>{patient.upcomingAppointments}</TableCell>
                 <TableCell>{patient.dateCreated}</TableCell>
                 <TableCell className="flex items-center justify-start gap-3 ">
-                  <Link to={`patients/${id}`}>
+                  <Link to={`patients/${patient.id}`}>
                     <Eye
                       size={36}
                       className="hover:bg-table-100 p-2 rounded-full"

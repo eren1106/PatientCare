@@ -28,14 +28,14 @@ const DASHBOARD_NAV_ITEMS = [
     icon: <BarChart2 />
   },
   {
-    to: "patients",
-    title: "Patient",
-    icon: <Users />
-  },
-  {
     to: "exercises",
     title: "Exercises",
     icon: <Dumbbell />
+  },
+  {
+    to: "patients",
+    title: "Patient",
+    icon: <Users />
   },
   {
     to: "appointments",

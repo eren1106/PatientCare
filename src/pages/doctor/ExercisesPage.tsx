@@ -1,15 +1,24 @@
 import DialogButton from "@/components/DialogButton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { MOCK_EXERCISES } from "@/constants"
-import { useNavigate } from "react-router-dom";
 import ExerciseForm from "./exercises/components/ExerciseForm";
+import ExercisesTable from "./exercises/components/ExercisesTable";
+import useLoading from "@/hooks/useLoading.hook";
+import { useEffect, useState } from "react";
+import { Exercise } from "@/interfaces/exercise";
+import { getExercises } from "@/services/exercise.service";
 
 const ExercisesPage = () => {
-  const navigate = useNavigate();
+  const { isLoading, withLoading } = useLoading();
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
-  const handleNavigateToExerciseDetail = (id: string) => {
-    navigate(id);
+  const getData = async () => {
+    const data = await getExercises();
+    setExercises(data);
   }
+
+  useEffect(() => {
+    withLoading(getData);
+  }, []);
 
   return (
     <div>
@@ -18,37 +27,18 @@ const ExercisesPage = () => {
           <span className="text-xl font-semibold">Exercises</span>
           <DialogButton
             variant="default"
+            title="Create Exercise"
             content={
               <div className="flex flex-col gap-3">
-                <h2 className="text-center">Create Exercise</h2>
                 <ExerciseForm />
               </div>
-            }>Add Exercise</DialogButton>
+            }>Create Exercise</DialogButton>
         </div>
 
-        <Table className="mt-2 w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[16rem]">Exercise</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="w-[8rem]">Date Created</TableHead>
-              {/* <TableHead className="w-[8rem]">Action</TableHead> */}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {MOCK_EXERCISES.map((exercise) => (
-              <TableRow
-                className="cursor-pointer hover:bg-muted"
-                key={exercise.id}
-                onClick={() => handleNavigateToExerciseDetail(exercise.id)}
-              >
-                <TableCell className="font-medium">{exercise.title}</TableCell>
-                <TableCell>{exercise.description}</TableCell>
-                <TableCell>{exercise.createdDatetime.toLocaleDateString()}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <ExercisesTable
+          exercises={exercises}
+          loading={isLoading}
+        />
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import Spinner from '@/components/Spinner'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useToast } from '@/components/ui/use-toast'
+import { EXERCISE_DIFFICULTY } from '@/constants'
 import useLoading from '@/hooks/useLoading.hook'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -14,7 +15,8 @@ const ExerciseSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   content: z.string(),
-  youtubeUrl: z.string().min(1),
+  difficulty: z.string(),
+  videoUrl: z.string().min(1),
 });
 
 const ExerciseForm = () => {
@@ -60,8 +62,16 @@ const ExerciseForm = () => {
         />
         <GenericFormField
           control={form.control}
-          name="youtubeUrl"
-          label="Youtube Url"
+          name="difficulty"
+          label="Difficulty"
+          placeholder="Select difficulty of exercise"
+          type='select'
+          options={EXERCISE_DIFFICULTY}
+        />
+        <GenericFormField
+          control={form.control}
+          name="videoUrl"
+          label="Video Url"
           placeholder="Copy and paste the example exercise video link at here"
         />
 
