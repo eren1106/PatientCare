@@ -1,12 +1,10 @@
-'use client'
-
 import GenericFormField from '@/components/GenericFormField'
-import Spinner from '@/components/Spinner'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useToast } from '@/components/ui/use-toast'
 import { EXERCISE_DIFFICULTY } from '@/constants'
 import useLoading from '@/hooks/useLoading.hook'
+import { createExercise } from '@/services/exercise.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod';
@@ -25,16 +23,51 @@ const ExerciseForm = () => {
 
   const form = useForm<z.infer<typeof ExerciseSchema>>({
     resolver: zodResolver(ExerciseSchema),
-    // defaultValues: {
-    // }
+    defaultValues: {
+      title: "",
+      description: "",
+      content: "",
+      difficulty: "EASY",
+      videoUrl: "",
+    }
   })
 
   const onSubmit = async (data: z.infer<typeof ExerciseSchema>) => {
     try {
+      const {
+        title,
+        description,
+        content,
+        difficulty,
+        videoUrl
+      } = data;
+      await createExercise({
+        title,
+        description,
+        content,
+        difficulty,
+        videoUrl
+      });
 
+      toast({
+        variant: "success",
+        title: "Exercise created!",
+        description: `New exercise (${title}) has been created successfully`,
+      });
+
+      form.reset();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
     catch (e) {
-
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: `Error occured - ${e}`,
+      });
     }
   }
 
