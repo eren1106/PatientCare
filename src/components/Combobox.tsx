@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useState } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -21,11 +21,12 @@ interface ComboboxProps {
   items: SelectItem[];
   onSelect?: (value: string) => void;
   placeholder?: string;
+  initialValue?: string;
 }
 
-const Combobox = ({ items, onSelect, placeholder="Select item..." }: ComboboxProps) => {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+const Combobox = ({ items, onSelect, placeholder = "Select item...", initialValue = "" }: ComboboxProps) => {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(initialValue)
 
   const handleSelect = (currentValue: string) => {
     const newValue = currentValue === value ? "" : currentValue
@@ -52,7 +53,7 @@ const Combobox = ({ items, onSelect, placeholder="Select item..." }: ComboboxPro
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command> 
+        <Command>
           <CommandList>
             <CommandInput placeholder="Search item..." />
             <CommandEmpty>No item found.</CommandEmpty>

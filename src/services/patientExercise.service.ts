@@ -1,6 +1,7 @@
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
 
+// TODO: remove mock data
 const MOCK_PATIENT_ID = "clwyqwafm0002570bgxcr8wwd";
 
 export const getPatientExercisesByPatientId = async (patientId: string) => {
@@ -24,19 +25,39 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
   }
 };
 
-interface CreatePatientExerciseDTO {
+interface PatientExerciseDTO {
   patientId: string;
   exerciseId: string;
   sets: number;
+  patientExerciseId?: string;
 }
 export const createPatientExercise = async ({
   patientId,
   exerciseId,
   sets,
-}: CreatePatientExerciseDTO) => {
+}: PatientExerciseDTO) => {
   try {
-    const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-      patientId: MOCK_PATIENT_ID,
+    // const res = await apiCaller.post(`patients/${patientId}/exercises`, {
+    const res = await apiCaller.post(`patients/${MOCK_PATIENT_ID}/exercises`, {
+      exerciseId,
+      sets,
+    });
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+
+export const updatePatientExercise = async ({
+  patientId,
+  exerciseId,
+  sets,
+  patientExerciseId,
+}: PatientExerciseDTO) => {
+  try {
+    const res = await apiCaller.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}`, {
       exerciseId,
       sets,
     });
