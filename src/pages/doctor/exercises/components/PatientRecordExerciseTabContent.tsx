@@ -1,5 +1,3 @@
-import { MOCK_EXERCISES } from "@/constants"
-import ExercisesTable from "./ExercisesTable"
 import DialogButton from "@/components/DialogButton"
 import * as z from 'zod'
 import { useForm } from "react-hook-form";
@@ -9,30 +7,101 @@ import GenericFormField from "@/components/GenericFormField";
 import { Button } from "@/components/ui/button";
 import useLoading from "@/hooks/useLoading.hook";
 import Combobox from "@/components/Combobox";
+import { useEffect, useState } from "react";
+import { Exercise, PatientExercise } from "@/interfaces/exercise";
+import { createPatientExercise, deletePatientExerciseById, getPatientExercisesByPatientId } from "@/services/patientExercise.service";
+import { useParams } from "react-router-dom";
+import PatientExercisesTable from "../../dashboard/components/PatientExercisesTable";
+import { useToast } from "@/components/ui/use-toast";
+import { getExercises } from "@/services/exercise.service";
+import { refreshPage } from "@/utils";
 
 const PatientExerciseSchema = z.object({
   exerciseId: z.string().min(1),
-  sets: z.number().min(0),
+  sets: z.preprocess((a) => parseInt(z.string().parse(a),10),
+  z.number().gte(1, 'Must be 1 and above')),
 });
 
 const PatientRecordExerciseTabContent = () => {
+  const { id } = useParams(); // id = patient's ID
   const { isLoading, withLoading } = useLoading();
+  const { toast } = useToast();
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [patientExercises, setPatientExercises] = useState<PatientExercise[]>([]);
+
+  const getData = async () => {
+    if (id) {
+      const patientExercisesData = await getPatientExercisesByPatientId(id);
+      setPatientExercises(patientExercisesData);
+    }
+
+    const exercisesData = await getExercises();
+    setExercises(exercisesData);
+  }
+
+  useEffect(() => {
+    withLoading(getData);
+  }, []);
 
   const form = useForm<z.infer<typeof PatientExerciseSchema>>({
     resolver: zodResolver(PatientExerciseSchema),
     defaultValues: {
-      sets: 1,
+      sets: 1
     }
   });
 
   const onSubmit = async (data: z.infer<typeof PatientExerciseSchema>) => {
+    if (!id) return;
+    const {
+      exerciseId,
+      sets,
+    } = data;
     try {
+      await createPatientExercise({
+        patientId: id,
+        exerciseId,
+        sets,
+      });
 
+      toast({
+        variant: "success",
+        title: "Exercise Assigned Successfully",
+      });
+
+      refreshPage();
     }
-    catch (e) {
-
+    catch (e: any) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: `${e.response.data.message}`,
+      });
     }
   };
+
+  const handleSelectExercise = (id: string) => {
+    form.setValue("exerciseId", id);
+  }
+
+  const handleClickDelete = async (id: string) => {
+    try {
+      await deletePatientExerciseById(id);
+
+      toast({
+        variant: "success",
+        title: "Unassigned Exercise Successfully",
+      });
+    }
+    catch (e) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: `${e}`,
+      });
+    }
+  }
 
   return (
     <div className="mt-5">
@@ -40,7 +109,7 @@ const PatientRecordExerciseTabContent = () => {
         <h2>Assigned Exercises</h2>
         <DialogButton
           variant="default"
-          title="Add Exercise"
+          title="Assign Exercise"
           content={
             <div className="flex flex-col gap-3">
               <Form {...form}>
@@ -53,10 +122,12 @@ const PatientRecordExerciseTabContent = () => {
                         <FormLabel>Exercise</FormLabel>
                         <FormControl>
                           <Combobox
-                            items={MOCK_EXERCISES.map((exercise) => ({
+                            items={exercises.map((exercise) => ({
                               label: exercise.title,
                               value: exercise.id,
                             }))}
+                            onSelect={handleSelectExercise}
+                            placeholder="Select Exercise..."
                           />
                         </FormControl>
                         <FormMessage />
@@ -80,9 +151,9 @@ const PatientRecordExerciseTabContent = () => {
                 </form>
               </Form>
             </div>
-          }>Add Exercise</DialogButton>
+          }>Assign Exercise</DialogButton>
       </div>
-      <ExercisesTable exercises={MOCK_EXERCISES} />
+      <PatientExercisesTable patientExercises={patientExercises} onDelete={handleClickDelete} />
     </div>
   )
 }

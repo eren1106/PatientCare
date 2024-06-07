@@ -16,14 +16,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { SelectItem } from "@/interfaces/select-items"
-import { MOCK_EXERCISES } from "@/constants"
 
 interface ComboboxProps {
-  items: SelectItem[]
-  onSelect?: (value: string) => void
+  items: SelectItem[];
+  onSelect?: (value: string) => void;
+  placeholder?: string;
 }
 
-const Combobox = ({ items, onSelect }: ComboboxProps) => {
+const Combobox = ({ items, onSelect, placeholder="Select item..." }: ComboboxProps) => {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -43,33 +43,33 @@ const Combobox = ({ items, onSelect }: ComboboxProps) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? items.find((item) => item.value === value)?.label
-            : "Select item..."}
+            : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
+        <Command> 
           <CommandList>
             <CommandInput placeholder="Search item..." />
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandGroup>
-              {MOCK_EXERCISES.map((item) => (
+              {items.map((item) => (
                 <CommandItem
-                  key={item.id}
-                  value={item.id}
+                  key={item.value}
+                  value={item.value}
                   onSelect={handleSelect}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === item.id ? "opacity-100" : "opacity-0"
+                      value === item.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {item.title}
+                  {item.label}
                 </CommandItem>
               ))}
             </CommandGroup>

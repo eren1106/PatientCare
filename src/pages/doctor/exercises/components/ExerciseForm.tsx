@@ -5,6 +5,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { EXERCISE_DIFFICULTY } from '@/constants'
 import useLoading from '@/hooks/useLoading.hook'
 import { createExercise } from '@/services/exercise.service'
+import { refreshPage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod';
@@ -57,9 +58,7 @@ const ExerciseForm = () => {
 
       form.reset();
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      refreshPage();
     }
     catch (e) {
       console.error(e);
