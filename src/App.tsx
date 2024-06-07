@@ -11,12 +11,15 @@ import Footer from "./components/footer";
 import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
-import ExercisesPage from "./pages/patient/exercise/ExercisesPage";
-import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
+import PatientExercisesPage from "./pages/patient/exercise/PatientExercisesPage";
+import PatientExerciseDetailPage from "./pages/patient/exercise/PatientExerciseDetailPage";
 import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
 import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
+import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
+import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 import QuestionnairePage from "./pages/doctor/QuestionnairePage";
+
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -79,11 +82,11 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "",
-                element: <ExercisesPage />,
+                element: <PatientExercisesPage />,
               },
               {
                 path: ":id",
-                element: <ExerciseDetailPage />,
+                element: <PatientExerciseDetailPage />,
               }
             ]
           },
@@ -97,6 +100,8 @@ const router = createBrowserRouter([
           }
         ]
       },
+
+      // DOCTOR DASHBOARD ROUTES
       {
         path: DASHBOARD_ROOT_PATH,
         element: <MainWrapper isDoctor />,
@@ -113,7 +118,19 @@ const router = createBrowserRouter([
             path: "patients/:recordId",
             element: <PatientDetailPage />,  
           },
-      
+          {
+            path: "exercises",
+            children: [
+              {
+                path: "",
+                element: <ExercisesPage />
+              },
+              {
+                path: ":id",
+                element: <ExerciseDetailPage />
+              }
+            ]  
+          },
           {
             path: "appointments",
             element: <AppointmentPage />

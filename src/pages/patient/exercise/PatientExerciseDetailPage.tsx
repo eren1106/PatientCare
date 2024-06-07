@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { MOCK_DAILY_PATIENT_EXERCISES } from "@/constants"
 
-const ExerciseDetailPage = () => {
+const PatientExerciseDetailPage = () => {
   const dailyPatientExercise = MOCK_DAILY_PATIENT_EXERCISES[0];
   const handleMarkComplete = () => { };
 
@@ -21,4 +21,4 @@ const ExerciseDetailPage = () => {
   )
 }
 
-export default ExerciseDetailPage
+export default PatientExerciseDetailPage

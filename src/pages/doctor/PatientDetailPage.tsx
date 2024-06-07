@@ -37,6 +37,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import React from "react";
+import PatientRecordExerciseTabContent from "./exercises/components/PatientRecordExerciseTabContent";
 import {
   Appointment,
   Assessment,
@@ -432,7 +433,7 @@ const PatientDetailPage = () => {
           </div>
         </TabsContent>
         <TabsContent value="Rehabilitation">
-          Rehabilitation Exercises Here
+          <PatientRecordExerciseTabContent />
         </TabsContent>
       </Tabs>
 
