@@ -155,4 +155,98 @@ export const MOCK_PATIENT_LIST: Patient[] = [
     upcomingAppointments: "May 20, 2024",
     dateCreated: "Jan 10, 2022",
   },
+  {
+    id: "3",
+    patient: "Zheng Wu Bang",
+    contactNumber: "+60112345782",
+    email: "wbzheng@gmail.com",
+    upcomingAppointments: "May 20, 2024",
+    dateCreated: "Jan 10, 2022",
+  },
+  {
+    id: "4",
+    patient: "Kuek Zi Lii",
+    contactNumber: "+60112345782",
+    email: "eren@gmail.com",
+    upcomingAppointments: "May 20, 2024",
+    dateCreated: "Jan 10, 2022",
+  },
+  {
+    id: "5",
+    patient: "Chee Zing",
+    contactNumber: "+60112345782",
+    email: "nasuha456@gmail.com",
+    upcomingAppointments: "May 20, 2024",
+    dateCreated: "Jan 10, 2022",
+  },
+  {
+    id: "6",
+    patient: "Nur Nasuha",
+    contactNumber: "+60112345782",
+    email: "sarahwilliams456@gmail.com",
+    upcomingAppointments: "May 20, 2024",
+    dateCreated: "Jan 10, 2022",
+  },
 ]
+
+export const MOCK_QUESTIONNAIRE: Questionnaire = {
+  title: "Knee Injury and Osteoarthritis Outcome Score (KOOS)",
+  description: "The Knee Injury and Osteoarthritis Outcome Score (KOOS) is a questionnaire designed to assess short and long-term patient-relevant outcomes following knee injury. The KOOS is self-administered and assesses five outcomes: pain, symptoms, activities of daily living, sport and recreation function, and knee-related quality of life. The KOOS meets basic criteria of outcome measures and can be used to evaluate the course of knee injury and treatment outcome. KOOS is patient-administered, the format is user-friendly and it takes about 10 minutes to fill out.",
+  questions: [
+    {
+      id: 1,
+      text: "How often is your knee painful?",
+      options: [
+        { id: 1, text: "Never" },
+        { id: 2, text: "Monthly" },
+        { id: 3, text: "Weekly" },
+        { id: 4, text: "Daily" },
+        { id: 5, text: "Always" }
+      ]
+    },
+    {
+      id: 2,
+      text: "What degree of pain have you experienced the last week when twisting/pivoting on your knee?",
+      options: [
+        { id: 1, text: "None" },
+        { id: 2, text: "Mild" },
+        { id: 3, text: "Modeate" },
+        { id: 4, text: "Severe" },
+        { id: 5, text: "Extreme" }
+      ]
+    },
+    {
+      id: 3,
+      text: "What degree of pain have you experienced the last week when twisting/pivoting on your knee?",
+      options: [
+        { id: 1, text: "None" },
+        { id: 2, text: "Mild" },
+        { id: 3, text: "Modeate" },
+        { id: 4, text: "Severe" },
+        { id: 5, text: "Extreme" }
+      ]
+    },
+    {
+      id: 4,
+      text: "What degree of pain have you experienced the last week when straightening knee fully?",
+      options: [
+        { id: 1, text: "None" },
+        { id: 2, text: "Mild" },
+        { id: 3, text: "Modeate" },
+        { id: 4, text: "Severe" },
+        { id: 5, text: "Extreme" }
+      ]
+    },
+    {
+      id: 5,
+      text: "What degree of pain have you experienced the last week when walking on flat surface?",
+      options: [
+        { id: 1, text: "None" },
+        { id: 2, text: "Mild" },
+        { id: 3, text: "Modeate" },
+        { id: 4, text: "Severe" },
+        { id: 5, text: "Extreme" }
+      ]
+    }
+  ]
+};

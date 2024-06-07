@@ -6,18 +6,74 @@ import { Copy, MessageCircle, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import React from "react";
 import PatientRecordExerciseTabContent from "./exercises/components/PatientRecordExerciseTabContent";
 
 const PatientDetailPage = () => {
-  const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
-  const [copyStatus, setCopyStatus] = useState(false); // To indicate if the text was copied
-  const { toast } = useToast();
+
+  // Edit Modal
+  const [editModal, setEditModal] = React.useState(false);
+  const openEditModal = () => {
+    setEditModal(true);
+  }
+  
+  // Delete Modal
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  }
+
+  // Text Copy Logic
+  const [textToCopy, setTextToCopy] = useState("");
+  const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
     setCopyStatus(true);
     setTimeout(() => setCopyStatus(false), 2000); // Reset status after 2 seconds
   };
+
+  // Edit modal
+  
+
+  const { toast } = useToast();
+  const displayToastMessage = () => {
+    toast({
+      variant: "success",
+      title: "Copied",
+      description: "Copied text to your clipboard",
+    });
+  };
+
 
   const patientDetails = [
     { label: "Weight", value: "80 kg" },
@@ -39,13 +95,31 @@ const PatientDetailPage = () => {
     { label: "Oxygen Saturation", value: "98%" },
   ];
 
-  const displayToastMessage = () => {
-    toast({
-      variant: "success",
-      title: "Copied",
-      description: "Copied text to your clipboard",
-    });
-  };
+  const mockCompletedAssessments = [
+    {
+      name: "Knee Injury and Osteoarthritis Outcome Score",
+      status: "Completed",
+      review: "Good",
+      dateCreated: "2024-01-15",
+      dateCompleted: "2024-01-15"
+    },
+    {
+      name: "Knee Injury and Osteoarthritis Outcome Score",
+      status: "Assigned",
+      review: "Good",
+      dateCreated: "2024-02-20",
+      dateCompleted: "2024-01-15"
+    },
+    // Add more completed assessments here
+  ];
+  
+  const mockExercises = [
+    "Exercise 1",
+    "Exercise 2",
+    "Exercise 3",
+    // Add more exercises here
+  ];
+
 
   return (
     <Card className="p-4">
@@ -77,8 +151,6 @@ const PatientDetailPage = () => {
                       onClick={displayToastMessage}
                     />
                   </CopyToClipboard>
-                  {/* TODO: Change to sonner message*/}
-                  {/* {copyStatus && displayToastMessage} */}
                 </div>
               </div>
             </div>
@@ -89,11 +161,11 @@ const PatientDetailPage = () => {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button className="flex gap-2" variant="outline">
+          <Button className="flex gap-2" variant="outline" onClick={openEditModal}>
             <Pencil size={20} />
             Edit
           </Button>
-          <Button className="flex gap-2" variant="outline">
+          <Button className="flex gap-2" variant="outline" onClick={openDeleteModal}>
             <Trash size={20} />
             Delete
           </Button>
@@ -109,8 +181,8 @@ const PatientDetailPage = () => {
 
         <TabsContent value="Overview">
           <section>
-            <Card className="flex flex-col p-4 gap-8 w-2/4">
-              <div className=" flex flex-col gap-5">
+            <Card className="flex  flex-col p-4 gap-8 w-full">
+              <div className="flex flex-col gap-5">
                 <h3 className="font-semibold">Patient Information</h3>
                 <ul>
                   {patientDetails.map((item, index) => (
@@ -179,12 +251,89 @@ const PatientDetailPage = () => {
           </section>
         </TabsContent>
         <TabsContent value="Assessment">
-          View and assign assessment here
+          <div className="p-4">
+         
+            <div className="flex items-center space-x-4 mb-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Select Exercise</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>Select Exercise</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    {mockExercises.map((exercise, index) => (
+                      <DropdownMenuItem key={index}>
+                        {exercise}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Card className="flex flex-col p-4 gap-4 w-full">
+
+            <h3 className="font-semibold">Assessments</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Questionnaire</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Review</TableHead>
+                  <TableHead>Date Assigned</TableHead>
+                  <TableHead>Date Completed</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockCompletedAssessments.map((assessment, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      {assessment.name}
+                    </TableCell>
+                    <TableCell>{assessment.status}</TableCell>
+                    <TableCell>{assessment.review}</TableCell>
+                    <TableCell>{assessment.dateCreated}</TableCell>
+                    <TableCell>{assessment.dateCompleted}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    Total: {mockCompletedAssessments.length} assessments
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+            </Card>
+           
+          </div>
         </TabsContent>
         <TabsContent value="Rehabilitation">
           <PatientRecordExerciseTabContent />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader >
+            <DialogTitle>Remove Patient</DialogTitle>
+            <p className="text-center p-2">Are you sure to remove this patient?</p>
+          </DialogHeader>
+          <DialogFooter className="w-full">
+              <Button className="w-1/2" variant="destructive" type="submit">
+                Remove
+              </Button>
+              <DialogClose asChild>
+                <Button className="w-1/2" type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      
     </Card>
   );
 };

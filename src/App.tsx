@@ -8,7 +8,6 @@ import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
 import { ThemeProvider } from './components/theme-provider';
 import Topbar from "./components/topbar";
 import Footer from "./components/footer";
-import PatientListPage from "./pages/doctor/PatientListPage";
 import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
@@ -19,6 +18,8 @@ import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
 import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
 import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
+import QuestionnairePage from "./pages/doctor/QuestionnairePage";
+
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -110,8 +111,8 @@ const router = createBrowserRouter([
             element: <DoctorDashboardPage />,
           },
           {
-            path: "patients",
-            element: <PatientListPage />,
+            path: "questionnaire",
+            element: <QuestionnairePage />,
           },
           {
             path: "patients/:id",
