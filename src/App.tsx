@@ -13,11 +13,12 @@ import Sidebar from "./components/sidebar";
 import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
 import PatientExercisesPage from "./pages/patient/exercise/PatientExercisesPage";
-import ExerciseDetailPage from "./pages/patient/exercise/ExerciseDetailPage";
+import PatientExerciseDetailPage from "./pages/patient/exercise/PatientExerciseDetailPage";
 import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
 import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
-import ExercisesPage from "./pages/doctor/ExercisesPage";
+import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
+import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 const AppWrapper = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -84,7 +85,7 @@ const router = createBrowserRouter([
               },
               {
                 path: ":id",
-                element: <ExerciseDetailPage />,
+                element: <PatientExerciseDetailPage />,
               }
             ]
           },
@@ -118,7 +119,16 @@ const router = createBrowserRouter([
           },
           {
             path: "exercises",
-            element: <ExercisesPage />,  
+            children: [
+              {
+                path: "",
+                element: <ExercisesPage />
+              },
+              {
+                path: ":id",
+                element: <ExerciseDetailPage />
+              }
+            ]  
           },
           {
             path: "appointments",

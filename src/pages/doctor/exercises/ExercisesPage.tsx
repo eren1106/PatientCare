@@ -1,6 +1,6 @@
 import DialogButton from "@/components/DialogButton";
-import ExerciseForm from "./exercises/components/ExerciseForm";
-import ExercisesTable from "./exercises/components/ExercisesTable";
+import ExerciseForm from "./components/ExerciseForm";
+import ExercisesTable from "./components/ExercisesTable";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { Exercise } from "@/interfaces/exercise";

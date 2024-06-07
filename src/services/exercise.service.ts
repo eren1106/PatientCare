@@ -11,6 +11,16 @@ export const getExercises = async (): Promise<Exercise[]> => {
   }
 };
 
+export const getExerciseById = async (id: string): Promise<Exercise> => {
+  try {
+    const res = await apiCaller.get(`exercises/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 interface CreateExerciseDTO {
   title: string,
   description: string,
@@ -18,7 +28,6 @@ interface CreateExerciseDTO {
   content: string,
   videoUrl: string,
 }
-
 export const createExercise = async ({
   title,
   description,
