@@ -23,18 +23,22 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useCallback, useEffect, useState } from "react";
-import { deletePatientRecord, getPatientRecord } from "@/services/dashboard.service";
-import { PatientRecord } from "@/interfaces/dashboard";
+import {
+  deletePatientRecord,
+  getPatientRecord,
+} from "@/services/dashboard.service";
+import { PatientRecord, PatientTable } from "@/interfaces/dashboard";
 import useLoading from "@/hooks/useLoading.hook";
 import SkeletonCard from "@/components/SkeletonCard";
 import SkeletonLoader from "@/components/SkeletonLoader";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 const DoctorDashboardPage = () => {
   const [deleteModal, setDeleteModal] = useState(false);
 
-  const [removeRecordId, setRemoveRecordId] = useState('');
-  const removePatient = (patientRecordId : string) => {
+  const [removeRecordId, setRemoveRecordId] = useState("");
+  const removePatient = (patientRecordId: string) => {
     setDeleteModal(true);
     setRemoveRecordId(patientRecordId);
   };
@@ -45,32 +49,41 @@ const DoctorDashboardPage = () => {
       prevRecords.filter((record) => record.id !== removeRecordId)
     );
     setDeleteModal(false);
-    setRemoveRecordId('');
-  }
+    setRemoveRecordId("");
+  };
   // Fetch patient records
-  const [patientRecord, setPatientRecord] = useState<PatientRecord[]>([]);
+  const [patientRecord, setPatientRecord] = useState<PatientTable[]>([]);
   const { isLoading, withLoading } = useLoading();
 
   // Date helper
   const convertDateFormat = (date: Date): string => {
-    const [day, month, year] = [date.getDate(), date.getMonth() + 1, date.getFullYear()];
-    const [hours, minutes, amPm] = [date.getHours() % 12 || 12, date.getMinutes(), date.getHours() >= 12 ? 'p.m.' : 'a.m.'];
-    return `${day}/${month}/${year} ${hours}:${minutes.toString().padStart(2, '0')}${amPm}`;
-  };  
+    const [day, month, year] = [
+      date.getDate(),
+      date.getMonth() + 1,
+      date.getFullYear(),
+    ];
+    const [hours, minutes, amPm] = [
+      date.getHours() % 12 || 12,
+      date.getMinutes(),
+      date.getHours() >= 12 ? "p.m." : "a.m.",
+    ];
+    return `${day}/${month}/${year} ${hours}:${minutes
+      .toString()
+      .padStart(2, "0")}${amPm}`;
+  };
 
   const [refresh, setRefresh] = useState(false);
-  const fetchData = useCallback( async () => {
+  const fetchData = useCallback(async () => {
     const data = await getPatientRecord();
-    console.log(data);
     setPatientRecord(data);
-    setRefresh(false); 
-  }, [])
-  
+    setRefresh(false);
+  }, []);
+
   useEffect(() => {
     if (refresh) {
       withLoading(fetchData);
     }
-  }, [refresh,fetchData]);
+  }, [refresh, fetchData]);
 
   useEffect(() => {
     withLoading(fetchData);
@@ -79,6 +92,17 @@ const DoctorDashboardPage = () => {
   const handlePatientAdded = () => {
     setRefresh(true);
   };
+
+  // Search function
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredRecords = patientRecord.filter(record =>
+    record.patient.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div>
@@ -110,63 +134,81 @@ const DoctorDashboardPage = () => {
       <div className="border border-gray-300 rounded-lg p-5 mt-10 gap-2">
         <div className="flex justify-between">
           <span className="text-xl font-semibold">Patient Record</span>
-          <InsertPatientRecordModal onPatientAdded={handlePatientAdded}/>
+          <Input
+            className="w-1/3 "
+            type="text"
+            placeholder="Search a patient..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <InsertPatientRecordModal onPatientAdded={handlePatientAdded} />
         </div>
-          {isLoading ? (
-            <SkeletonLoader />
-          ) : (
-            <Table className="mt-2 w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="">Patient</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Upcoming Appointments</TableHead>
-                  <TableHead>Date Created</TableHead>
-                  <TableHead>Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {patientRecord.map((record) => (
-                  <TableRow key={record.id}>
-                    <TableCell className="font-medium">
-                      {record.patient.username}
-                    </TableCell>
-                    <TableCell>{record.patient.email}</TableCell>
-                    <TableCell>
-                      {record.appointment.length > 0 ? (
-                        <ul>
-                          {record.appointment.map((appt) => (
-                            <li key={appt.id}>
-                              <Badge variant="secondary">{convertDateFormat(new Date(appt.scheduledDatetime))}</Badge>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "No Appointments"
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="destructive">{convertDateFormat(new Date(record.createdDatetime))}</Badge>
-                    </TableCell>
-                    <TableCell className="flex items-center justify-start gap-3 ">
-                      <Link to={`patients/${record.id}`}>
-                        <Eye
-                          size={36}
-                          className="hover:bg-table-100 p-2 rounded-full"
-                        />
-                      </Link>
-                      <Trash
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : (
+          <Table className="mt-2 w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">Patient</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Upcoming Appointments</TableHead>
+                <TableHead>Date Created</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredRecords.length > 0 ? (
+              filteredRecords.map((record) => (
+                <TableRow key={record.id}>
+                  <TableCell className="font-medium">
+                    {record.patient.username}
+                  </TableCell>
+                  <TableCell>{record.patient.email}</TableCell>
+                  <TableCell>
+                    {record.appointment.length > 0 ? (
+                      <ul>
+                        {record.appointment.map((appt) => (
+                          <li key={appt.id}>
+                            <Badge variant="secondary">
+                              {convertDateFormat(new Date(appt.scheduledDatetime))}
+                            </Badge>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      "No Appointments"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="destructive">
+                      {convertDateFormat(new Date(record.patient.createdDatetime))}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="flex items-center justify-start gap-3 ">
+                    <Link to={`patients/${record.id}`}>
+                      <Eye
                         size={36}
                         className="hover:bg-table-100 p-2 rounded-full"
-                        onClick={() => {removePatient(record.id)}}
                       />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        
+                    </Link>
+                    <Trash
+                      size={36}
+                      className="hover:bg-table-100 p-2 rounded-full"
+                      onClick={() => { removePatient(record.id) }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  No patient records found.
+                </TableCell>
+              </TableRow>
+            )}
+            </TableBody>
+          </Table>
+        )}
       </div>
 
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
@@ -178,7 +220,11 @@ const DoctorDashboardPage = () => {
             </p>
           </DialogHeader>
           <DialogFooter className="w-full">
-            <Button className="w-1/2" variant="destructive" onClick={() => remove()}>
+            <Button
+              className="w-1/2"
+              variant="destructive"
+              onClick={() => remove()}
+            >
               Remove
             </Button>
             <DialogClose asChild>

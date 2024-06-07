@@ -1,4 +1,4 @@
-import { User, PatientRecord } from "@/interfaces/dashboard";
+import { User, PatientRecord, PatientTable } from "@/interfaces/dashboard";
 import { apiCaller } from "@/utils";
 
 const MOCK_DOCTOR_ID = "clx1wjgcb0003pqpp4a7061z7";
@@ -13,9 +13,19 @@ export const getAllPatient = async (): Promise<User[]> => {
   }
 };
 
-export const getPatientRecord = async (): Promise<PatientRecord[]> => {
+export const getPatientRecord = async (): Promise<PatientTable[]> => {
   try {
     const res = await apiCaller.get(`dashboard/doctors/${MOCK_DOCTOR_ID}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const getPatientRecordDetails = async (patientRecordId: string): Promise<PatientRecord> => {
+  try {
+    const res = await apiCaller.get(`dashboard/records/${patientRecordId}`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -35,9 +45,19 @@ export const insertPatientRecord = async (patientRecord: CreatePatientRecord) =>
     }
 };
 
-export const deletePatientRecord = async (patientRecordId: string) => {
+export const updatePatientRecord = async (record: PatientRecord | null) => {
   try {
     
+    const res = await apiCaller.put(`dashboard/records`,record);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const deletePatientRecord = async (patientRecordId: string) => {
+  try {
     const res = await apiCaller.put(`dashboard/doctors/deleterecords/${patientRecordId}`);
     return res.data.data;
   } catch (e) {
