@@ -49,7 +49,6 @@ import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import {
   CreatePatientRecord,
-  PatientRecord,
   User,
 } from "@/interfaces/dashboard";
 import SkeletonCard from "@/components/SkeletonCard";
@@ -109,8 +108,9 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
     },
   });
 
-  const { setValue } = form;
+  const { reset, setValue } = form;
 
+  
   const [patientRecord, setPatientRecord] = useState<CreatePatientRecord>({
     patientId: "",
     ic_no: "",
@@ -127,6 +127,7 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
     }
   };
 
+  
   function onSubmit(values: z.infer<typeof formSchema>) {
     setOpenDialog(false);
     const updatedRecord = {
@@ -140,7 +141,29 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
     setPatientRecord(updatedRecord);
 
     addPatient(updatedRecord); 
+
+    reset({
+      patient: { id: "" },
+      ic_no: "",
+      age: 0,
+      gender: "MALE",
+      weight: 0,
+      height: 0,
+    });
   }
+
+  useEffect(() => {
+    if (openDialog) {
+      reset({
+        patient: { id: "" },
+        ic_no: "",
+        age: 0,
+        gender: "MALE",
+        weight: 0,
+        height: 0,
+      });
+    }
+  }, [openDialog, reset]);
 
   const handleSelect = (patient: User) => {
     setSelectedPatient(patient);

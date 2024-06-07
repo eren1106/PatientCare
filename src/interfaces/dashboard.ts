@@ -6,6 +6,13 @@ export interface User {
     createdDatetime: string;
 }
 
+export interface PatientTable {
+    id:string,
+    doctor_id:string,
+    patient_id:string,
+    appointment: Appointment[],
+    patient: User
+}
 
 export interface PatientRecord {
     id:string;
@@ -13,9 +20,9 @@ export interface PatientRecord {
     patient_id:string,
     ic_no:string,
     age: number,
-    gender: string,
-    weight: string,
-    height: string,
+    gender: 'MALE' | 'FEMALE',
+    weight: number,
+    height: number,
     progressReport: string,
     createdDatetime: Date,
     updatedDatetime: Date,
@@ -57,7 +64,7 @@ export interface Injury {
     duration:string,
     painScore:number,
     description:string,
-    is_recurrent:string,
+    is_recurrent: 'YES' | 'NO',
     createdDatetime: Date | null,
     updatedDatetime: Date | null
 }
@@ -69,4 +76,4 @@ export interface CreatePatientRecord {
     gender:string,
     weight:number,
     height:number,
-  }
+}
