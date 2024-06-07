@@ -1,3 +1,19 @@
+import { SelectItem } from '@/interfaces/select-items';
+
 export * from './mocks'
 
 export const DASHBOARD_ROOT_PATH = "dashboard";
+export const EXERCISE_DIFFICULTY: SelectItem[] = [
+  {
+    label: "Easy",
+    value: "EASY",
+  },
+  {
+    label: "Medium",
+    value: "MEDIUM",
+  },
+  {
+    label: "Hard",
+    value: "HARD",
+  },
+]

@@ -1,12 +1,11 @@
 import ExerciseCard from "./components/ExerciseCard"
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
-import { apiCaller } from "@/utils";
 import SkeletonCard from "@/components/SkeletonCard";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
 
-const ExercisesPage = () => {
+const PatientExercisesPage = () => {
   const { isLoading, withLoading } = useLoading();
   const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
 
@@ -46,4 +45,4 @@ const ExercisesPage = () => {
   )
 }
 
-export default ExercisesPage
+export default PatientExercisesPage
