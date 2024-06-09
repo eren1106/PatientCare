@@ -31,6 +31,7 @@ const ExerciseCard = ({
       toast({
         title: "Marked as complete!",
         description: "Congrats on completing this exercise for today!",
+        variant: "success"
       })
     }
     catch (e) {
@@ -56,7 +57,7 @@ const ExerciseCard = ({
         <CardFooter>
           {
             isCompleted
-              ? <p>Completed</p>
+              ? <p className="text-lg font-bold text-primary">Completed</p>
               : <Button onClick={handleMarkComplete}>Mark as complete</Button>
           }
         </CardFooter>
