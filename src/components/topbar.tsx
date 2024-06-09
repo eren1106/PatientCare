@@ -14,7 +14,7 @@ const Topbar = () => {
           </Link>
           <div className='gap-4 hidden md:flex'>
             {/* NAV ITEM */}
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </div>
         </div>
         {/* <Sheet>

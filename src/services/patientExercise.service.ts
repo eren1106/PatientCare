@@ -25,6 +25,16 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
   }
 };
 
+export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
+  try {
+    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 interface PatientExerciseDTO {
   patientId: string;
   exerciseId: string;
