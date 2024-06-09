@@ -34,6 +34,7 @@ import {
 import { Appointment, Assessment, Exercise, Injury, PatientRecord } from "@/interfaces/dashboard";
 import { Pencil } from "lucide-react";
 import { updatePatientRecord } from "@/services/dashboard.service";
+import { useToast } from "@/components/ui/use-toast";
 
 
 
@@ -67,7 +68,7 @@ type ChildComponentProps = {
 const EditPatientDetailsModal: React.FC<ChildComponentProps> = ({ record , onChangeState}) => {
   // Open and close the modal
   const [openDialog, setOpenDialog] = useState(false);
-
+  const { toast } = useToast();
   // Edit patient data
   const [patientRecord, editPatientRecord] = useState<PatientRecord | null>(null);
 
@@ -104,10 +105,24 @@ const EditPatientDetailsModal: React.FC<ChildComponentProps> = ({ record , onCha
 
 
   const updateRecord = async (record : PatientRecord) => {
-
+    try {
       const data = await updatePatientRecord(record);
+      // Show success toast message
+      toast({
+        variant: "success",
+        title: "Record Updated Successfully",
+        description: "The patient record has been updated.",
+      });
       onChangeState();
-    
+    } catch (e: any) {
+      console.error(e);
+      // Show error toast message
+      toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: `${e.response.data.message}`,
+      });
+    }
   }
   
   function onSubmit(data: z.infer<typeof formSchema>) {

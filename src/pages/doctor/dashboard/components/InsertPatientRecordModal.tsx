@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-
+import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -93,7 +93,7 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
 
     withLoading(getData);
   }, []);
-
+  const { toast } = useToast();
   // Open and close the modal
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -122,8 +122,23 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
 
   const addPatient = async (patientRecord:CreatePatientRecord) => {
     if (patientRecord) {
-      const data = await insertPatientRecord(patientRecord);
-      onPatientAdded();
+      try {
+        const data = await insertPatientRecord(patientRecord);
+        toast({
+          variant: "success",
+          title: "Patient Added Successfully",
+          description: "The patient record has been added.",
+        });
+
+        onPatientAdded();
+      } catch (e:any) {
+        console.error(e);
+        toast({
+          variant: "destructive",
+          title: "Add Patient Failed",
+          description: `${e.response.data.message}`,
+        });
+      }
     }
   };
 
