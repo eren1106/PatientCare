@@ -1,7 +1,7 @@
 import { User, PatientRecord, PatientTable } from "@/interfaces/dashboard";
 import { apiCaller } from "@/utils";
 
-const MOCK_DOCTOR_ID = "clx1wjgcb0003pqpp4a7061z7";
+const MOCK_DOCTOR_ID = "clx6zqc2i0003x16m7aze1okw";
 
 export const getAllPatient = async (): Promise<User[]> => {
   try {

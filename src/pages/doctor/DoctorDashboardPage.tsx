@@ -11,7 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Calendar, Eye, Trash, User } from "lucide-react";
 import InsertPatientRecordModal from "./dashboard/components/InsertPatientRecordModal";
 import { useParams } from "react-router-dom";
-
+import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -42,14 +42,28 @@ const DoctorDashboardPage = () => {
     setDeleteModal(true);
     setRemoveRecordId(patientRecordId);
   };
-
-  const remove = () => {
-    const deleteRecord = deletePatientRecord(removeRecordId);
-    setPatientRecord((prevRecords) =>
-      prevRecords.filter((record) => record.id !== removeRecordId)
-    );
-    setDeleteModal(false);
-    setRemoveRecordId("");
+  const { toast } = useToast();
+  const remove = async () => {
+    try {
+      const deleteRecord = await deletePatientRecord(removeRecordId);
+      toast({
+        variant: "success",
+        title: "Patient Record Deleted Successfully",
+        description: "The patient record has been deleted.",
+      });
+      setPatientRecord((prevRecords) =>
+        prevRecords.filter((record) => record.id !== removeRecordId)
+      );
+      setDeleteModal(false);
+      setRemoveRecordId("");
+    } catch (e:any) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Delete Record Failed",
+        description: `${e.response.data.message}`,
+      });
+    }
   };
   // Fetch patient records
   const [patientRecord, setPatientRecord] = useState<PatientTable[]>([]);
@@ -94,13 +108,13 @@ const DoctorDashboardPage = () => {
   };
 
   // Search function
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredRecords = patientRecord.filter(record =>
+  const filteredRecords = patientRecord.filter((record) =>
     record.patient.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -158,54 +172,60 @@ const DoctorDashboardPage = () => {
             </TableHeader>
             <TableBody>
               {filteredRecords.length > 0 ? (
-              filteredRecords.map((record) => (
-                <TableRow key={record.id}>
-                  <TableCell className="font-medium">
-                    {record.patient.username}
-                  </TableCell>
-                  <TableCell>{record.patient.email}</TableCell>
-                  <TableCell>
-                    {record.appointment.length > 0 ? (
-                      <ul>
-                        {record.appointment.map((appt) => (
-                          <li key={appt.id}>
-                            <Badge variant="secondary">
-                              {convertDateFormat(new Date(appt.scheduledDatetime))}
-                            </Badge>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      "No Appointments"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="destructive">
-                      {convertDateFormat(new Date(record.patient.createdDatetime))}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="flex items-center justify-start gap-3 ">
-                    <Link to={`patients/${record.id}`}>
-                      <Eye
+                filteredRecords.map((record) => (
+                  <TableRow key={record.id}>
+                    <TableCell className="font-medium">
+                      {record.patient.username}
+                    </TableCell>
+                    <TableCell>{record.patient.email}</TableCell>
+                    <TableCell>
+                      {record.appointment.length > 0 ? (
+                        <ul>
+                          {record.appointment.map((appt) => (
+                            <li key={appt.id}>
+                              <Badge variant="secondary">
+                                {convertDateFormat(
+                                  new Date(appt.scheduledDatetime)
+                                )}
+                              </Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        "No Appointments"
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="destructive">
+                        {convertDateFormat(
+                          new Date(record.patient.createdDatetime)
+                        )}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="flex items-center justify-start gap-3 ">
+                      <Link to={`patients/${record.id}`}>
+                        <Eye
+                          size={36}
+                          className="hover:bg-table-100 p-2 rounded-full"
+                        />
+                      </Link>
+                      <Trash
                         size={36}
                         className="hover:bg-table-100 p-2 rounded-full"
+                        onClick={() => {
+                          removePatient(record.id);
+                        }}
                       />
-                    </Link>
-                    <Trash
-                      size={36}
-                      className="hover:bg-table-100 p-2 rounded-full"
-                      onClick={() => { removePatient(record.id) }}
-                    />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No patient records found.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center">
-                  No patient records found.
-                </TableCell>
-              </TableRow>
-            )}
+              )}
             </TableBody>
           </Table>
         )}

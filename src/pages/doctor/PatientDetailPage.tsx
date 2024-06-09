@@ -148,13 +148,26 @@ const PatientDetailPage = () => {
   // Delete Modal
   const [deleteModal, setDeleteModal] = React.useState(false);
 
-  const remove = () => {
-    const deleteRecord = deletePatientRecord(removeRecordId);
-    navigate('/dashboard');
-    setDeleteModal(false);
-    setRemoveRecordId('');
-    
-  }
+  const remove = async () => {
+    try {
+      const deleteRecord = await deletePatientRecord(removeRecordId);
+      toast({
+        variant: "success",
+        title: "Patient Record Deleted Successfully",
+        description: "The patient record has been deleted.",
+      });
+      navigate('/dashboard');
+      setDeleteModal(false);
+      setRemoveRecordId('');
+    } catch (e:any) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Delete Record Failed",
+        description: `${e.response.data.message}`,
+      });
+    }
+  };
   const [refresh, setRefresh] = useState(false);
   const fetchData = useCallback(async () => {
     if (recordId) {
