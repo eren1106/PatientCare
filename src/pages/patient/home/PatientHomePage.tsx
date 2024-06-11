@@ -26,7 +26,7 @@ const PatientHomePage = () => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <h1>Welcome, Ali</h1>
+      <h1>Welcome, John</h1>
       <section className="flex flex-col gap-4">
         <h2>Your pending exercises</h2>
         {

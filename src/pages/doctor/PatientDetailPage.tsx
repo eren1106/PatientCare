@@ -71,7 +71,7 @@ const defaultInjury: Injury[] = [];
 const defaultPatientRecord: PatientRecord = {
   id: "",
   docotr_id: "",
-  patient_id: "",
+  patientId: "",
   ic_no: "",
   age: 0,
   gender: "MALE",
@@ -285,7 +285,7 @@ const PatientDetailPage = () => {
             </div>
           )}
 
-          <Button className="flex gap-4" variant="message" size="lg">
+          <Button className="flex gap-4" variant="default" size="lg">
             <MessageCircle />
             Message Patient
           </Button>
@@ -446,7 +446,9 @@ const PatientDetailPage = () => {
           </div>
         </TabsContent>
         <TabsContent value="Rehabilitation">
-          <PatientRecordExerciseTabContent />
+          {
+            record.patientId && <PatientRecordExerciseTabContent patientId={record.patientId} />
+          }
         </TabsContent>
       </Tabs>
 

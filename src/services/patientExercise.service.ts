@@ -2,7 +2,7 @@ import { DailyPatientExercise } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
 
 // TODO: remove mock data
-const MOCK_PATIENT_ID = "clwyqwafm0002570bgxcr8wwd";
+const MOCK_PATIENT_ID = "clx71vozt00029gzgr9me5ixn";
 
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {
@@ -48,7 +48,8 @@ export const createPatientExercise = async ({
 }: PatientExerciseDTO) => {
   try {
     // const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-    const res = await apiCaller.post(`patients/${MOCK_PATIENT_ID}/exercises`, {
+    const res = await apiCaller.post(`patients/${patientId}/exercises`, {
+      patientId,
       exerciseId,
       sets,
     });
@@ -67,7 +68,8 @@ export const updatePatientExercise = async ({
   patientExerciseId,
 }: PatientExerciseDTO) => {
   try {
-    const res = await apiCaller.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}`, {
+    const res = await apiCaller.put(`patients/${patientId}/exercises/${patientExerciseId}`, {
+      patientId,
       exerciseId,
       sets,
     });
