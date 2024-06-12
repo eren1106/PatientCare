@@ -21,7 +21,8 @@ export const getExerciseById = async (id: string): Promise<Exercise> => {
   }
 };
 
-interface CreateExerciseDTO {
+interface ExerciseDTO {
+  id?: string;
   title: string,
   description: string,
   difficulty: string,
@@ -34,9 +35,33 @@ export const createExercise = async ({
   difficulty,
   content,
   videoUrl,
-}: CreateExerciseDTO) => {
+}: ExerciseDTO) => {
   try {
     const res = await apiCaller.post(`exercises`, {
+      title,
+      description,
+      difficulty,
+      content,
+      videoUrl,
+    });
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const updateExercise = async ({
+  id,
+  title,
+  description,
+  difficulty,
+  content,
+  videoUrl,
+}: ExerciseDTO) => {
+  try {
+    const res = await apiCaller.put(`exercises/${id}`, {
+      id,
       title,
       description,
       difficulty,

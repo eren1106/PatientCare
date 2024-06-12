@@ -35,7 +35,6 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
   const getData = async () => {
     if (patientId) {
       const patientExercisesData = await getPatientExercisesByPatientId(patientId);
-      console.log("DATA: ", patientExercisesData);
       setPatientExercises(patientExercisesData);
     }
 

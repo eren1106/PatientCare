@@ -1,4 +1,3 @@
-import { MOCK_PATIENT_EXERCISES } from "@/constants"
 import ExerciseCard from "../exercise/components/ExerciseCard"
 import { Card } from "@/components/ui/card"
 import ProfileAvatar from "@/components/ProfileAvatar"
