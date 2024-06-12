@@ -61,11 +61,11 @@ const ExercisesTable = ({
                       className="hover:bg-muted p-2 rounded-full"
                     />
                   </Link>
-                  {/* <PenBox
+                  <PenBox
                     size={36}
                     className="hover:bg-muted p-2 rounded-full cursor-pointer"
                     onClick={() => onEdit?.(exercise)}
-                  /> */}
+                  />
                   <Trash
                     size={36}
                     className="hover:bg-table-100 p-2 rounded-full cursor-pointer"

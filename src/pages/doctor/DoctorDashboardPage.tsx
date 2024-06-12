@@ -56,7 +56,7 @@ const DoctorDashboardPage = () => {
       );
       setDeleteModal(false);
       setRemoveRecordId("");
-    } catch (e:any) {
+    } catch (e: any) {
       console.error(e);
       toast({
         variant: "destructive",
@@ -196,11 +196,14 @@ const DoctorDashboardPage = () => {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="destructive">
+                      {/* <Badge variant="secondary">
                         {convertDateFormat(
                           new Date(record.patient.createdDatetime)
                         )}
-                      </Badge>
+                      </Badge> */}
+                      {convertDateFormat(
+                        new Date(record.patient.createdDatetime)
+                      )}
                     </TableCell>
                     <TableCell className="flex items-center justify-start gap-3 ">
                       <Link to={`patients/${record.id}`}>
