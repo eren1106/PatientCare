@@ -10,7 +10,6 @@ import Combobox from "@/components/Combobox";
 import { useEffect, useState } from "react";
 import { Exercise, PatientExercise } from "@/interfaces/exercise";
 import { createPatientExercise, deletePatientExerciseById, getPatientExercisesByPatientId, updatePatientExercise } from "@/services/patientExercise.service";
-import { useParams } from "react-router-dom";
 import PatientExercisesTable from "../../dashboard/components/PatientExercisesTable";
 import { useToast } from "@/components/ui/use-toast";
 import { getExercises } from "@/services/exercise.service";
@@ -19,12 +18,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 const PatientExerciseSchema = z.object({
   exerciseId: z.string().min(1),
-  sets: z.preprocess((a) => parseInt(z.string().parse(a), 10),
-    z.number().gte(1, 'Must be 1 and above')),
+  sets: z.coerce.number().nonnegative(),
+  // sets: z.preprocess((a) => parseInt(z.string().parse(a), 10),
+  //   z.number().gte(1, 'Must be 1 and above')),
 });
 
-const PatientRecordExerciseTabContent = () => {
-  const { id } = useParams(); // id = patient's ID
+const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
+  // const { recordId } = useParams(); // id = patient's ID
   const { isLoading, withLoading } = useLoading();
   const { toast } = useToast();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -33,8 +33,8 @@ const PatientRecordExerciseTabContent = () => {
   const [selectedEditPatientExercise, setSelectedEditPatientExercise] = useState<PatientExercise | null>(null);
 
   const getData = async () => {
-    if (id) {
-      const patientExercisesData = await getPatientExercisesByPatientId(id);
+    if (patientId) {
+      const patientExercisesData = await getPatientExercisesByPatientId(patientId);
       setPatientExercises(patientExercisesData);
     }
 
@@ -54,16 +54,18 @@ const PatientRecordExerciseTabContent = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof PatientExerciseSchema>) => {
-    if (!id) return;
+    if (!patientId) return;
     const {
       exerciseId,
       sets,
     } = data;
+
+    console.log("PATIENT ID: ", patientId)
     try {
       if (showEditModal) {
         // edit patient exercise
         await updatePatientExercise({
-          patientId: id,
+          patientId,
           exerciseId,
           sets,
           patientExerciseId: selectedEditPatientExercise?.id,
@@ -77,7 +79,7 @@ const PatientRecordExerciseTabContent = () => {
       else {
         // create patient exercise
         await createPatientExercise({
-          patientId: id,
+          patientId,
           exerciseId,
           sets,
         });

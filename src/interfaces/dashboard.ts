@@ -17,7 +17,7 @@ export interface PatientTable {
 export interface PatientRecord {
     id:string;
     docotr_id:string,
-    patient_id:string,
+    patientId:string,
     ic_no:string,
     age: number,
     gender: 'MALE' | 'FEMALE',

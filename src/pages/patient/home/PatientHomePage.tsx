@@ -1,4 +1,3 @@
-import { MOCK_PATIENT_EXERCISES } from "@/constants"
 import ExerciseCard from "../exercise/components/ExerciseCard"
 import { Card } from "@/components/ui/card"
 import ProfileAvatar from "@/components/ProfileAvatar"
@@ -26,7 +25,7 @@ const PatientHomePage = () => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <h1>Welcome, Ali</h1>
+      <h1>Welcome, John</h1>
       <section className="flex flex-col gap-4">
         <h2>Your pending exercises</h2>
         {

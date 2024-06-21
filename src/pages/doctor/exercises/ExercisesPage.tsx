@@ -6,12 +6,16 @@ import { useEffect, useState } from "react";
 import { Exercise } from "@/interfaces/exercise";
 import { deleteExerciseById, getExercises } from "@/services/exercise.service";
 import { useToast } from "@/components/ui/use-toast";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const ExercisesPage = () => {
   const { toast } = useToast();
 
   const { isLoading, withLoading } = useLoading();
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [selectedEditExercise, setSelectedEditExercise] = useState<Exercise | null>(null);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const getData = async () => {
     const data = await getExercises();
@@ -41,6 +45,16 @@ const ExercisesPage = () => {
     }
   }
 
+  const handleClickEdit = (exercise: Exercise) => {
+    setSelectedEditExercise(exercise);
+    setShowEditModal(true);
+  }
+
+  // const handleChangeEditModal = (open: boolean) => {
+  //   setShowEditModal(open);
+  //   // if (open) form.reset();
+  // }
+
   return (
     <div>
       <div className="border border-gray-300 rounded-lg p-5 gap-2">
@@ -60,8 +74,20 @@ const ExercisesPage = () => {
           exercises={exercises}
           loading={isLoading}
           onDelete={handleClickDelete}
+          onEdit={handleClickEdit}
         />
       </div>
+
+      {/* TODO: MAKE CREATE & EDIT THE SAME COMPONENT */}
+      {/* EDIT EXERCISE MODAL */}
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[42rem]">
+          <DialogHeader>
+            <DialogTitle>Edit Exercise</DialogTitle>
+          </DialogHeader>
+          {selectedEditExercise ? <ExerciseForm exercise={selectedEditExercise}/> : "No exercise selected!"}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
