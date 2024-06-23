@@ -5,37 +5,36 @@ import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
-import { Questionnaire } from '@/interfaces/questionnaire';
+import { Assessment, Questionnaire } from '@/interfaces/questionnaire';
 import { Badge } from "@/components/ui/badge";
-import { Assessment } from '@/interfaces/dashboard';
+
 
 interface QuestionnaireTableProps {
-  questionnaires: Questionnaire[];
+
   loading?: boolean;
-  assessment? : Questionnaire[];
+  assessment : Assessment[];
   onDelete?: (id: string) => Promise<void>;
   onEdit?: (questionnaire: Questionnaire) => void;
 }
 
-const QuestionnaireTable = ({
-  questionnaires,
+const PatientQuestionnaireTable = ({
   loading = false,
   assessment,
   onDelete,
 }: QuestionnaireTableProps) => {
 
-  // Display either questionnaire assigned to patient or all questionnaire
-  const dataToRender = assessment ?? questionnaires;
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<Questionnaire | null>(null);
 
-  const handleClickDeleteIcon = (questionnaire: Questionnaire) => {
-    setSelectedQuestionnaire(questionnaire);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
+
+
+  const handleClickDeleteIcon = (questionnaire: Assessment) => {
+    setSelectedAssessment(questionnaire);
     setShowConfirmDialog(true);
   }
 
   const handleClickConfirmDelete = async () => {
-    await onDelete?.(selectedQuestionnaire!.id);
+    await onDelete?.(selectedAssessment!.id);
     setShowConfirmDialog(false);
   }
 
@@ -53,18 +52,18 @@ const QuestionnaireTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dataToRender.map((questionnaire) => (
+            {assessment.map((assessment) => (
               <TableRow
                 className=""
-                key={questionnaire.id}
+                key={assessment.id}
               >
-                <TableCell className="font-medium">{questionnaire.title}</TableCell>
-                <TableCell className="text-ellipsis">{questionnaire.description}</TableCell>
-                <TableCell><Badge>{questionnaire.type}</Badge></TableCell>
-                <TableCell>{new Date(questionnaire.createdDatetime).toLocaleDateString()}</TableCell>
+                <TableCell className="font-medium">{assessment.questionnaire.title}</TableCell>
+                <TableCell className="text-ellipsis">{assessment.questionnaire.description}</TableCell>
+                <TableCell><Badge>{assessment.questionnaire.type}</Badge></TableCell>
+                <TableCell>{new Date(assessment.questionnaire.createdDatetime).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex items-center justify-center gap-2 " >
-                  <Link to={`${questionnaire.id}`}>
+                  <Link to={`/dashboard/questionnaire/${assessment.questionnaire.id}`}>
                     <Eye
                       size={36}
                       className="hover:bg-muted p-2 rounded-full"
@@ -73,7 +72,7 @@ const QuestionnaireTable = ({
                   <Trash
                     size={36}
                     className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                    onClick={() => handleClickDeleteIcon(questionnaire)}
+                    onClick={() => handleClickDeleteIcon(assessment)}
                   />
                   </div>
                 </TableCell>
@@ -90,7 +89,7 @@ const QuestionnaireTable = ({
             <DialogTitle>Confirm Delete</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            {`Are you sure you want to delete this questionnaire - ${selectedQuestionnaire?.title}?`}
+            {`Are you sure you want to delete this questionnaire - ${selectedAssessment?.questionnaire.title}?`}
           </DialogDescription>
           <div></div>
           <DialogFooter>
@@ -102,4 +101,4 @@ const QuestionnaireTable = ({
   )
 }
 
-export default QuestionnaireTable
+export default PatientQuestionnaireTable
