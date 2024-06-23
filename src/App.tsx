@@ -18,9 +18,11 @@ import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
 import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
 import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
-import QuestionnairePage from "./pages/doctor/QuestionnairePage";
+import QuestionnairePage from "./pages/doctor/questionnaire/QuestionnairePage";
 import PatientProfilePage from "./pages/patient/PatientProfilePage";
 import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
+import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
+import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 
 const AppWrapper = () => {
   return (
@@ -118,7 +120,22 @@ const router = createBrowserRouter([
           },
           {
             path: "questionnaire",
-            element: <QuestionnairePage />,
+            children: [
+              {
+                path: "",
+                element: <QuestionnairePage />,
+              },
+              {
+                path: ":id",
+                element: <QuestionnaireDetailsPage />
+              },
+              {
+                path: "create",
+                element: <CreateQuestionnaireForm />
+              }
+            ]
+            
+            
           },
           {
             path: "patients/:recordId",

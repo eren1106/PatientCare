@@ -1,19 +1,33 @@
 // Options
 interface Option {
   id: number;
-  text: string;
+  content: string;
+  questionId: string;
+}
+
+// Question type
+interface FieldType {
+  id: string,
+  name: string
 }
 
 // Single question
 interface Question {
   id: number;
-  text: string;
-  options: Option[];
+  title: string;
+  fieldTypeId: string,
+  option: Option[];
+  fieldType: FieldType
 }
 
 // Questionnaire
-interface Questionnaire {
+export interface Questionnaire {
+  id: string,
   title: string;
   description: string;
-  questions: Question[];
+  type: string;
+  authorId: string;
+  question: Question[];
+  createdDatetime: Date;
+  updatedDatetime: Date;
 }
