@@ -1,6 +1,9 @@
+import { PatientExercise } from "./exercise";
+
 export interface User {
     id: string;
     username: string;
+    fullname: string;
     email: string;
     profileImageUrl: string | null;
     createdDatetime: string;

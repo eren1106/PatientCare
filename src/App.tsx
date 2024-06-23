@@ -19,6 +19,8 @@ import { Toaster } from "@/components/toaster";
 import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
 import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 import QuestionnairePage from "./pages/doctor/QuestionnairePage";
+import PatientProfilePage from "./pages/patient/PatientProfilePage";
+import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
 
 const AppWrapper = () => {
   return (
@@ -97,6 +99,10 @@ const router = createBrowserRouter([
           {
             path: "questionnaire/:id",
             element: <PatientQuestionnairePage />
+          },
+          {
+            path: "profile/:id",
+            element: <PatientProfilePage />
           }
         ]
       },
@@ -134,6 +140,10 @@ const router = createBrowserRouter([
           {
             path: "appointments",
             element: <AppointmentPage />
+          },
+          {
+            path: "profile/:id",
+            element: <DoctorProfilePage />
           }
         ]
       },

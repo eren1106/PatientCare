@@ -16,4 +16,15 @@ export const EXERCISE_DIFFICULTY: SelectItem[] = [
     label: "Hard",
     value: "HARD",
   },
+];
+
+export const GENDER_SELECT: SelectItem[] = [
+  {
+    label: "Male",
+    value: "MALE",
+  },
+  {
+    label: "Female",
+    value: "FEMALE",
+  },
 ]
