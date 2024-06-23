@@ -1,4 +1,3 @@
-import { Gender } from "@/enums/gender.enum";
 import { Patient } from "@/interfaces/user";
 import { apiCaller } from "@/utils";
 
@@ -34,6 +33,16 @@ export const updateProfile = async ({
       gender,
       ic,
     });
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const deleteProfileById = async (id: string) => {
+  try {
+    const res = await apiCaller.delete(`profile/${id}`);
     return res.data.data;
   } catch (e) {
     console.error(e);

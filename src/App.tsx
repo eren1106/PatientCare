@@ -21,6 +21,7 @@ import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 import QuestionnairePage from "./pages/doctor/questionnaire/QuestionnairePage";
 import PatientProfilePage from "./pages/patient/PatientProfilePage";
 import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
+import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 
@@ -164,6 +165,12 @@ const router = createBrowserRouter([
           }
         ]
       },
+
+      // AUTH
+      {
+        path: "login",
+        element: <LoginPage />
+      }
     ]
   }
 ]);

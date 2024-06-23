@@ -12,6 +12,7 @@ export interface User {
   age: number;
   gender: Gender;
   ic: string;
+  isDelete: boolean;
 }
 
 export interface Patient extends User {
