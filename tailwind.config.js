@@ -67,6 +67,9 @@ module.exports = {
         badge : {
           light: '#7BD7AB',
           moderate: '#FFD250'
+        },
+        pink : {
+          DEFAULT: '#ffe4e4'
         }
       },
       borderRadius: {
