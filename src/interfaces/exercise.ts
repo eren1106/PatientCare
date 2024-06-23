@@ -8,8 +8,8 @@ export interface Exercise {
   difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   content?: string;
   videoUrl?: string;
-  createdDatetime: string;
-  updatedDatetime?: string;
+  createdDatetime: Date | string;
+  updatedDatetime?: Date | string;
 }
 
 export interface DailyPatientExercise {
@@ -18,13 +18,13 @@ export interface DailyPatientExercise {
   // patientExerciseId: string;
   patientExercise: PatientExercise;
   isCompleted: boolean;
-  createdDatetime: string;
-  completedDatetime?: string;
+  createdDatetime: Date | string;
+  completedDatetime?: Date | string;
 }
 
 export interface PatientExercise {
   id: string;
   exercise: Exercise;
   sets: number;
-  createdDatetime: string;
+  createdDatetime: Date | string;
 }

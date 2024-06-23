@@ -1,9 +1,16 @@
+import { PatientExercise } from "./exercise";
+
 export interface User {
     id: string;
     username: string;
     email: string;
     profileImageUrl: string | null;
     createdDatetime: string;
+}
+
+export interface Patient extends User {
+    patientRecord: PatientRecord;
+    patientExercise: PatientExercise[];
 }
 
 export interface PatientTable {

@@ -1,9 +1,18 @@
-import { ModeToggle } from './mode-toggle';
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Menu } from 'lucide-react';
-import { Link } from 'react-router-dom';
+// import { ModeToggle } from './mode-toggle';
+// import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+// import { Menu } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import ProfileAvatar from './ProfileAvatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { LogOut, User } from 'lucide-react';
+import { MOCK_PATIENT_IMAGE_PATH } from '@/constants';
 
 const Topbar = () => {
+  // const navigate = useNavigate();
+  // const handleNavigateToProfile = () => {
+  //   navigate
+  // }
+
   return (
     <>
       <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
@@ -15,6 +24,25 @@ const Topbar = () => {
           <div className='gap-4 hidden md:flex'>
             {/* NAV ITEM */}
             {/* <ModeToggle /> */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className='cursor-pointer'>
+                  <ProfileAvatar className='size-12' src={MOCK_PATIENT_IMAGE_PATH} />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <Link to="/profile/clx71vozt00029gzgr9me5ixn">
+                  <DropdownMenuItem className='gap-3 cursor-pointer'>
+                    <User />
+                    Profile
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem className='gap-3 cursor-pointer'>
+                  <LogOut />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         {/* <Sheet>

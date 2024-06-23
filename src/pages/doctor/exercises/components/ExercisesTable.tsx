@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
+import { formatDate } from '@/utils';
 
 interface ExercisesTableProps {
   exercises: Exercise[];
@@ -53,7 +54,7 @@ const ExercisesTable = ({
               >
                 <TableCell className="font-medium">{exercise.title}</TableCell>
                 <TableCell>{exercise.description}</TableCell>
-                <TableCell>{new Date(exercise.createdDatetime).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(exercise.createdDatetime)}</TableCell>
                 <TableCell className="flex items-center justify-start gap-2">
                   <Link to={`${exercise.id}`}>
                     <Eye

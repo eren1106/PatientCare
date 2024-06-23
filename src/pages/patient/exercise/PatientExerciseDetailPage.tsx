@@ -2,10 +2,10 @@ import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
-import { MOCK_DAILY_PATIENT_EXERCISES } from "@/constants"
 import useLoading from "@/hooks/useLoading.hook";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { completePatientExercise, getDailyPatientExerciseById } from "@/services/patientExercise.service";
+import { refreshPage } from "@/utils";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -34,7 +34,9 @@ const PatientExerciseDetailPage = () => {
         title: "Marked as complete!",
         description: "Congrats on completing this exercise for today!",
         variant: "success"
-      })
+      });
+
+      refreshPage();
     }
     catch (e) {
       console.error(e);
