@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react'
 import PatientProfileForm from './components/PatientProfileForm';
 import { useParams } from 'react-router-dom';
 import { getProfileById } from '@/services/profile.service';
-import { Patient } from '@/interfaces/dashboard';
 import useLoading from '@/hooks/useLoading.hook';
 import Spinner from '@/components/Spinner';
 import { formatDate } from '@/utils';
+import { Patient } from '@/interfaces/user';
 
 interface ProfileInfoProps {
   label: string;
@@ -57,7 +57,11 @@ const PatientProfilePage = () => {
                 title="Edit Profile"
                 content={
                   <div className="flex flex-col gap-3">
-                    <PatientProfileForm />
+                    {
+                      patient ? (
+                        <PatientProfileForm profile={patient} />
+                      ) : <p>No User Found!</p>
+                    }
                   </div>
                 }><Edit size={20} /></DialogButton>
               <DialogButton
@@ -77,22 +81,19 @@ const PatientProfilePage = () => {
               <div className='flex flex-col gap-3 w-full'>
                 <ProfileInfo
                   label="Full Name"
-                  // TODO: add fullname to user model
-                  value={patient?.username}
+                  value={patient?.fullname}
                 />
                 <ProfileInfo
                   label="Age"
-                  // TODO: revamp patientRecord model, so that age is inside patient model
-                  value={patient?.patientRecord.age}
+                  value={patient?.age}
                 />
                 <ProfileInfo
                   label="Gender"
-                  value={patient?.patientRecord.gender}
+                  value={patient?.gender}
                 />
                 <ProfileInfo
                   label="IC"
-                  // TODO: change the property name to ic instead of ic_no
-                  value={patient?.patientRecord.ic_no}
+                  value={patient?.ic}
                 />
                 <ProfileInfo
                   label="Register Date"

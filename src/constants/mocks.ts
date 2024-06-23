@@ -1,5 +1,8 @@
 import { DailyPatientExercise, Exercise, PatientExercise } from "@/interfaces/exercise";
 
+export const MOCK_PATIENT_ID = "clxqv0c1v0002646phf5dgcsn";
+export const MOCK_DOCTOR_ID = "clxqv0c2p0003646pgxxvqi2f";
+
 export const MOCK_EXERCISES: Exercise[] = [
   {
     id: "1",

@@ -1,10 +1,39 @@
-import { Patient } from "@/interfaces/dashboard";
+import { Gender } from "@/enums/gender.enum";
+import { Patient } from "@/interfaces/user";
 import { apiCaller } from "@/utils";
 
 export const getProfileById = async (id: string): Promise<Patient> => {
   try {
-    // const MOCK_PATIENT_ID = "clx71vozt00029gzgr9me5ixn"
     const res = await apiCaller.get(`profile/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+interface ProfileDTO {
+  id: string;
+  fullname: string;
+  age: number;
+  gender: string;
+  ic: string;
+}
+
+export const updateProfile = async ({
+  id,
+  fullname,
+  age,
+  gender,
+  ic,
+}: ProfileDTO) => {
+  try {
+    const res = await apiCaller.put(`profile/${id}`, {
+      fullname,
+      age,
+      gender,
+      ic,
+    });
     return res.data.data;
   } catch (e) {
     console.error(e);

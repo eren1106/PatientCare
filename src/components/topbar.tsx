@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProfileAvatar from './ProfileAvatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { LogOut, User } from 'lucide-react';
-import { MOCK_PATIENT_IMAGE_PATH } from '@/constants';
+import { MOCK_PATIENT_ID, MOCK_PATIENT_IMAGE_PATH } from '@/constants';
 
 const Topbar = () => {
   // const navigate = useNavigate();
@@ -31,7 +31,7 @@ const Topbar = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <Link to="/profile/clx71vozt00029gzgr9me5ixn">
+                <Link to={`/profile/${MOCK_PATIENT_ID}`}>
                   <DropdownMenuItem className='gap-3 cursor-pointer'>
                     <User />
                     Profile
