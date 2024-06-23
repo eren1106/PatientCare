@@ -21,6 +21,7 @@ import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 import QuestionnairePage from "./pages/doctor/QuestionnairePage";
 import PatientProfilePage from "./pages/patient/PatientProfilePage";
 import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
+import LoginPage from "./pages/auth/LoginPage";
 
 const AppWrapper = () => {
   return (
@@ -147,6 +148,12 @@ const router = createBrowserRouter([
           }
         ]
       },
+
+      // AUTH
+      {
+        path: "login",
+        element: <LoginPage />
+      }
     ]
   }
 ]);
