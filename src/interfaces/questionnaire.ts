@@ -31,3 +31,18 @@ export interface Questionnaire {
   createdDatetime: Date;
   updatedDatetime: Date;
 }
+
+export interface Assessment {
+  id : string,
+  userId : string,
+  questionnaireId : string,
+  createdDatetime : Date;
+  patientRecordId : string,
+  questionnaire : Questionnaire;
+}
+
+export interface CreateAssessment {
+  userId : string,
+  questionnaireId : string,
+  recordId : string
+}

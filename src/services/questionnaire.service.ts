@@ -1,6 +1,7 @@
-import { Questionnaire } from "@/interfaces/questionnaire";
+import { Assessment, CreateAssessment, Questionnaire } from "@/interfaces/questionnaire";
 import { apiCaller } from "@/utils";
-const MOCK_DOCTOR_ID = "clxpjetj600037ans9l1tr9cm";
+import { MOCK_DOCTOR_ID } from "@/constants";
+
 
 export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
     try {
@@ -12,6 +13,16 @@ export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
     }
 }
 
+
+export const getAssessmentsByPatientId = async (id : string): Promise<Assessment[]> => {
+  try {
+    const res = await apiCaller.get(`questionnaire/patient/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 
 export const getQuestionnaireById = async (id : string): Promise<Questionnaire> => {
   try {
@@ -33,9 +44,29 @@ export const insertQuestionnaire = async (questionnaire : CreateQuestionnaire) =
   }
 }
 
+export const insertAssessment = async (assessment : CreateAssessment) => {
+  try {
+    const res = await apiCaller.post(`questionnaire/assessment`, { assessment });
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 export const deleteQuestionnaire = async (questionnaireId : string) => {
   try {
     const res = await apiCaller.put(`questionnaire/${questionnaireId}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export const deleteAssessment = async (assessmentId : string) => {
+  try {
+    const res = await apiCaller.delete(`questionnaire/assessment/${assessmentId}`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -59,3 +90,4 @@ export interface CreateQuestionnaire {
   type: 'General' | 'Shoulder' | 'Knee';
   questions: CreateQuestion[];
 }
+

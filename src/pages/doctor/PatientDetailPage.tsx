@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import PatientRecordExerciseTabContent from "./exercises/components/PatientRecordExerciseTabContent";
+import PatientRecordQuestionnaireTab from "./questionnaire/components/PatientRecordQuestionnaireTab";
 import {
   Appointment,
   Assessment,
@@ -54,6 +55,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultUser: User = {
   id: "",
+  fullname: "",
   username: "",
   email: "",
   profileImageUrl: null,
@@ -390,60 +392,9 @@ const PatientDetailPage = () => {
           </section>
         </TabsContent>
         <TabsContent value="Assessment">
-          <div className="p-4">
-            <div className="flex items-center space-x-4 mb-8">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Select Exercise</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>Select Exercise</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    {mockExercises.map((exercise, index) => (
-                      <DropdownMenuItem key={index}>
-                        {exercise}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <Card className="flex flex-col p-4 gap-4 w-full">
-              <h3 className="font-semibold">Assessments</h3>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Questionnaire</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Review</TableHead>
-                    <TableHead>Date Assigned</TableHead>
-                    <TableHead>Date Completed</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {mockCompletedAssessments.map((assessment, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">
-                        {assessment.name}
-                      </TableCell>
-                      <TableCell>{assessment.status}</TableCell>
-                      <TableCell>{assessment.review}</TableCell>
-                      <TableCell>{assessment.dateCreated}</TableCell>
-                      <TableCell>{assessment.dateCompleted}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={5}>
-                      Total: {mockCompletedAssessments.length} assessments
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </Card>
-          </div>
+          {record.patientId && recordId && (
+            <PatientRecordQuestionnaireTab patientId={record.patientId} recordId={recordId} />
+          )}
         </TabsContent>
         <TabsContent value="Rehabilitation">
           {
