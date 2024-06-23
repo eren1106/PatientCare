@@ -1,8 +1,8 @@
+import { MOCK_PATIENT_ID } from "@/constants";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
 
-// TODO: remove mock data
-const MOCK_PATIENT_ID = "clx71vozt00029gzgr9me5ixn";
+// TODO: remove all mock id
 
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {

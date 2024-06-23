@@ -19,6 +19,8 @@ import { Toaster } from "@/components/toaster";
 import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
 import ExerciseDetailPage from "./pages/doctor/exercises/ExerciseDetailPage";
 import QuestionnairePage from "./pages/doctor/questionnaire/QuestionnairePage";
+import PatientProfilePage from "./pages/patient/PatientProfilePage";
+import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 
@@ -99,6 +101,10 @@ const router = createBrowserRouter([
           {
             path: "questionnaire/:id",
             element: <PatientQuestionnairePage />
+          },
+          {
+            path: "profile/:id",
+            element: <PatientProfilePage />
           }
         ]
       },
@@ -151,6 +157,10 @@ const router = createBrowserRouter([
           {
             path: "appointments",
             element: <AppointmentPage />
+          },
+          {
+            path: "profile/:id",
+            element: <DoctorProfilePage />
           }
         ]
       },
