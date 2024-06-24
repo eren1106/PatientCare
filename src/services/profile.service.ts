@@ -1,7 +1,17 @@
-import { Patient } from "@/interfaces/user";
+import { Doctor, Patient, User } from "@/interfaces/user";
 import { apiCaller } from "@/utils";
 
 export const getProfileById = async (id: string): Promise<Patient> => {
+  try {
+    const res = await apiCaller.get(`profile/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const getDoctorProfileById = async (id: string): Promise<Doctor> => {
   try {
     const res = await apiCaller.get(`profile/${id}`);
     return res.data.data;

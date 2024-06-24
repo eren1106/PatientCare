@@ -4,32 +4,32 @@ import { Form } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast";
 import { GENDER_SELECT } from "@/constants";
 import useLoading from "@/hooks/useLoading.hook";
-import { Patient } from "@/interfaces/user";
+import { Doctor } from "@/interfaces/user";
 import { updateProfile } from "@/services/profile.service";
 import { refreshPage } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod"
 
-const PatientProfileSchema = z.object({
+const DoctorProfileSchema = z.object({
   fullname: z.string().min(1),
   age: z.number(),
   gender: z.string(),
   ic: z.string(),
 });
 
-interface PatientProfileFormProps {
-  profile: Patient;
+interface DoctorProfileFormProps {
+  profile: Doctor;
 }
 
-const PatientProfileForm = ({
+const DoctorProfileForm = ({
   profile
-}: PatientProfileFormProps) => {
+}: DoctorProfileFormProps) => {
   // TODO: check how to implement withLoading in this page
   const { isLoading, withLoading } = useLoading();
 
-  const form = useForm<z.infer<typeof PatientProfileSchema>>({
-    resolver: zodResolver(PatientProfileSchema),
+  const form = useForm<z.infer<typeof DoctorProfileSchema>>({
+    resolver: zodResolver(DoctorProfileSchema),
     defaultValues: {
       fullname: profile.fullname,
       age: profile.age,
@@ -38,7 +38,7 @@ const PatientProfileForm = ({
     }
   });
 
-  const onSubmit = async (data: z.infer<typeof PatientProfileSchema>) => {
+  const onSubmit = async (data: z.infer<typeof DoctorProfileSchema>) => {
     try {
       const {
         fullname,
@@ -115,4 +115,4 @@ const PatientProfileForm = ({
   )
 }
 
-export default PatientProfileForm
+export default DoctorProfileForm

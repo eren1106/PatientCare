@@ -9,7 +9,7 @@ interface GenericFormFieldProps {
   control: any;
   name: string;
   label: string;
-  type?: 'input' | 'textarea' | 'select' | 'number';
+  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email';
   placeholder?: string;
   options?: Option[];
   minRows?: number;
@@ -42,6 +42,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
             break;
           case 'number':
             res = <Input placeholder={placeholder} {...field} type="number" />;
+            break;
+          case 'email':
+            res = <Input placeholder={placeholder} {...field} type="email" />;
+            break;
+          case 'password':
+            res = <Input placeholder={placeholder} {...field} type="password" />;
             break;
           case 'textarea':
             res = <AutoResizeTextarea placeholder={placeholder} minRows={minRows!} {...field} />;

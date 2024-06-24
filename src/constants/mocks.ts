@@ -1,7 +1,7 @@
 import { DailyPatientExercise, Exercise, PatientExercise } from "@/interfaces/exercise";
 
-export const MOCK_PATIENT_ID = "clxr5b60g000214nuqvj27lxo";
-export const MOCK_DOCTOR_ID = "clxr5b62c000314nuxh3boir4";
+export const MOCK_PATIENT_ID = "clxqv0c1v0002646phf5dgcsn";
+export const MOCK_DOCTOR_ID = "clxqv0c2p0003646pgxxvqi2f";
 
 export const MOCK_EXERCISES: Exercise[] = [
   {
@@ -254,3 +254,4 @@ export const MOCK_DAILY_PATIENT_EXERCISES: DailyPatientExercise[] = [
 // };
 
 export const MOCK_PATIENT_IMAGE_PATH = "/images/patient_img.jpg";
+export const MOCK_DOCTOR_IMAGE_PATH = "/images/doctor_img.jpg";

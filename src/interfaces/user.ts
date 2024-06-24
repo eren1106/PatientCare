@@ -1,4 +1,4 @@
-import { Gender } from "@/enums/gender.enum";
+import { Gender, UserRole } from "@/enums";
 import { PatientRecord } from "./dashboard";
 import { PatientExercise } from "./exercise";
 
@@ -13,9 +13,22 @@ export interface User {
   gender: Gender;
   ic: string;
   isDelete: boolean;
+  role: UserRole;
 }
 
 export interface Patient extends User {
   patientRecord: PatientRecord;
   patientExercise: PatientExercise[];
+}
+
+export interface Doctor extends User {
+  patientRecord: PatientRecord[];
+  doctorValidation: DoctorValidation;
+}
+
+interface DoctorValidation {
+  id: string;
+  doctorId: string;
+  registrationNumber: string;
+  identityImageUrl?: string;
 }
