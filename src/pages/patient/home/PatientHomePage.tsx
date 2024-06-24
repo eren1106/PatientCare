@@ -1,63 +1,84 @@
-import ExerciseCard from "../exercise/components/ExerciseCard"
-import { Card } from "@/components/ui/card"
-import ProfileAvatar from "@/components/ProfileAvatar"
-import { Button } from "@/components/ui/button"
-import { CircleUser, Send } from "lucide-react"
-import { Link } from "react-router-dom"
-import useLoading from "@/hooks/useLoading.hook"
-import { useEffect, useState } from "react"
-import { DailyPatientExercise } from "@/interfaces/exercise"
-import SkeletonCard from "@/components/SkeletonCard"
-import { getDailyPatientExercises } from "@/services/patientExercise.service"
+import ExerciseCard from "../exercise/components/ExerciseCard";
+import { Card } from "@/components/ui/card";
+import ProfileAvatar from "@/components/ProfileAvatar";
+import { Button } from "@/components/ui/button";
+import { CircleUser, Send } from "lucide-react";
+import { Link } from "react-router-dom";
+import useLoading from "@/hooks/useLoading.hook";
+import { useEffect, useState } from "react";
+import { DailyPatientExercise } from "@/interfaces/exercise";
+import SkeletonCard from "@/components/SkeletonCard";
+import { getDailyPatientExercises } from "@/services/patientExercise.service";
+import { Assessment } from "@/interfaces/questionnaire";
+import { getAssessmentsByPatientId } from "@/services/questionnaire.service";
+import { MOCK_PATIENT_ID } from "@/constants/mocks";
 
 const PatientHomePage = () => {
   const { isLoading, withLoading } = useLoading();
-  const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
+  const [dailyPatientExercises, setDailyPatientExercises] = useState<
+    DailyPatientExercise[]
+  >([]);
+
+  const [patientAssessment, setPatientAssessment] = useState<Assessment[]>([]);
 
   const getData = async () => {
     const data = await getDailyPatientExercises();
     setDailyPatientExercises(data);
-  }
+    const assessment = await getAssessmentsByPatientId(MOCK_PATIENT_ID);
+    setPatientAssessment(assessment);
+    console.log(assessment);
+  };
 
   useEffect(() => {
     withLoading(getData);
   }, []);
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className="flex flex-col gap-6">
       <h1>Welcome, John</h1>
       <section className="flex flex-col gap-4">
         <h2>Your pending exercises</h2>
-        {
-          isLoading ? <SkeletonCard /> : (
-            <div className="flex flex-wrap gap-4">
-              {
-                dailyPatientExercises
-                  .filter((dailyPatientExercise) => !dailyPatientExercise.isCompleted) // Filter out completed exercises
-                  .map((dailyPatientExercise) => (
-                    <ExerciseCard
-                      key={dailyPatientExercise.id}
-                      id={dailyPatientExercise.id}
-                      title={dailyPatientExercise.patientExercise.exercise.title}
-                      description={dailyPatientExercise.patientExercise.exercise.description}
-                      thumbnailUrl={dailyPatientExercise.patientExercise.exercise.thumbnailUrl}
-                      isCompleted={dailyPatientExercise.isCompleted}
-                      to={`exercises/${dailyPatientExercise.id}`}
-                    />
-                  ))
-              }
-            </div>
-          )
-        }
+        {isLoading ? (
+          <SkeletonCard />
+        ) : (
+          <div className="flex flex-wrap gap-4">
+            {dailyPatientExercises
+              .filter(
+                (dailyPatientExercise) => !dailyPatientExercise.isCompleted
+              ) // Filter out completed exercises
+              .map((dailyPatientExercise) => (
+                <ExerciseCard
+                  key={dailyPatientExercise.id}
+                  id={dailyPatientExercise.id}
+                  title={dailyPatientExercise.patientExercise.exercise.title}
+                  description={
+                    dailyPatientExercise.patientExercise.exercise.description
+                  }
+                  thumbnailUrl={
+                    dailyPatientExercise.patientExercise.exercise.thumbnailUrl
+                  }
+                  isCompleted={dailyPatientExercise.isCompleted}
+                  to={`exercises/${dailyPatientExercise.id}`}
+                />
+              ))}
+          </div>
+        )}
       </section>
       <section className="flex flex-col gap-4">
         <h2>Your pending assessment</h2>
-        <Link to="questionnaire/123">
-          <Card className="p-4 w-min flex flex-col gap-3">
-            <h2 className="whitespace-nowrap">Knee Rehab Questionnaire</h2>
-            <p className="whitespace-nowrap">Assigned by Dr. Tan</p>
-          </Card>
-        </Link>
+        <div className="flex gap-4">
+        {patientAssessment.map((assessment, index) => {
+          return (
+            <Link to={`questionnaire/${assessment.questionnaire.id}`} key={index}>
+              <Card className="p-4 w-min flex flex-col gap-3">
+                <h2 className="whitespace-nowrap">{assessment.questionnaire.title}</h2>
+                <p className="whitespace-nowrap">Assigned by Dr. Samiha</p>
+              </Card>
+            </Link>
+          );
+        })}
+        </div>
+        
       </section>
       <section className="flex flex-col gap-4">
         <h2>Your assigned doctor</h2>
@@ -68,13 +89,21 @@ const PatientHomePage = () => {
           />
           <div className="flex flex-col gap-3">
             <h2 className="whitespace-nowrap">Dr. Tan</h2>
-            <p className="whitespace-nowrap">Harvard graduate professional Dr</p>
+            <p className="whitespace-nowrap">
+              Harvard graduate professional Dr
+            </p>
             <div className="w-min flex gap-3">
-              <Button className="flex items-center gap-2 justify-start w-full" variant="secondary">
+              <Button
+                className="flex items-center gap-2 justify-start w-full"
+                variant="secondary"
+              >
                 <CircleUser />
                 Watch Profile
               </Button>
-              <Button className="flex items-center gap-2 justify-start w-full" variant="secondary">
+              <Button
+                className="flex items-center gap-2 justify-start w-full"
+                variant="secondary"
+              >
                 <Send />
                 Message
               </Button>
@@ -83,7 +112,7 @@ const PatientHomePage = () => {
         </Card>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default PatientHomePage
+export default PatientHomePage;
