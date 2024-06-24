@@ -27,4 +27,6 @@ export const GENDER_SELECT: SelectItem[] = [
     label: "Female",
     value: "FEMALE",
   },
-]
+];
+
+export const USER_SESSION_KEY = "USER_SESSION";
