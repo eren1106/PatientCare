@@ -5,14 +5,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProfileAvatar from './ProfileAvatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { LogOut, User } from 'lucide-react';
-import { MOCK_PATIENT_ID, MOCK_PATIENT_IMAGE_PATH } from '@/constants';
+import { MOCK_DOCTOR_IMAGE_PATH, MOCK_PATIENT_ID, MOCK_PATIENT_IMAGE_PATH, USER_SESSION_KEY } from '@/constants';
+import { User as UserModel } from '@/interfaces/user';
+import { getCurrentUser } from '@/services/auth.service';
+import { UserRole } from '@/enums';
 
 const Topbar = () => {
-  // const navigate = useNavigate();
-  // const handleNavigateToProfile = () => {
-  //   navigate
-  // }
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    sessionStorage.removeItem(USER_SESSION_KEY);
+    navigate("/login");
+  }
+
+  const userData = getCurrentUser();
   return (
     <>
       <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
@@ -27,17 +33,19 @@ const Topbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='size-12' src={MOCK_PATIENT_IMAGE_PATH} />
+                  <ProfileAvatar className='size-12' src={userData?.role === UserRole.PATIENT ? MOCK_PATIENT_IMAGE_PATH : MOCK_DOCTOR_IMAGE_PATH} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <Link to={`/profile/${MOCK_PATIENT_ID}`}>
+                <Link to={
+                  userData?.role === UserRole.PATIENT ? `/profile/${userData.id}` : `/dashboard/profile/${userData?.id}`
+                }>
                   <DropdownMenuItem className='gap-3 cursor-pointer'>
                     <User />
                     Profile
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem className='gap-3 cursor-pointer'>
+                <DropdownMenuItem className='gap-3 cursor-pointer' onClick={handleLogout}>
                   <LogOut />
                   Logout
                 </DropdownMenuItem>

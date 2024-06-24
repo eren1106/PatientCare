@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import PatientHomePage from './pages/patient/home/PatientHomePage';
 import DoctorDashboardPage from './pages/doctor/DoctorDashboardPage';
-import { ThemeProvider } from './components/theme-provider';
+import { ThemeProvider } from './providers/theme-provider';
 import Topbar from "./components/topbar";
 import Footer from "./components/footer";
 import Sidebar from "./components/sidebar";
@@ -24,13 +24,16 @@ import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
 import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
+import AuthProvider from "./providers/auth-provider";
 
 const AppWrapper = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Outlet />
-      <Toaster />
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen flex flex-col">
+        <Outlet />
+        <Toaster />
+      </div>
+    </AuthProvider>
   )
 }
 
@@ -135,12 +138,12 @@ const router = createBrowserRouter([
                 element: <CreateQuestionnaireForm />
               }
             ]
-            
-            
+
+
           },
           {
             path: "patients/:recordId",
-            element: <PatientDetailPage />,  
+            element: <PatientDetailPage />,
           },
           {
             path: "exercises",
@@ -153,7 +156,7 @@ const router = createBrowserRouter([
                 path: ":id",
                 element: <ExerciseDetailPage />
               }
-            ]  
+            ]
           },
           {
             path: "appointments",
@@ -176,7 +179,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
