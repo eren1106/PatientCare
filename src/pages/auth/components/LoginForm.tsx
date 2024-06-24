@@ -49,10 +49,11 @@ const LoginForm = () => {
         return;
       }
     }
-    catch (err) {
-      console.log(err);
+    catch (e: any) {
+      console.log(e);
       toast({
-        title: String(err),
+        title: "Failed to login",
+        description: `${e.response.data.message}`,
         variant: "destructive"
       })
     }

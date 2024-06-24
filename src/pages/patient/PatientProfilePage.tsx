@@ -13,6 +13,7 @@ import { formatDate } from '@/utils';
 import { Patient } from '@/interfaces/user';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import { logoutUser } from '@/services/auth.service';
 
 interface ProfileInfoProps {
   label: string;
@@ -64,6 +65,7 @@ const PatientProfilePage = () => {
         variant: "success",
         title: "Account Deleted Successfully",
       });
+      logoutUser();
       navigate("/login");
     }
     catch (e: any) {
@@ -135,7 +137,7 @@ const PatientProfilePage = () => {
                 <ProfileInfo
                   label="Assigned Doctor"
                   // TODO: change to doctor fullname
-                  value={patient?.patientRecord.doctor.username}
+                  value={patient?.patientRecord.doctor.fullname}
                 />
                 <ProfileInfo
                   label="Assigned Exercises"

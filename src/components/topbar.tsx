@@ -7,14 +7,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { LogOut, User } from 'lucide-react';
 import { MOCK_DOCTOR_IMAGE_PATH, MOCK_PATIENT_ID, MOCK_PATIENT_IMAGE_PATH, USER_SESSION_KEY } from '@/constants';
 import { User as UserModel } from '@/interfaces/user';
-import { getCurrentUser } from '@/services/auth.service';
+import { getCurrentUser, logoutUser } from '@/services/auth.service';
 import { UserRole } from '@/enums';
 
 const Topbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem(USER_SESSION_KEY);
+    logoutUser();
     navigate("/login");
   }
 

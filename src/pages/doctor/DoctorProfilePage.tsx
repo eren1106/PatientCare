@@ -13,6 +13,7 @@ import { Doctor } from '@/interfaces/user';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import DoctorProfileForm from './components/DoctorProfileForm';
+import { logoutUser } from '@/services/auth.service';
 
 interface ProfileInfoProps {
   label: string;
@@ -65,6 +66,7 @@ const DoctorProfilePage = () => {
         variant: "success",
         title: "Account Deleted Successfully",
       });
+      logoutUser();
       navigate("/login");
     }
     catch (e: any) {
