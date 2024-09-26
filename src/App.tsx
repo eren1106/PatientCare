@@ -25,6 +25,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 import AuthProvider from "./providers/auth-provider";
+import { ChatLayout } from "./components/chat/chat-layout";
 
 const AppWrapper = () => {
   return (
@@ -123,6 +124,15 @@ const router = createBrowserRouter([
             element: <DoctorDashboardPage />,
           },
           {
+            path : "chat" ,
+            children : [
+              {
+                path: "",
+                element : <ChatLayout />
+              }
+            ]
+          },
+          {
             path: "questionnaire",
             children: [
               {
@@ -181,7 +191,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
       </ThemeProvider>
     </>
