@@ -1,69 +1,57 @@
 import {
     FileImage,
-    Mic,
     Paperclip,
-    PlusCircle,
     SendHorizontal,
     ThumbsUp,
   } from "lucide-react";
-  import { Link } from "react-router-dom";
-  import React, { useEffect, useRef, useState } from "react";
-  import { Button, buttonVariants } from "../ui/button";
-  import { cn } from "@/lib/utils";
+  import React, { useRef, useState } from "react";
+  import { Button } from "../../components/ui/button";
   import { AnimatePresence, motion } from "framer-motion";
-  import { Message, loggedInUserData } from "../../constants/mocks";
-  import { EmojiPicker } from "../emoji-picker";
-  import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-  import { ChatInput } from "../ui/chat/chat-input";
+  import { EmojiPicker } from "../../components/emoji-picker";
+  import { ChatInput } from "../../components/ui/chat/chat-input";
   import useChatStore from "../../hooks/useChatStore.hook";
+import { sendMessage } from "@/services/chat.service";
+import { getCurrentUser } from "@/services/auth.service";
   
   interface ChatBottombarProps {
     isMobile: boolean;
+    selectedUserId: string;
   }
   
   export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
   
   export default function ChatBottombar({
-    isMobile,
+    selectedUserId,
   }: ChatBottombarProps) {
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const setMessages = useChatStore((state) => state.setMessages);
-    const hasInitialResponse = useChatStore((state) => state.hasInitialResponse);
-    const setHasInitialResponse = useChatStore((state) => state.setHasInitialResponse);
-    const [isLoading, setisLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const addMessage = useChatStore((state) => state.addMessage);
   
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(event.target.value);
     };
   
-    const sendMessage = (newMessage: Message) => {
-      useChatStore.setState((state) => ({
-        messages: [...state.messages, newMessage],
-      }));
-    };
   
-    const handleThumbsUp = () => {
-      const newMessage: Message = {
-        id: message.length + 1,
-        name: loggedInUserData.name,
-        avatar: loggedInUserData.avatar,
-        message: "👍",
-      };
-      sendMessage(newMessage);
-      setMessage("");
-    };
-  
-    const handleSend = () => {
-      if (message.trim()) {
-        const newMessage: Message = {
-          id: message.length + 1,
-          name: loggedInUserData.name,
-          avatar: loggedInUserData.avatar,
-          message: message.trim(),
-        };
-        sendMessage(newMessage);
-        setMessage("");
+    const handleSend = async () => {
+      const userId = getCurrentUser()?.id;
+      if (message.trim() && userId) {
+        setIsLoading(true);
+        
+        try {
+          const newMessage = await sendMessage({
+            fromUserId: userId, // Replace with actual logged-in user ID
+            toUserId: selectedUserId,
+            message: message.trim(),
+          });
+          addMessage(newMessage);
+          setMessage("");
+        } catch (error) {
+          console.error("Failed to send message:", error);
+          // Optionally show an error message to the user
+        } finally {
+          setIsLoading(false);
+        }
   
         if (inputRef.current) {
           inputRef.current.focus();
@@ -71,36 +59,28 @@ import {
       }
     };
   
+    const handleThumbsUp = async () => {
+      setIsLoading(true);
+      try {
+        const newMessage = await sendMessage({
+          fromUserId: "cm1oprb1d0003psohq8d7ibue", // Replace with actual logged-in user ID
+          toUserId: selectedUserId,
+          message: "👍",
+        });
+        addMessage(newMessage);
+      } catch (error) {
+        console.error("Failed to send thumbs up:", error);
+        // Optionally show an error message to the user
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
     const formattedTime = new Date().toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
     });
-  
-  
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-  
-      if (!hasInitialResponse) {
-        setisLoading(true);
-        setTimeout(() => {
-          setMessages((messages) => [
-            ...messages.slice(0, messages.length - 1),
-            {
-              id: messages.length + 1,
-              avatar: "https://images.freeimages.com/images/large-previews/971/basic-shape-avatar-1632968.jpg?fmt=webp&h=350",
-              name: "Jane Doe",
-              message: "Awesome! I am just chilling outside.",
-              timestamp: formattedTime,
-            }
-          ]);
-          setisLoading(false);
-          setHasInitialResponse(true);
-        }, 2500);
-      }
-    }, []);
   
     const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter" && !event.shiftKey) {
@@ -113,11 +93,14 @@ import {
         setMessage((prev) => prev + "\n");
       }
     };
+
+  
+  
   
     return (
       <div className="px-2 py-4 flex justify-between w-full items-center gap-2">
         <div className="flex">
-          <Popover>
+          {/* <Popover>
             <PopoverTrigger asChild>
               <Link
                 to="/"
@@ -168,8 +151,8 @@ import {
                 </Link>
               )}
             </PopoverContent>
-          </Popover>
-          {!message.trim() && !isMobile && (
+          </Popover> */}
+          {/* {!message.trim() && !isMobile && (
             <div className="flex">
               {BottombarIcons.map((icon, index) => (
                 <Link
@@ -185,13 +168,13 @@ import {
                 </Link>
               ))}
             </div>
-          )}
+          )} */}
         </div>
   
         <AnimatePresence initial={false}>
           <motion.div
             key="input"
-            className="w-full relative"
+            className="w-full relative flex items-center justify-center"
             layout
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -204,6 +187,8 @@ import {
               },
             }}
           >
+
+
             <ChatInput
               value={message}
               ref={inputRef}
@@ -212,7 +197,7 @@ import {
               placeholder="Type a message..."
               className="rounded-full"
             />
-            <div className="absolute right-4 bottom-2  ">
+            <div className="absolute right-6 ">
               <EmojiPicker onChange={(value) => {
                 setMessage(message + value)
                 if (inputRef.current) {
@@ -220,6 +205,7 @@ import {
                 }
               }} />
             </div>
+
           </motion.div>
   
           {message.trim() ? (

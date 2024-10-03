@@ -1,10 +1,11 @@
-import { MOCK_DOCTOR_ID } from "@/constants";
 import { User, PatientRecord, PatientTable } from "@/interfaces/dashboard";
 import { apiCaller } from "@/utils";
+import { getCurrentUser } from "./auth.service";
 
 export const getAllPatient = async (): Promise<User[]> => {
   try {
-    const res = await apiCaller.get(`dashboard/${MOCK_DOCTOR_ID}`);
+    const userId = getCurrentUser()?.id;
+    const res = await apiCaller.get(`dashboard/${userId}`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -14,7 +15,8 @@ export const getAllPatient = async (): Promise<User[]> => {
 
 export const getPatientRecord = async (): Promise<PatientTable[]> => {
   try {
-    const res = await apiCaller.get(`dashboard/doctors/${MOCK_DOCTOR_ID}`);
+    const userId = getCurrentUser()?.id;
+    const res = await apiCaller.get(`dashboard/doctors/${userId}`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -34,8 +36,8 @@ export const getPatientRecordDetails = async (patientRecordId: string): Promise<
 
 export const insertPatientRecord = async (patientRecord: CreatePatientRecord) => {
     try {
-      console.log(patientRecord);
-      const res = await apiCaller.post(`dashboard/doctors/${MOCK_DOCTOR_ID}`, { patientRecord });
+      const userId = getCurrentUser()?.id;
+      const res = await apiCaller.post(`dashboard/doctors/${userId}`, { patientRecord });
       console.log(res.data.data);
       return res.data.data;
     } catch (e) {

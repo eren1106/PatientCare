@@ -25,7 +25,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 import AuthProvider from "./providers/auth-provider";
-import { ChatLayout } from "./components/chat/chat-layout";
+import { ChatLayout } from "./pages/chat/chat-layout";
 
 const AppWrapper = () => {
   return (
@@ -85,6 +85,15 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <PatientHomePage />,
+          },
+          {
+            path : "chat" ,
+            children : [
+              {
+                path: "",
+                element : <ChatLayout />
+              }
+            ]
           },
           {
             path: "exercises",
