@@ -1,6 +1,6 @@
 import { Assessment, CreateAssessment, Questionnaire } from "@/interfaces/questionnaire";
 import { apiCaller } from "@/utils";
-import { MOCK_DOCTOR_ID } from "@/constants";
+import { getCurrentUser } from "./auth.service";
 
 
 export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
@@ -36,7 +36,8 @@ export const getQuestionnaireById = async (id : string): Promise<Questionnaire> 
 
 export const insertQuestionnaire = async (questionnaire : CreateQuestionnaire) => {
   try {
-    const res = await apiCaller.post(`questionnaire/create`, { questionnaire, authorId: MOCK_DOCTOR_ID });
+    const userId = getCurrentUser()?.id;
+    const res = await apiCaller.post(`questionnaire/create`, { questionnaire, authorId: userId });
     return res.data.data;
   } catch (e) {
     console.error(e);

@@ -1,13 +1,13 @@
-import { Avatar, AvatarImage } from '../ui/avatar'
-import { UserData } from "../../constants/mocks";
+import { Avatar, AvatarImage } from '../../components/ui/avatar'
 import { Info, Phone, Video } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { buttonVariants } from '../ui/button';
-import { ExpandableChatHeader } from '../ui/chat/expandable-chat';
+import { buttonVariants } from '../../components/ui/button';
+import { ExpandableChatHeader } from '../../components/ui/chat/expandable-chat';
+import { Chats } from '@/services/chat.service';
 
 interface ChatTopbarProps {
-  selectedUser: UserData;
+  selectedUser: Chats;
 }
 
 export const TopbarIcons = [{ icon: Phone }, { icon: Video }, { icon: Info }];
@@ -19,7 +19,7 @@ export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {
       <div className="flex items-center gap-2">
         <Avatar className="flex justify-center items-center">
           <AvatarImage
-            src={selectedUser.avatar}
+            src={selectedUser.profileImageUrl}
             alt={selectedUser.name}
             width={6}
             height={6}
