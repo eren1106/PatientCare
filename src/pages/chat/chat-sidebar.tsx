@@ -9,10 +9,9 @@ interface SidebarProps {
   chats: Chats[];
   onSelectChat: (chat: Chats) => void;
   selectedChat: Chats | null;
-  isMobile: boolean;
 }
 
-export function Sidebar({ chats, onSelectChat, selectedChat, isMobile }: SidebarProps) {
+export function Sidebar({ chats, onSelectChat, selectedChat }: SidebarProps) {
   return (
     <div
       className="relative group flex flex-col h-full bg-muted/10 dark:bg-muted/20 gap-4 p-2 data-[collapsed=true]:p-2 "

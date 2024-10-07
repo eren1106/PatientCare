@@ -1,33 +1,49 @@
 // chat.service.ts
 import { apiCaller } from "@/utils";
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { getCurrentUser } from "./auth.service";
 
-let socket: any;
+let socket: Socket | null = null;
+let onNewMessage: ((message: Message) => void) | null = null;
 
 export const initializeSocket = (userId: string) => {
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
-  socket = io(VITE_API_URL, {
-    path: '/api/socket.io',
-    withCredentials: true
-  });
-  
-  
-  socket.on('connect', () => {
-    console.log('Connected to socket');
-    socket.emit('join', userId);
-  });
+  if (!socket) {
+    socket = io("http://localhost:3000"   , {
+      path: '/api/socket.io',
+      withCredentials: true,
+      transports: ['websocket'] 
+    });
 
-  socket.on('newMessage', (message: Message) => {
-    // Handle incoming messages
-    // You'll need to update your state management here
-    console.log('New message received:', message);
-  });
+    socket.on('connect', () => {
+      console.log('Connected:', socket?.id);
+      socket?.emit('join', userId);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected');
+    });
+
+    socket.on('newMessage', (message: Message) => {
+      if (onNewMessage) onNewMessage(message);
+    });
+  }
 };
 
 export const disconnectSocket = () => {
-  if (socket) socket.disconnect();
+  socket?.disconnect();
+  socket = null;
 };
+
+
+
+export const registerMessageHandler = (callback: (message: Message) => void) => {
+  onNewMessage = callback;
+};
+
+export const unregisterMessageHandler = () => {
+  onNewMessage = null;
+};
+
 
 
 
@@ -55,6 +71,7 @@ export const fetchChatMessages = async (toUserId: string): Promise<Message[]> =>
 export const sendMessage = async (message: SendMessage): Promise<Message> => {
   try {
     const res = await apiCaller.post(`/chat/send`, message);
+    socket?.emit('sendMessage', message);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -62,9 +79,13 @@ export const sendMessage = async (message: SendMessage): Promise<Message> => {
   }
 };
 export interface Message {
+  id: string;
   message: string;
   fromUserId: string;
   fromUserName : string
+  toUserId: string;
+  toUserName: string;
+  createdDatetime: Date;
 }
 
 export interface Chats {
@@ -73,6 +94,7 @@ export interface Chats {
   profileImageUrl: string;
   lastMessage : string;
   lastMessageTime : Date;
+  messages?: Message[];
 }
 
 export interface SendMessage {

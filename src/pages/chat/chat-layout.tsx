@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Sidebar } from "./chat-sidebar";
 import { Chat } from "./chat";
-import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser } from "@/services/chat.service";
+import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler } from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
 
 
@@ -17,33 +17,42 @@ export function ChatLayout({
 }: ChatLayoutProps) {
   const [chats, setChats] = useState<Chats[]>([]);
   const [selectedUser, setSelectedUser] = useState<Chats| null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
 
 
-  // Fetch all chats for the user
   useEffect(() => {
     const userId = getCurrentUser()?.id;
-    const initializeChat = async () => {
-      try {
-        if (userId) {
-          initializeSocket(userId);
-        const fetchedChats = await fetchAllChatsForUser(userId);
-          setChats(fetchedChats);
-          console.log(chats);
-          if (fetchedChats.length > 0) {
-            setSelectedUser(fetchedChats[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to initialize chat:", error);
+    if (!userId) return;
+
+    initializeSocket(userId);
+
+    const loadChats = async () => {
+      const fetchedChats = await fetchAllChatsForUser(userId);
+      setChats(fetchedChats);
+      if (fetchedChats.length > 0) {
+        setSelectedUser(fetchedChats[0]);
       }
     };
+    loadChats();
 
-    initializeChat();
+    registerMessageHandler((message) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === message.fromUserId || chat.id === message.toUserId
+            ? { ...chat, lastMessage: message.message }
+            : chat
+        )
+      );
+      if (selectedUser && (selectedUser.id === message.fromUserId || selectedUser.id === message.toUserId)) {
+        setSelectedUser((prevUser) => ({
+          ...prevUser!,
+          messages: [...(prevUser?.messages || []), message],
+        }));
+      }
+    });
 
-    // Cleanup
     return () => {
+      unregisterMessageHandler();
       disconnectSocket();
     };
   }, []);
@@ -59,7 +68,6 @@ export function ChatLayout({
           chats={chats}
           onSelectChat={handleSelectChat}
           selectedChat={selectedUser}
-          isMobile={isMobile}
         />
       </div>
 
@@ -67,7 +75,6 @@ export function ChatLayout({
       {selectedUser && (
           <Chat
             selectedUser={selectedUser}
-            isMobile={isMobile}
           />
         )}
       </div>

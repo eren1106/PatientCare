@@ -11,13 +11,12 @@ import { getCurrentUser } from "@/services/auth.service";
 
 interface ChatListProps {
   selectedUser: Chats;
-  isMobile: boolean;
 }
 
 const getMessageVariant = (fromUserId: string, selectedUserId: string) =>
   fromUserId !== selectedUserId ? "sent" : "received";
 
-export function ChatList({ selectedUser, isMobile }: ChatListProps) {
+export function ChatList({ selectedUser }: ChatListProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messages = useChatStore((state) => state.messages);
 
@@ -78,7 +77,7 @@ export function ChatList({ selectedUser, isMobile }: ChatListProps) {
 
       </ChatMessageList>
       </ScrollArea>
-      <ChatBottombar isMobile={isMobile} selectedUserId={selectedUser.id} />
+      <ChatBottombar selectedUserId={selectedUser.id} />
     </div>
     
   );
