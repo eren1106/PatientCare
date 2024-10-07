@@ -14,7 +14,7 @@ import { sendMessage } from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
   
   interface ChatBottombarProps {
-    isMobile: boolean;
+
     selectedUserId: string;
   }
   

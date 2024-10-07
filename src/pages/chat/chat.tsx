@@ -7,10 +7,9 @@ import { useEffect } from "react";
 
 interface ChatProps {
   selectedUser: Chats;
-  isMobile: boolean;
 }
 
-export function Chat({ selectedUser, isMobile }: ChatProps) {
+export function Chat({ selectedUser }: ChatProps) {
   const setMessages = useChatStore((state) => state.setMessages);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ export function Chat({ selectedUser, isMobile }: ChatProps) {
       <ChatTopbar selectedUser={selectedUser} />
         <ChatList
           selectedUser={selectedUser}
-          isMobile={isMobile}
         />
     </div>
   );
