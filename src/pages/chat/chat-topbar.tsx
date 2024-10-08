@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage } from '../../components/ui/avatar'
-import { Info, Phone, Video } from 'lucide-react';
+import { Info, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '../../components/ui/button';
@@ -10,7 +10,7 @@ interface ChatTopbarProps {
   selectedUser: Chats;
 }
 
-export const TopbarIcons = [{ icon: Phone }, { icon: Video }, { icon: Info }];
+export const TopbarIcons = [{ icon: Phone }, { icon: Info }];
 
 
 export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {

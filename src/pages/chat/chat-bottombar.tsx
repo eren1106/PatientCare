@@ -9,8 +9,7 @@ import {
   import { AnimatePresence, motion } from "framer-motion";
   import { EmojiPicker } from "../../components/emoji-picker";
   import { ChatInput } from "../../components/ui/chat/chat-input";
-  import useChatStore from "../../hooks/useChatStore.hook";
-import { sendMessage } from "@/services/chat.service";
+import { emitSocketMessage, sendMessage } from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
   
   interface ChatBottombarProps {
@@ -26,11 +25,14 @@ import { getCurrentUser } from "@/services/auth.service";
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const addMessage = useChatStore((state) => state.addMessage);
+    
   
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(event.target.value);
-    };
+    }
+    
+    
+      
   
   
     const handleSend = async () => {
@@ -39,16 +41,22 @@ import { getCurrentUser } from "@/services/auth.service";
         setIsLoading(true);
         
         try {
-          const newMessage = await sendMessage({
-            fromUserId: userId, // Replace with actual logged-in user ID
+          await sendMessage({
+            fromUserId: userId,
             toUserId: selectedUserId,
             message: message.trim(),
           });
-          addMessage(newMessage);
+
+          emitSocketMessage({
+            fromUserId: userId,
+            toUserId: selectedUserId,
+            message: message.trim(),
+            createdDatetime: new Date(),
+          });
           setMessage("");
         } catch (error) {
           console.error("Failed to send message:", error);
-          // Optionally show an error message to the user
+         
         } finally {
           setIsLoading(false);
         }
@@ -60,14 +68,22 @@ import { getCurrentUser } from "@/services/auth.service";
     };
   
     const handleThumbsUp = async () => {
+      const userId = getCurrentUser()?.id;
       setIsLoading(true);
       try {
-        const newMessage = await sendMessage({
-          fromUserId: "cm1oprb1d0003psohq8d7ibue", // Replace with actual logged-in user ID
+        if (!userId) return;
+        await sendMessage({
+          fromUserId: userId, 
           toUserId: selectedUserId,
           message: "👍",
         });
-        addMessage(newMessage);
+
+        emitSocketMessage({
+          fromUserId: userId,
+          toUserId: selectedUserId,
+          message: message.trim(),
+          createdDatetime: new Date(),
+        });
       } catch (error) {
         console.error("Failed to send thumbs up:", error);
         // Optionally show an error message to the user
@@ -76,11 +92,7 @@ import { getCurrentUser } from "@/services/auth.service";
       }
     };
     
-    const formattedTime = new Date().toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+
   
     const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter" && !event.shiftKey) {
@@ -99,77 +111,6 @@ import { getCurrentUser } from "@/services/auth.service";
   
     return (
       <div className="px-2 py-4 flex justify-between w-full items-center gap-2">
-        <div className="flex">
-          {/* <Popover>
-            <PopoverTrigger asChild>
-              <Link
-                to="/"
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "icon" }),
-                  "h-9 w-9",
-                  "shrink-0"
-                )}
-              >
-                <PlusCircle size={22} className="text-muted-foreground" />
-              </Link>
-            </PopoverTrigger>
-            <PopoverContent
-              side="top"
-              className="w-full p-2">
-              {message.trim() || isMobile ? (
-                <div className="flex gap-2">
-                  <Link
-                    to="/"
-                    
-                  >
-                    <Mic size={22} className="text-muted-foreground" />
-                  </Link>
-                  {BottombarIcons.map((icon, index) => (
-                    <Link
-                      key={index}
-                      to="/"
-                      className={cn(
-                        buttonVariants({ variant: "ghost", size: "icon" }),
-                        "h-9 w-9",
-                        "shrink-0"
-                      )}
-                    >
-                      <icon.icon size={22} className="text-muted-foreground" />
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <Link
-                  to="/"
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "h-9 w-9",
-                    "shrink-0"
-                  )}
-                >
-                  <Mic size={22} className="text-muted-foreground" />
-                </Link>
-              )}
-            </PopoverContent>
-          </Popover> */}
-          {/* {!message.trim() && !isMobile && (
-            <div className="flex">
-              {BottombarIcons.map((icon, index) => (
-                <Link
-                  key={index}
-                  to="/"
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "h-9 w-9",
-                    "shrink-0"
-                  )}
-                >
-                  <icon.icon size={22} className="text-muted-foreground" />
-                </Link>
-              ))}
-            </div>
-          )} */}
-        </div>
   
         <AnimatePresence initial={false}>
           <motion.div
@@ -180,10 +121,10 @@ import { getCurrentUser } from "@/services/auth.service";
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1 }}
             transition={{
-              opacity: { duration: 0.05 },
+              opacity: { duration: 0.1 },
               layout: {
                 type: "spring",
-                bounce: 0.15,
+                bounce: 0.1,
               },
             }}
           >

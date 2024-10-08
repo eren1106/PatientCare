@@ -1,8 +1,7 @@
-// chat.service.ts
 import { apiCaller } from "@/utils";
 import { io, Socket } from 'socket.io-client';
 import { getCurrentUser } from "./auth.service";
-
+import { User  } from "@/interfaces/dashboard";
 let socket: Socket | null = null;
 let onNewMessage: ((message: Message) => void) | null = null;
 
@@ -25,6 +24,7 @@ export const initializeSocket = (userId: string) => {
 
     socket.on('newMessage', (message: Message) => {
       if (onNewMessage) onNewMessage(message);
+      console.log("new message", message);
     });
   }
 };
@@ -34,7 +34,9 @@ export const disconnectSocket = () => {
   socket = null;
 };
 
-
+export const emitSocketMessage = (message: SendMessage) => {
+  socket?.emit('sendMessage', message);
+};
 
 export const registerMessageHandler = (callback: (message: Message) => void) => {
   onNewMessage = callback;
@@ -43,6 +45,8 @@ export const registerMessageHandler = (callback: (message: Message) => void) => 
 export const unregisterMessageHandler = () => {
   onNewMessage = null;
 };
+
+
 
 
 
@@ -56,6 +60,18 @@ export const fetchAllChatsForUser = async (userId: string): Promise<Chats[]> => 
     throw new Error("Failed to fetch chat history");
   }
 };
+
+export const findNewUserAvailableForChat = async (): Promise<User[]> => {
+  try {
+    const userId = getCurrentUser()?.id;
+    const res = await apiCaller.get(`/chat/newconversation/${userId}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to fetch chat history");
+  }
+};
+
 
 export const fetchChatMessages = async (toUserId: string): Promise<Message[]> => {
   try {
@@ -71,7 +87,6 @@ export const fetchChatMessages = async (toUserId: string): Promise<Message[]> =>
 export const sendMessage = async (message: SendMessage): Promise<Message> => {
   try {
     const res = await apiCaller.post(`/chat/send`, message);
-    socket?.emit('sendMessage', message);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -101,4 +116,6 @@ export interface SendMessage {
   fromUserId: string;
   toUserId: string;
   message: string;
+  createdDatetime?: Date;
 }
+

@@ -5,7 +5,7 @@ export interface User {
     username: string;
     fullname: string;
     email: string;
-    profileImageUrl: string | null;
+    profileImageUrl: string;
     createdDatetime: string;
 }
 

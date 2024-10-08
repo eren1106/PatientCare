@@ -1,9 +1,10 @@
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect} from "react";
 import { Sidebar } from "./chat-sidebar";
 import { Chat } from "./chat";
-import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler } from "@/services/chat.service";
+import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler} from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
+import useChatStore from "@/hooks/useChatStore.hook";
 
 
 interface ChatLayoutProps {
@@ -15,10 +16,18 @@ interface ChatLayoutProps {
 export function ChatLayout({
 
 }: ChatLayoutProps) {
-  const [chats, setChats] = useState<Chats[]>([]);
-  const [selectedUser, setSelectedUser] = useState<Chats| null>(null);
+  const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
+ 
+  const loadChats = useCallback(async () => {
+    const userId = getCurrentUser()?.id;
+    if (!userId) return;
 
-
+    const fetchedChats = await fetchAllChatsForUser(userId);
+    setChats(fetchedChats);
+    if (fetchedChats.length > 0 && !selectedUser) {
+      setSelectedUser(fetchedChats[0]);
+    }
+  }, [setChats, setSelectedUser, selectedUser]);
 
   useEffect(() => {
     const userId = getCurrentUser()?.id;
@@ -26,52 +35,39 @@ export function ChatLayout({
 
     initializeSocket(userId);
 
-    const loadChats = async () => {
-      const fetchedChats = await fetchAllChatsForUser(userId);
-      setChats(fetchedChats);
-      if (fetchedChats.length > 0) {
-        setSelectedUser(fetchedChats[0]);
-      }
-    };
     loadChats();
 
     registerMessageHandler((message) => {
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat.id === message.fromUserId || chat.id === message.toUserId
-            ? { ...chat, lastMessage: message.message }
-            : chat
-        )
-      );
-      if (selectedUser && (selectedUser.id === message.fromUserId || selectedUser.id === message.toUserId)) {
-        setSelectedUser((prevUser) => ({
-          ...prevUser!,
-          messages: [...(prevUser?.messages || []), message],
-        }));
-      }
+      addMessage(message);
+      updateChatWithNewMessage(message);
     });
 
     return () => {
       unregisterMessageHandler();
       disconnectSocket();
     };
-  }, []);
+  }, [loadChats, addMessage, updateChatWithNewMessage]);
 
   const handleSelectChat = (chat: Chats) => {
     setSelectedUser(chat);
   };
+
+  const handleChatsUpdate = () => {
+    loadChats();
+  };
   
   return (
-    <div className="flex justify-between h-full items-stretch w-full">
+    <div className="flex justify-between   w-full">
       <div className="w-2/5">
       <Sidebar
           chats={chats}
           onSelectChat={handleSelectChat}
           selectedChat={selectedUser}
+          onChatsUpdate={handleChatsUpdate}
         />
       </div>
 
-      <div className="w-3/5 border rounded-md min-h-full">
+      <div className="w-3/5 border rounded-md ">
       {selectedUser && (
           <Chat
             selectedUser={selectedUser}
