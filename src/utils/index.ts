@@ -14,7 +14,8 @@ export const formatDate = (date: string | Date | undefined): string => {
 
 export const timeAgo = (date: Date): string => {
   const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const inputDate = new Date(date);
+  const seconds = Math.floor((now.getTime() - inputDate.getTime()) / 1000);
 
   const intervals = [
     { name: 'year', seconds: 31536000 },

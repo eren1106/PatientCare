@@ -7,9 +7,14 @@ import { getCurrentUser, logoutUser } from '@/services/auth.service';
 import { UserRole } from '@/enums';
 import DropdownIcon from './DropdownIcon';
 import NotificationDropdown from './notification/NotificationDropdown';
+import { getNotificationsByUserId } from '@/services/notification.service';
+import { useNotificationStore } from '@/hooks/useNotificationStore.hook';
+import { toast } from './ui/use-toast';
+import { useEffect } from 'react';
 
 const Topbar = () => {
   const navigate = useNavigate();
+  const { notifications, setNotifications } = useNotificationStore();
 
   const handleLogout = () => {
     logoutUser();
@@ -17,6 +22,26 @@ const Topbar = () => {
   }
 
   const userData = getCurrentUser();
+
+  const getData = async () => {
+    if(!userData?.id) return;
+
+    try {
+      const data = await getNotificationsByUserId(userData?.id);
+      setNotifications(data);
+    }
+    catch (e) {
+      toast({
+        title: "Failed to fetch data",
+        description: `${e}`
+      })
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
       <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
@@ -30,7 +55,7 @@ const Topbar = () => {
             <DropdownIcon
               icon={Bell}
               content={<NotificationDropdown />}
-              number={8}
+              number={notifications.filter((notification) => !notification.isRead).length}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
