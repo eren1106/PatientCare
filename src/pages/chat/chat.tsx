@@ -12,6 +12,7 @@ interface ChatProps {
 export function Chat({ selectedUser }: ChatProps) {
   const setMessages = useChatStore((state) => state.setMessages);
 
+
   useEffect(() => {
     const loadMessages = async () => {
       try {
@@ -27,7 +28,7 @@ export function Chat({ selectedUser }: ChatProps) {
 
   return (
     <div className="flex flex-col justify-between w-full ">
-      <ChatTopbar selectedUser={selectedUser} />
+      <ChatTopbar />
         <ChatList
           selectedUser={selectedUser}
         />
