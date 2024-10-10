@@ -6,7 +6,7 @@ import { Dot } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const NotificationDropdown = () => {
-  const {notifications} = useNotificationStore();
+  const { notifications } = useNotificationStore();
 
   return (
     <div className="flex flex-col max-h-[30rem] w-screen sm:w-[24rem]">
@@ -19,20 +19,21 @@ const NotificationDropdown = () => {
       <Separator className="" />
       <div className="overflow-y-auto">
         {
-          notifications.map((notification) => (
-            <Link to={notification.redirectUrl ?? ""} key={notification.id} className="">
-              <DropdownMenuItem className="flex items-start gap-3 p-3 cursor-pointer hover:bg-secondary">
-                <div className="flex flex-col gap-1">
-                  <p className="font-medium">{notification.title}</p>
-                  <p>{notification.message}</p>
-                  <p className="text-muted-foreground text-sm">{timeAgo(notification.createdDatetime)}</p>
-                </div>
-                {
-                  !notification.isRead && <Dot className="fill-primary text-primary ml-auto" size={50} />
-                }
-              </DropdownMenuItem>
-            </Link>
-          ))
+          notifications.length > 0 ?
+            notifications.map((notification) => (
+              <Link to={notification.redirectUrl ?? ""} key={notification.id} className="">
+                <DropdownMenuItem className="flex items-start gap-3 p-3 cursor-pointer hover:bg-secondary">
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">{notification.title}</p>
+                    <p>{notification.message}</p>
+                    <p className="text-muted-foreground text-sm">{timeAgo(notification.createdDatetime)}</p>
+                  </div>
+                  {
+                    !notification.isRead && <Dot className="fill-primary text-primary ml-auto" size={50} />
+                  }
+                </DropdownMenuItem>
+              </Link>
+            )) : <p className="p-6">You don't have any notification</p>
         }
       </div>
       {/* <Separator />

@@ -15,9 +15,13 @@ const DropdownIcon = (props: DropdownIconProps) => {
       >
         <props.icon size={22} />
       </DropdownTrigger>
-      <div className='absolute -top-2.5 -right-2.5 rounded-full size-5 bg-primary text-background text-xs font-medium flex justify-center items-center'>
-        {props.number}
-      </div>
+      {
+        props.number > 0 && (
+          <div className='absolute -top-2.5 -right-2.5 rounded-full size-5 bg-primary text-background text-xs font-medium flex justify-center items-center'>
+            {props.number}
+          </div>
+        )
+      }
     </div>
   )
 }
