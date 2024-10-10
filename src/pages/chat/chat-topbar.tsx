@@ -4,30 +4,31 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '../../components/ui/button';
 import { ExpandableChatHeader } from '../../components/ui/chat/expandable-chat';
-import { Chats } from '@/services/chat.service';
+import useChatStore from '@/hooks/useChatStore.hook';
 
-interface ChatTopbarProps {
-  selectedUser: Chats;
-}
+
 
 export const TopbarIcons = [{ icon: Phone }, { icon: Info }];
 
 
-export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {
+export default function ChatTopbar() {
+
+  const selectedUsers = useChatStore((state) => state.selectedUser);
+  
   return (
     <ExpandableChatHeader>
       <div className="flex items-center gap-2">
         <Avatar className="flex justify-center items-center">
           <AvatarImage
-            src={selectedUser.profileImageUrl}
-            alt={selectedUser.name}
+            src={selectedUsers?.profileImageUrl}
+            alt={selectedUsers?.name}
             width={6}
             height={6}
             className="w-10 h-10 "
           />
         </Avatar>
         <div className="flex flex-col">
-          <span className="font-medium">{selectedUser.name}</span>
+          <span className="font-medium">{selectedUsers?.name}</span>
           <span className="text-xs">Active 2 mins ago</span>
         </div>
       </div>

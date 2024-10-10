@@ -10,6 +10,7 @@ interface ChatState {
   addMessage: (message: Message) => void;
   setMessages: (messages: Message[]) => void;
   updateChatWithNewMessage: (message: Message) => void;
+  clearMessages: () => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -29,6 +30,7 @@ const useChatStore = create<ChatState>((set) => ({
         : chat
     ),
   })),
+  clearMessages: () => set({ messages: [] }),
 }));
 
 export default useChatStore;

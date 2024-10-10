@@ -6,13 +6,12 @@ import { Chats, emitSocketMessage, findNewUserAvailableForChat, sendMessage } fr
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"; // Import Dialog components
 import { useEffect, useState } from "react";
 import { User } from "@/interfaces/dashboard";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useForm } from "react-hook-form";
 import useLoading from "@/hooks/useLoading.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getCurrentUser } from "@/services/auth.service";
-import { Form, FormField } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import GenericFormField from "@/components/GenericFormField";
 
 const formSchema = z.object({
@@ -55,6 +54,9 @@ export function Sidebar({ chats, onSelectChat, selectedChat, onChatsUpdate }: Si
 
     fetchPatients();
   }, [isModalOpen]);
+
+  
+
   
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const userId = getCurrentUser()?.id;
@@ -79,7 +81,6 @@ export function Sidebar({ chats, onSelectChat, selectedChat, onChatsUpdate }: Si
 
           // Trigger chat update in the parent component (ChatLayout)
           onChatsUpdate();
-
 
 
         } catch (error) {

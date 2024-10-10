@@ -24,10 +24,10 @@ export function ChatLayout({
 
     const fetchedChats = await fetchAllChatsForUser(userId);
     setChats(fetchedChats);
-    if (fetchedChats.length > 0 && !selectedUser) {
+    if (fetchedChats.length > 0) {
       setSelectedUser(fetchedChats[0]);
     }
-  }, [setChats, setSelectedUser, selectedUser]);
+  }, [setChats, setSelectedUser]);
 
   useEffect(() => {
     const userId = getCurrentUser()?.id;
@@ -40,6 +40,7 @@ export function ChatLayout({
     registerMessageHandler((message) => {
       addMessage(message);
       updateChatWithNewMessage(message);
+      loadChats();
     });
 
     return () => {
@@ -49,11 +50,14 @@ export function ChatLayout({
   }, [loadChats, addMessage, updateChatWithNewMessage]);
 
   const handleSelectChat = (chat: Chats) => {
+
     setSelectedUser(chat);
   };
 
   const handleChatsUpdate = () => {
     loadChats();
+
+
   };
   
   return (
