@@ -2,25 +2,61 @@
 
 import FormButton from "@/components/FormButton";
 import GenericFormField from "@/components/GenericFormField";
+import { toast } from "@/components/ui/use-toast";
 import ZodForm from "@/components/ZodForm";
 import { useZodForm } from "@/hooks/useZodForm.hook";
+import { User } from "@/interfaces/user";
 import { AppointmentSchema, AppointmentSchemaType } from "@/schemas/appointment.schema";
+import { createAppointment } from "@/services/appointment.service";
+import { getCurrentUser } from "@/services/auth.service";
+import { getAllPatientsByDoctorId } from "@/services/user.service";
+import { refreshPage } from "@/utils";
+import { useEffect, useState } from "react";
 
 interface AppointmentFormProps {
   defaultValues?: AppointmentSchemaType;
 }
 
 const AppointmentForm = ({ defaultValues }: AppointmentFormProps) => {
-  const form = useZodForm(AppointmentSchema, defaultValues ?? {});
+  const userData = getCurrentUser();
+
+  const [patients, setPatients] = useState<User[]>([]);
+  const getData = async () => {
+    if(!userData?.id) return;
+    const data = await getAllPatientsByDoctorId(userData.id);
+    setPatients(data);
+  }
+  useEffect(() => {
+    getData();
+  }, [])
+
+  const form = useZodForm(AppointmentSchema, defaultValues ?? {
+    date: new Date(),
+    startTime: new Date(),
+    endTime: new Date(new Date().getTime() + (60 * 60 * 1000)), // default endTime is 1 hour after the startTime
+  });
 
   const onSubmit = async (data: AppointmentSchemaType) => {
     console.log("DATA", data);
 
     try {
+      await createAppointment({
+        ...data,
+        doctorId: userData?.id
+      });
 
+      toast({
+        title: "Appointment created successfully",
+      });
+
+      refreshPage();
     }
     catch (e) {
-
+      toast({
+        title: "Failed to create appointment",
+        description: `${e}`,
+        variant: "destructive"
+      })
     }
   };
 
@@ -55,17 +91,10 @@ const AppointmentForm = ({ defaultValues }: AppointmentFormProps) => {
         type="select"
         label="Patient"
         placeholder="Select a patient"
-        options={[
-          // TODO: replace with real data
-          {
-            value: "123",
-            label: "Ali"
-          },
-          {
-            value: "456",
-            label: "Abu"
-          }
-        ]}
+        options={patients.map((patient) => ({
+          label: patient.fullname,
+          value: patient.id
+        }))}
         control={form.control}
       />
       <FormButton type="submit" className="w-min ml-auto" disabled={!form.formState.isDirty}>

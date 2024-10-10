@@ -1,4 +1,5 @@
 import { Appointment } from "@/interfaces/appointment";
+import { AppointmentSchemaType } from "@/schemas/appointment.schema";
 import { apiRequest } from "@/utils/apiRequest";
 
 export const getAppointments = async (): Promise<Appointment[]> => {
@@ -22,33 +23,14 @@ export const getAppointmentById = async (id: string): Promise<Appointment> => {
 };
 
 // DTO for creating or updating an appointment
-interface AppointmentDTO {
+type AppointmentDTO = AppointmentSchemaType & {
   id?: string;
-  title: string;
-  description: string;
-  startTime: Date;
-  endTime: Date;
-  doctorId: string;
-  patientId: string;
+  doctorId?: string;
 }
 
-export const createAppointment = async ({
-  title,
-  description,
-  startTime,
-  endTime,
-  doctorId,
-  patientId,
-}: AppointmentDTO) => {
+export const createAppointment = async (data: AppointmentDTO) => {
   try {
-    const res = await apiRequest.post(`appointments`, {
-      title,
-      description,
-      startTime,
-      endTime,
-      doctorId,
-      patientId,
-    });
+    const res = await apiRequest.post(`appointments`, data);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -56,24 +38,10 @@ export const createAppointment = async ({
   }
 };
 
-export const updateAppointment = async ({
-  id,
-  title,
-  description,
-  startTime,
-  endTime,
-  doctorId,
-  patientId,
-}: AppointmentDTO) => {
+export const updateAppointment = async (data: AppointmentDTO) => {
+  const {id, ...updateData} = data
   try {
-    const res = await apiRequest.put(`appointments/${id}`, {
-      title,
-      description,
-      startTime,
-      endTime,
-      doctorId,
-      patientId,
-    });
+    const res = await apiRequest.put(`appointments/${id}`, updateData);
     return res.data;
   } catch (e) {
     console.error(e);
