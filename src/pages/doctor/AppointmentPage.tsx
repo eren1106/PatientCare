@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import DynamicDialogTrigger from "@/components/DynamicDialogTrigger";
 
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
@@ -143,11 +144,11 @@ const Calendar: React.FC = () => {
       </div>
 
       {/* Dialog for adding new events */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Event Details</DialogTitle>
-          </DialogHeader>
+      <DynamicDialogTrigger
+        title="Add New Event Details"
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        content={
           <form className="space-x-5 mb-4" onSubmit={handleAddEvent}>
             <input
               type="text"
@@ -165,8 +166,8 @@ const Calendar: React.FC = () => {
             </button>{" "}
             {/* Button to submit new event */}
           </form>
-        </DialogContent>
-      </Dialog>
+        }
+      />
     </div>
   );
 };
