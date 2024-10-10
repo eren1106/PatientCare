@@ -60,7 +60,7 @@ const Topbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='size-12' src={userData?.role === UserRole.PATIENT ? MOCK_PATIENT_IMAGE_PATH : MOCK_DOCTOR_IMAGE_PATH} />
+                  <ProfileAvatar className='size-10' src={userData?.role === UserRole.PATIENT ? MOCK_PATIENT_IMAGE_PATH : MOCK_DOCTOR_IMAGE_PATH} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

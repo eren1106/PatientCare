@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import DynamicDialogTrigger from "@/components/DynamicDialogTrigger";
+import AppointmentForm from "./components/AppointmentForm";
 
 const Calendar: React.FC = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
@@ -143,29 +144,13 @@ const Calendar: React.FC = () => {
         </div>
       </div>
 
-      {/* Dialog for adding new events */}
+      {/* APPOINTMENT DIALOG */}
       <DynamicDialogTrigger
-        title="Add New Event Details"
+        title="Add New Appointment"
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         content={
-          <form className="space-x-5 mb-4" onSubmit={handleAddEvent}>
-            <input
-              type="text"
-              placeholder="Event Title"
-              value={newEventTitle}
-              onChange={(e) => setNewEventTitle(e.target.value)} // Update new event title as the user types.
-              required
-              className="border border-gray-200 p-3 rounded-md text-lg"
-            />
-            <button
-              className="bg-green-500 text-white p-3 mt-5 rounded-md"
-              type="submit"
-            >
-              Add
-            </button>{" "}
-            {/* Button to submit new event */}
-          </form>
+          <AppointmentForm />
         }
       />
     </div>

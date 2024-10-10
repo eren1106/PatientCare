@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from './ui/dialog-scroll-area';
 
 interface DynamicDialogTriggerProps {
   children?: ReactNode;
@@ -37,25 +38,27 @@ const DynamicDialogTrigger = ({
         )
       }
       <DialogContent
-        className={cn("", contentClassName)}
+        className={cn("p-0", contentClassName)}
         hasClose={hasClose}
         closeClassName={closeClassName}
       >
-        {
-          (title || description) && (
-            <DialogHeader>
-              {title && <DialogTitle>{title}</DialogTitle>}
-              {
-                description && (
-                  <DialogDescription>
-                    {description}
-                  </DialogDescription>
-                )
-              }
-            </DialogHeader>
-          )
-        }
-        {content}
+        <ScrollArea className='max-h-[90vh] p-6'>
+          {
+            (title || description) && (
+              <DialogHeader>
+                {title && <DialogTitle className='mb-3'>{title}</DialogTitle>}
+                {
+                  description && (
+                    <DialogDescription>
+                      {description}
+                    </DialogDescription>
+                  )
+                }
+              </DialogHeader>
+            )
+          }
+          {content}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )
