@@ -52,6 +52,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        // make it in default is button type, instead of submit
+        type="button"
         {...props}
       />
     )

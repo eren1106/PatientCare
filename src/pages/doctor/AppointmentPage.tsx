@@ -72,7 +72,8 @@ const Calendar: React.FC = () => {
           headerToolbar={{
             left: "prev,next today",
             center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+            // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+            right: "dayGridMonth,timeGridDay",
           }}
           initialView="dayGridMonth"
           editable={true}
@@ -83,7 +84,7 @@ const Calendar: React.FC = () => {
           eventClick={handleEventClick}
           events={currentEvents} // Load events from state (mapped appointments)
           eventContent={(eventInfo) => (
-            <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 m-1 rounded-md">
+            <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
               <b>{eventInfo.event.title}</b>
               {
                 eventInfo.event.start && eventInfo.event.end &&
