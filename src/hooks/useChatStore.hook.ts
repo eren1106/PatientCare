@@ -10,7 +10,7 @@ interface ChatState {
   addMessage: (message: Message) => void;
   setMessages: (messages: Message[]) => void;
   updateChatWithNewMessage: (message: Message) => void;
-  clearMessages: () => void;
+  deleteMessage: (messageId: string) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -30,7 +30,18 @@ const useChatStore = create<ChatState>((set) => ({
         : chat
     ),
   })),
-  clearMessages: () => set({ messages: [] }),
+  deleteMessage: (messageId) => set((state) => ({
+    messages: state.messages.filter((message) => message.id !== messageId),
+    chats: state.chats.map((chat) => {
+      if (chat.messages) {
+        return {
+          ...chat,
+          messages: chat.messages.filter((message) => message.id !== messageId),
+        };
+      }
+      return chat;
+    }),
+  })),
 }));
 
 export default useChatStore;
