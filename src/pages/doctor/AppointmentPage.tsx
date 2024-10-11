@@ -21,7 +21,8 @@ const Calendar: React.FC = () => {
 
   const [currentEvents, setCurrentEvents] = useState<EventInput[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  // const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
   const fetchData = async () => {
     if (!currentUser) return;
@@ -40,7 +41,7 @@ const Calendar: React.FC = () => {
       })
     );
 
-    // setAppointments(fetchedAppointments);
+    setAppointments(fetchedAppointments);
     setCurrentEvents(events); // Update the current events state with mapped events
   };
 
@@ -49,13 +50,17 @@ const Calendar: React.FC = () => {
   }, []);
 
   const handleDateClick = (selected: DateSelectArg) => {
+    // FOR CREATE APPOINTMENT
+    setSelectedAppointment(null);
     setIsDialogOpen(true);
   };
 
   const handleEventClick = (selected: EventClickArg) => {
-    if (window.confirm(`Are you sure you want to delete the event "${selected.event.title}"?`)) {
-      selected.event.remove();
-    }
+    // FOR UPDATE APPOINTMENT
+    const appointment = appointments.find((a) => a.id === selected.event.id);
+    if (!appointment) return;
+    setSelectedAppointment(appointment);
+    setIsDialogOpen(true);
   };
 
   return (
@@ -94,7 +99,16 @@ const Calendar: React.FC = () => {
         title="Add New Appointment"
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        content={<AppointmentForm />}
+        content={
+          <AppointmentForm
+            appointmentId={selectedAppointment?.id}
+            defaultValues={selectedAppointment ? {
+              ...selectedAppointment,
+              date: new Date(selectedAppointment.date),
+              startTime: new Date(selectedAppointment.startTime),
+              endTime: new Date(selectedAppointment.endTime),
+            } : undefined}
+          />}
       />
     </div>
   );

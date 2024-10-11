@@ -7,17 +7,18 @@ import ZodForm from "@/components/ZodForm";
 import { useZodForm } from "@/hooks/useZodForm.hook";
 import { User } from "@/interfaces/user";
 import { AppointmentSchema, AppointmentSchemaType } from "@/schemas/appointment.schema";
-import { createAppointment } from "@/services/appointment.service";
+import { createAppointment, updateAppointment } from "@/services/appointment.service";
 import { getCurrentUser } from "@/services/auth.service";
 import { getAllPatientsByDoctorId } from "@/services/user.service";
 import { refreshPage } from "@/utils";
 import { useEffect, useState } from "react";
 
 interface AppointmentFormProps {
+  appointmentId?: string;
   defaultValues?: AppointmentSchemaType;
 }
 
-const AppointmentForm = ({ defaultValues }: AppointmentFormProps) => {
+const AppointmentForm = ({ appointmentId, defaultValues }: AppointmentFormProps) => {
   const userData = getCurrentUser();
 
   const [patients, setPatients] = useState<User[]>([]);
@@ -40,13 +41,24 @@ const AppointmentForm = ({ defaultValues }: AppointmentFormProps) => {
     console.log("DATA", data);
 
     try {
-      await createAppointment({
-        ...data,
-        doctorId: userData?.id
-      });
+      if(appointmentId) {
+        // UPDATE
+        await updateAppointment({
+          ...data,
+          id: appointmentId
+        })
+      }
+      else {
+        // CREATE
+        if(!userData) return;
+        await createAppointment({
+          ...data,
+          doctorId: userData?.id
+        });
+      }
 
       toast({
-        title: "Appointment created successfully",
+        title: `Appointment ${appointmentId ? "updated" : "created"} successfully`,
       });
 
       refreshPage();

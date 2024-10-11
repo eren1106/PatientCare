@@ -23,12 +23,14 @@ export const getAppointmentById = async (id: string): Promise<Appointment> => {
 };
 
 // DTO for creating or updating an appointment
-type AppointmentDTO = AppointmentSchemaType & {
-  id?: string;
-  doctorId?: string;
+type CreateAppointmentDTO = AppointmentSchemaType & {
+  doctorId: string;
+}
+type UpdateAppointmentDTO = AppointmentSchemaType & {
+  id: string;
 }
 
-export const createAppointment = async (data: AppointmentDTO) => {
+export const createAppointment = async (data: CreateAppointmentDTO) => {
   try {
     const res = await apiRequest.post(`appointments`, data);
     return res.data;
@@ -38,7 +40,7 @@ export const createAppointment = async (data: AppointmentDTO) => {
   }
 };
 
-export const updateAppointment = async (data: AppointmentDTO) => {
+export const updateAppointment = async (data: UpdateAppointmentDTO) => {
   const {id, ...updateData} = data
   try {
     const res = await apiRequest.put(`appointments/${id}`, updateData);
