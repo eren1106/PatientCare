@@ -1,82 +1,47 @@
-import { ChatBotMessages, Message, UserData, userData, Users } from "../constants/mocks";
 import { create } from "zustand";
+import { Message, Chats } from "../services/chat.service";
 
-
-export interface Example {
-  name: string;
-  url: string;
-}
-
-interface State {
-  selectedExample: Example;
-  examples: Example[];
-  input: string;
-  chatBotMessages: Message[];
+interface ChatState {
+  chats: Chats[];
+  selectedUser: Chats | null;
   messages: Message[];
-  hasInitialAIResponse: boolean;
-  hasInitialResponse: boolean;
+  setChats: (chats: Chats[]) => void;
+  setSelectedUser: (user: Chats | null) => void;
+  addMessage: (message: Message) => void;
+  setMessages: (messages: Message[]) => void;
+  updateChatWithNewMessage: (message: Message) => void;
+  deleteMessage: (messageId: string) => void;
 }
 
-interface Actions {
-  selectedUser: UserData;
-  setSelectedExample: (example: Example) => void;
-  setExamples: (examples: Example[]) => void;
-  setInput: (input: string) => void;
-  handleInputChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => void;
-  setchatBotMessages: (
-    fn: (chatBotMessages: Message[]) => Message[]
-  ) => void;
-  setMessages: (fn: (messages: Message[]) => Message[]) => void;
-  setHasInitialAIResponse: (hasInitialAIResponse: boolean) => void;
-  setHasInitialResponse: (hasInitialResponse: boolean) => void;
-}
-
-const useChatStore = create<State & Actions>()(
-  (set) => ({
-    selectedUser: Users[4],
-
-    selectedExample: { name: "Messenger example", url: "/" },
-
-    examples: [
-      { name: "Messenger example", url: "/" },
-      { name: "Chatbot example", url: "/chatbot" },
-      { name: "Chatbot2 example", url: "/chatbot2" },
-    ],
-
-    input: "",
-
-    setSelectedExample: (selectedExample) =>
-      set({ selectedExample }),
-
-    setExamples: (examples) => set({ examples }),
-
-    setInput: (input) => set({ input }),
-    handleInputChange: (
-      e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
-    ) => set({ input: e.target.value }),
-
-    chatBotMessages: ChatBotMessages,
-    setchatBotMessages: (fn) =>
-      set(({ chatBotMessages }) => ({ chatBotMessages: fn(chatBotMessages) })),
-
-    messages: userData[0].messages,
-    setMessages: (fn) =>
-      set(({ messages }) => ({ messages: fn(messages) })),
-
-    hasInitialAIResponse: false,
-    setHasInitialAIResponse: (hasInitialAIResponse) =>
-      set({ hasInitialAIResponse }),
-
-    hasInitialResponse: false,
-    setHasInitialResponse: (hasInitialResponse) =>
-      set({ hasInitialResponse }),
-  })
-);
+const useChatStore = create<ChatState>((set) => ({
+  chats: [],
+  selectedUser: null,
+  messages: [],
+  setChats: (chats) => set({ chats }),
+  setSelectedUser: (user) => set({ selectedUser: user }),
+  addMessage: (message) => set((state) => ({ 
+    messages: [...state.messages, message] 
+  })),
+  setMessages: (messages) => set({ messages }),
+  updateChatWithNewMessage: (message) => set((state) => ({
+    chats: state.chats.map((chat) =>
+      chat.id === message.fromUserId || chat.id === message.toUserId
+        ? { ...chat, lastMessage: message.message, lastMessageTime: message.createdDatetime }
+        : chat
+    ),
+  })),
+  deleteMessage: (messageId) => set((state) => ({
+    messages: state.messages.filter((message) => message.id !== messageId),
+    chats: state.chats.map((chat) => {
+      if (chat.messages) {
+        return {
+          ...chat,
+          messages: chat.messages.filter((message) => message.id !== messageId),
+        };
+      }
+      return chat;
+    }),
+  })),
+}));
 
 export default useChatStore;
