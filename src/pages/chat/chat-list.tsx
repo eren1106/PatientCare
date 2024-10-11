@@ -7,6 +7,9 @@ import ChatBottombar from "./chat-bottombar";
 import { Chats } from "@/services/chat.service";
 import useChatStore from "@/hooks/useChatStore.hook";
 import { getCurrentUser } from "@/services/auth.service";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { deleteMessage, emitSocketDeleteMessage, registerMessageDeletedHandler, unregisterMessageDeletedHandler } from "@/services/chat.service";
+import { Button } from "@/components/ui/button";
 
 
 interface ChatListProps {
@@ -20,6 +23,30 @@ export function ChatList({ selectedUser }: ChatListProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const messages = useChatStore((state) => state.messages);
+  const deleteMessageFromStore = useChatStore((state) => state.deleteMessage);
+
+
+  const handleDeleteMessage = async (messageId: string) => {
+    try {
+      await deleteMessage(messageId);
+      emitSocketDeleteMessage(messageId, currentUser?.id!, selectedUser.id);
+      deleteMessageFromStore(messageId);
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+    }
+  };
+
+  useEffect(() => {
+    registerMessageDeletedHandler((messageId) => {
+      deleteMessageFromStore(messageId);
+    });
+
+    return () => {
+      unregisterMessageDeletedHandler();
+    };
+  }, [deleteMessageFromStore]);
+
+
 
   const currentUser = getCurrentUser();
   
@@ -71,24 +98,54 @@ export function ChatList({ selectedUser }: ChatListProps) {
                 className="flex flex-col gap-2 p-4"
               >
                 {/* Usage of ChatBubble component */}
-                <ChatBubble variant={variant}>
-                <ChatBubbleAvatar src={isCurrentUserMessage ? currentUser?.profileImageUrl ?? undefined : selectedUser.profileImageUrl ?? undefined}  />
-                    <ChatBubbleMessage variant={variant}>
-                      {message.message}
-                      {message.createdDatetime && (
-                         <ChatBubbleTimestamp
-                         timestamp={new Date(message.createdDatetime).toLocaleString('en-GB', {
-                           hour: '2-digit',
-                           minute: '2-digit',
-                           day: '2-digit',
-                           month: '2-digit',
-                           year: '2-digit',
-                           hour12: false,
-                         }).replace(',', '')}
-                       />
-                      )}
-                    </ChatBubbleMessage>
-                  </ChatBubble>
+                {isCurrentUserMessage ? (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <ChatBubble variant={variant}>
+          <ChatBubbleAvatar src={currentUser?.profileImageUrl ?? undefined} />
+          <ChatBubbleMessage variant={variant}>
+            {message.message}
+            {message.createdDatetime && (
+              <ChatBubbleTimestamp
+                timestamp={new Date(message.createdDatetime).toLocaleString('en-GB', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: '2-digit',
+                  hour12: false,
+                }).replace(',', '')}
+              />
+            )}
+          </ChatBubbleMessage>
+        </ChatBubble>
+      </TooltipTrigger>
+      <TooltipContent>
+        <Button variant="ghost" onClick={() => handleDeleteMessage(message.id)}>Unsend</Button>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+) : (
+  <ChatBubble variant={variant}>
+    <ChatBubbleAvatar src={selectedUser.profileImageUrl ?? undefined} />
+    <ChatBubbleMessage variant={variant}>
+      {message.message}
+      {message.createdDatetime && (
+        <ChatBubbleTimestamp
+          timestamp={new Date(message.createdDatetime).toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour12: false,
+          }).replace(',', '')}
+        />
+      )}
+    </ChatBubbleMessage>
+  </ChatBubble>
+)}
               </motion.div>
             );
           })}
