@@ -62,7 +62,7 @@ const Calendar: React.FC = () => {
     <div>
       <div className="mt-8">
         <FullCalendar
-          height={"85vh"}
+          // height={"85vh"}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
             left: "prev,next today",
@@ -78,11 +78,11 @@ const Calendar: React.FC = () => {
           eventClick={handleEventClick}
           events={currentEvents} // Load events from state (mapped appointments)
           eventContent={(eventInfo) => (
-            <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
+            <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 m-1 rounded-md">
               <b>{eventInfo.event.title}</b>
               {
                 eventInfo.event.start && eventInfo.event.end &&
-                <p>{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
+                <p className="text-xs">{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
               }
             </div>
           )}
