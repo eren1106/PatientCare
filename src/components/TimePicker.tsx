@@ -11,7 +11,18 @@ interface TimePickerProps {
 }
 
 export function TimePicker({ date, setDate }: TimePickerProps) {
-  const [period, setPeriod] = React.useState<Period>("PM");
+  // Initialize the period based on the date or current time
+  const [period, setPeriod] = React.useState<Period>(() => {
+    // If date is provided, use it to determine AM/PM
+    if (date) {
+      const hours = date.getHours();
+      return hours >= 12 ? 'PM' : 'AM';
+    } 
+    // If date is undefined, use the current time
+    const currentHours = new Date().getHours();
+    return currentHours >= 12 ? 'PM' : 'AM';
+  });
+  
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
   const periodRef = React.useRef<HTMLButtonElement>(null);
