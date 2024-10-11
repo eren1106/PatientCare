@@ -88,7 +88,6 @@ const ExercisesTable = ({
           <DialogDescription>
             {`Are you sure you want to delete this exercise - ${selectedExercise?.title}?`}
           </DialogDescription>
-          <div></div>
           <DialogFooter>
             <Button variant="destructive" onClick={handleClickConfirmDelete}>Delete</Button>
           </DialogFooter>

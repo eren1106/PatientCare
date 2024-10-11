@@ -24,3 +24,7 @@ export const getCurrentUser = (): User | null | undefined => {
   const user = JSON.parse(userString);
   return user;
 }
+
+export const logoutUser = () => {
+  sessionStorage.removeItem(USER_SESSION_KEY);
+}

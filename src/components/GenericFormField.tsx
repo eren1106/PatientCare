@@ -4,18 +4,20 @@ import { Input } from './ui/input';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { SelectItem as Option } from '@/interfaces/select-items';
+import { convertCamelCaseToTitle } from '@/utils';
+import { DatePicker } from './DatePicker';
+import { TimePicker } from './TimePicker';
 
 interface GenericFormFieldProps {
   control: any;
   name: string;
-  label: string;
-  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email';
+  label?: string;
+  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email' | 'date' | 'time';
   placeholder?: string;
   options?: Option[];
   minRows?: number;
   imagePreview?: string;
-  // setValue?: UseFormSetValue<FieldValues>;
-  // getValues?: UseFormGetValues<FieldValues>;
+  noLabel?: boolean;
 }
 
 const GenericFormField: React.FC<GenericFormFieldProps> = ({
@@ -23,12 +25,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
   name,
   label,
   type = "input",
-  placeholder = "",
+  placeholder,
   options,
   minRows,
-  // setValue,
-  // getValues,
+  noLabel = false,
 }) => {
+  placeholder = placeholder ?? `Enter ${convertCamelCaseToTitle(name)}`
 
   return (
     <FormField
@@ -66,6 +68,22 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
               </Select>
             );
             break;
+          case 'date':
+            res = (
+              <DatePicker
+                date={field.value}
+                setDate={field.onChange}
+              />
+            )
+            break;
+          case 'time':
+            res = (
+              <TimePicker
+                setDate={field.onChange}
+                date={field.value}
+              />
+            )
+            break;
           default:
             res = <></>;
             break;
@@ -74,7 +92,13 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
 
         return (
           <FormItem>
-            <FormLabel>{label}</FormLabel>
+            {
+              (label || !noLabel) && (
+                <FormLabel className='font-medium text-sm flex gap-1 items-center'>
+                  {label || convertCamelCaseToTitle(name)}
+                </FormLabel>
+              )
+            }
             <FormControl>
               {res}
             </FormControl>
