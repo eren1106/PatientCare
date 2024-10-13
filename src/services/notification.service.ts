@@ -10,3 +10,13 @@ export const getNotificationsByUserId = async (id: string): Promise<Notification
     throw e;
   }
 };
+
+export const markNotificationAsRead = async (id: string): Promise<Notification[]> => {
+  try {
+    const res = await apiRequest.put(`notifications/${id}/mark-as-read`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};

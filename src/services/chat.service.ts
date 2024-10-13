@@ -2,6 +2,7 @@ import { apiCaller } from "@/utils";
 import { io, Socket } from 'socket.io-client';
 import { getCurrentUser } from "./auth.service";
 import { User  } from "@/interfaces/dashboard";
+import { SOCKET_IO_PATH } from "@/constants";
 let socket: Socket | null = null;
 
 let onNewMessage: ((message: Message) => void) | null = null;
@@ -12,7 +13,7 @@ const SOCKET_SERVER_URL = "http://localhost:3000";
 export const initializeSocket = (userId: string) => {
   if (!socket) {
     socket = io(SOCKET_SERVER_URL   , {
-      path: '/api/socket.io',
+      path: SOCKET_IO_PATH,
       withCredentials: true,
       transports: ['websocket'] 
     });

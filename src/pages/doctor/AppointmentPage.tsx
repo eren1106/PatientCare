@@ -23,6 +23,7 @@ const Calendar: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const fetchData = async () => {
     if (!currentUser) return;
@@ -51,6 +52,7 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (selected: DateSelectArg) => {
     // FOR CREATE APPOINTMENT
+    setSelectedDate(selected.start); // for setting default date value for CREATE form
     setSelectedAppointment(null);
     setIsDialogOpen(true);
   };
@@ -109,6 +111,7 @@ const Calendar: React.FC = () => {
               startTime: new Date(selectedAppointment.startTime),
               endTime: new Date(selectedAppointment.endTime),
             } : undefined}
+            selectedDate={selectedDate ?? undefined}
           />}
       />
     </div>
