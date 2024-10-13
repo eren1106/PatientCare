@@ -19,9 +19,10 @@ import { useEffect, useState } from "react";
 interface AppointmentFormProps {
   appointmentId?: string;
   defaultValues?: AppointmentSchemaType;
+  selectedDate?: Date;
 }
 
-const AppointmentForm = ({ appointmentId, defaultValues }: AppointmentFormProps) => {
+const AppointmentForm = ({ appointmentId, defaultValues, selectedDate }: AppointmentFormProps) => {
   const userData = getCurrentUser();
 
   const [patients, setPatients] = useState<User[]>([]);
@@ -37,7 +38,7 @@ const AppointmentForm = ({ appointmentId, defaultValues }: AppointmentFormProps)
   }, [])
 
   const form = useZodForm(AppointmentSchema, defaultValues ?? {
-    date: new Date(),
+    date: selectedDate ?? new Date(),
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + (60 * 60 * 1000)), // default endTime is 1 hour after the startTime
   });
