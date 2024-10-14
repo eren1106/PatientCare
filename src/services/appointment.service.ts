@@ -2,9 +2,9 @@ import { Appointment } from "@/interfaces/appointment";
 import { AppointmentSchemaType } from "@/schemas/appointment.schema";
 import { apiRequest } from "@/utils/apiRequest";
 
-export const getAppointmentsByDoctorId = async (doctorId: string): Promise<Appointment[]> => {
+export const getAppointmentsByUserId = async (id: string): Promise<Appointment[]> => {
   try {
-    const res = await apiRequest.get(`appointments/doctor/${doctorId}`);
+    const res = await apiRequest.get(`appointments/user/${id}`);
     return res.data;
   } catch (e) {
     console.error(e);

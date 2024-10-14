@@ -4,7 +4,8 @@ import { create } from 'zustand';
 type NotificationStore = {
   notifications: Notification[],
   setNotifications: (notifications: Notification[]) => void,
-  addNotification: (notification: Notification) => void // change here
+  addNotification: (notification: Notification) => void,
+  markNotificationAsRead: (notificationId: string) => void,
 }
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
@@ -16,4 +17,9 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
       notification,
     ]
   })),
+  markNotificationAsRead: (notificationId: string) => set((state) => ({
+    notifications: state.notifications.map(
+      (notification) => notification.id === notificationId ? {...notification, isRead: true} : notification
+    )
+  }))
 }));

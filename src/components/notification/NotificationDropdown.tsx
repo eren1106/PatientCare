@@ -7,10 +7,16 @@ import { Dot } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const NotificationDropdown = () => {
-  const { notifications } = useNotificationStore();
+  const { notifications, markNotificationAsRead: markNotificationAsReadInStore } = useNotificationStore();
 
   const handleClickNotification = async (id: string) => {
-    await markNotificationAsRead(id);
+    try {
+      await markNotificationAsRead(id);
+      markNotificationAsReadInStore(id);
+    }
+    catch (e) {
+      console.error(e);
+    }
   }
 
   return (
