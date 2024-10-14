@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  formatDate,
   DateSelectArg,
   EventClickArg,
   EventInput,
@@ -15,8 +14,12 @@ import { Appointment } from "@/interfaces/appointment";
 import { getAppointmentsByDoctorId } from "@/services/appointment.service";
 import { getCurrentUser } from "@/services/auth.service";
 import { formatTime } from "@/utils";
+import AppointmentList from "@/components/appointment/AppointmentList";
+import useLoading from "@/hooks/useLoading.hook";
+import Spinner from "@/components/Spinner";
 
 const Calendar: React.FC = () => {
+  const { isLoading, withLoading } = useLoading();
   const currentUser = getCurrentUser();
 
   const [currentEvents, setCurrentEvents] = useState<EventInput[]>([]);
@@ -47,7 +50,7 @@ const Calendar: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    withLoading(fetchData);
   }, []);
 
   const handleDateClick = (selected: DateSelectArg) => {
@@ -65,41 +68,42 @@ const Calendar: React.FC = () => {
     setIsDialogOpen(true);
   };
 
+  if(isLoading) return <Spinner />
   return (
-    <div>
-      <div className="mt-8">
-        <FullCalendar
-          // height={"85vh"}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-            right: "dayGridMonth,timeGridDay",
-          }}
-          initialView="dayGridMonth"
-          editable={true}
-          selectable={true}
-          selectMirror={true}
-          dayMaxEvents={true}
-          select={handleDateClick}
-          eventClick={handleEventClick}
-          events={currentEvents} // Load events from state (mapped appointments)
-          eventContent={(eventInfo) => (
-            <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
-              <b>{eventInfo.event.title}</b>
-              {
-                eventInfo.event.start && eventInfo.event.end &&
-                <p className="text-xs">{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
-              }
-            </div>
-          )}
-        />
-      </div>
+    <div className="flex flex-col gap-6">
+      <FullCalendar
+        // height={"85vh"}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        headerToolbar={{
+          left: "prev,next today",
+          center: "title",
+          // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+          right: "dayGridMonth,timeGridDay",
+        }}
+        initialView="dayGridMonth"
+        editable={true}
+        selectable={true}
+        selectMirror={true}
+        dayMaxEvents={true}
+        select={handleDateClick}
+        eventClick={handleEventClick}
+        events={currentEvents} // Load events from state (mapped appointments)
+        eventContent={(eventInfo) => (
+          <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
+            <b>{eventInfo.event.title}</b>
+            {
+              eventInfo.event.start && eventInfo.event.end &&
+              <p className="text-xs">{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
+            }
+          </div>
+        )}
+      />
+
+      <AppointmentList appointments={appointments}/>
 
       {/* APPOINTMENT DIALOG */}
       <DynamicDialogTrigger
-        title="Add New Appointment"
+        title={`${selectedAppointment?.id ? "Edit" : "Add New"} Appointment`}
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         content={
