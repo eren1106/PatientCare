@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Appointment {
   id: string;
   title: string;
@@ -9,4 +11,7 @@ export interface Appointment {
   patientId: string;
   createdDatetime: Date;
   updatedDatetime?: Date;
+
+  patient?: User;
+  doctor?: User;
 }
