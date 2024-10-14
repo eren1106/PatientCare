@@ -11,10 +11,9 @@ export const getNotificationsByUserId = async (id: string): Promise<Notification
   }
 };
 
-export const markNotificationAsRead = async (id: string): Promise<Notification[]> => {
+export const markNotificationAsRead = async (id: string) => {
   try {
-    const res = await apiRequest.put(`notifications/${id}/mark-as-read`);
-    return res.data;
+    await apiRequest.put(`notifications/${id}/mark-as-read`);
   } catch (e) {
     console.error(e);
     throw e;
