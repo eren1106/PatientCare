@@ -24,6 +24,7 @@ const buttonVariants = cva(
         plain: "",
         message: "bg-message text-white hover:bg-message-foreground",
         textPrimary: "hover:bg-accent text-primary",
+        success: "bg-green text-primary-foreground hover:bg-green/90",
       },
       size: {
         default: "h-10 px-4 py-2",
