@@ -26,13 +26,17 @@ import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/Questionnaire
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
 import AuthProvider from "./providers/auth-provider";
 import { ChatLayout } from "./pages/chat/chat-layout";
+import IncomingCall from "./pages/chat/call/incoming-call";
 
 const AppWrapper = () => {
+
   return (
     <AuthProvider>
       <div className="min-h-screen flex flex-col">
         <Outlet />
         <Toaster />
+        <IncomingCall/>
+
       </div>
     </AuthProvider>
   )

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { Avatar, AvatarImage } from "../../components/ui/avatar";
 import { Info, Phone, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { ExpandableChatHeader } from "../../components/ui/chat/expandable-chat";
@@ -13,7 +13,12 @@ import ProfileAvatar from "@/components/ProfileAvatar";
 import { CallHistory, fetchCallHistory } from "@/services/chat.service";
 import { formatDate } from "@/utils";
 import { Badge } from "@/components/ui/badge";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import OutgoingCall from "./call/outgoing-call";
 
 export const TopbarIcons = [{ icon: Phone }, { icon: Info }];
 
@@ -62,8 +67,10 @@ export default function ChatTopbar() {
     setSheetOpen(true);
   };
 
+  const [isCallDialogOpen, setIsCallDialogOpen] = useState(false);
+
   const callDialog = () => {
-    // TODO: Add call dialog
+    setIsCallDialogOpen(true);
   };
 
   useEffect(() => {
@@ -138,6 +145,24 @@ export default function ChatTopbar() {
           </SheetHeader>
         </SheetContent>
       </Sheet>
+
+      <Dialog open={isCallDialogOpen} onOpenChange={setIsCallDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+          <div className="flex flex-col items-center gap-4 p-4">
+            <ProfileAvatar
+              src={selectedUsers?.profileImageUrl}
+              className="size-24"
+            />
+            <p className="text-lg font-semibold">{selectedUsers?.name}</p>
+          </div>
+          </DialogHeader>
+          <OutgoingCall
+            recipientId={selectedUsers?.id || ''}
+            onClose={() => setIsCallDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </ExpandableChatHeader>
   );
 }

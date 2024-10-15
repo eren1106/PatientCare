@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { loginUser } from "@/services/auth.service"
 import { toast } from "@/components/ui/use-toast"
 import { UserRole } from "@/enums"
+import useCallStore from "@/hooks/useCallStore.hook"
 
 const LoginSchema = z.object({
   email: z.string().min(2, "Email required at least 3 characters"),
@@ -21,6 +22,8 @@ const LoginSchema = z.object({
 const LoginForm = () => {
   const navigate = useNavigate();
   const { isLoading, withLoading } = useLoading();
+  const { initializeDevice } = useCallStore();
+
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -35,17 +38,22 @@ const LoginForm = () => {
     try {
       const { email, password } = data;
       const res = await loginUser(email, password);
-      console.log("RES: ", res);
+      //console.log("RES: ", res);
+      await initializeDevice();
+
       toast({
         title: "Login Successfully",
         variant: "success"
       });
       if(res.role === UserRole.DOCTOR) {
         navigate("/dashboard");
+
         return;
       }
       if(res.role === UserRole.PATIENT) {
         navigate("/");
+
+
         return;
       }
     }
@@ -89,3 +97,5 @@ const LoginForm = () => {
 }
 
 export default LoginForm
+
+
