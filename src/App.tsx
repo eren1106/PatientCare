@@ -78,6 +78,7 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
 // }
 
 const router = createBrowserRouter([
+  // PATIENT ROUTES
   {
     path: "/",
     element: <AppWrapper />,
@@ -114,7 +115,7 @@ const router = createBrowserRouter([
           },
           {
             path: "appointments",
-            element: <AppointmentPage />,
+            element: <AppointmentPage isDoctor={false} />,
           },
           {
             path: "questionnaire/:id",

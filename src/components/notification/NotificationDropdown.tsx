@@ -1,12 +1,23 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import { useNotificationStore } from "@/hooks/useNotificationStore.hook"
+import { markNotificationAsRead } from "@/services/notification.service"
 import { timeAgo } from "@/utils"
 import { Dot } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const NotificationDropdown = () => {
-  const { notifications } = useNotificationStore();
+  const { notifications, markNotificationAsRead: markNotificationAsReadInStore } = useNotificationStore();
+
+  const handleClickNotification = async (id: string) => {
+    try {
+      await markNotificationAsRead(id);
+      markNotificationAsReadInStore(id);
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
 
   return (
     <div className="flex flex-col max-h-[30rem] w-screen sm:w-[24rem]">
@@ -21,7 +32,12 @@ const NotificationDropdown = () => {
         {
           notifications.length > 0 ?
             notifications.map((notification) => (
-              <Link to={notification.redirectUrl ?? ""} key={notification.id} className="">
+              <Link
+                to={notification.redirectUrl ?? window.location.pathname}
+                key={notification.id}
+                className=""
+                onClick={() => handleClickNotification(notification.id)}
+              >
                 <DropdownMenuItem className="flex items-start gap-3 p-3 cursor-pointer hover:bg-secondary">
                   <div className="flex flex-col gap-1">
                     <p className="font-medium">{notification.title}</p>

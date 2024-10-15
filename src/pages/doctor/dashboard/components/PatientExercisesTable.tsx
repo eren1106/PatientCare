@@ -1,7 +1,7 @@
 import Spinner from '@/components/Spinner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PatientExercise } from '@/interfaces/exercise';
-import { Eye, Pen, PenBox, Trash } from 'lucide-react';
+import { Eye, PenBox, Trash } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";

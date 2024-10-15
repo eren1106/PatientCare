@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProfileAvatar from './ProfileAvatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Bell, LogOut, User } from 'lucide-react';
-import { APP_LOGO_URL, MOCK_DOCTOR_IMAGE_PATH, MOCK_PATIENT_IMAGE_PATH } from '@/constants';
+import { APP_LOGO_URL, MOCK_DOCTOR_IMAGE_PATH, MOCK_PATIENT_IMAGE_PATH, SOCKET_IO_PATH } from '@/constants';
 import { getCurrentUser, logoutUser } from '@/services/auth.service';
 import { UserRole } from '@/enums';
 import DropdownIcon from './DropdownIcon';
@@ -11,23 +11,32 @@ import { getNotificationsByUserId } from '@/services/notification.service';
 import { useNotificationStore } from '@/hooks/useNotificationStore.hook';
 import { toast } from './ui/use-toast';
 import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+import { Notification } from '@/interfaces/notification';
+
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+const socket = io(serverUrl, {
+  path: SOCKET_IO_PATH,
+  withCredentials: true,
+  transports: ['websocket']
+});
 
 const Topbar = () => {
   const navigate = useNavigate();
-  const { notifications, setNotifications } = useNotificationStore();
+  const { notifications, setNotifications, addNotification } = useNotificationStore();
 
   const handleLogout = () => {
     logoutUser();
     navigate("/login");
   }
 
-  const userData = getCurrentUser();
+  const currentUser = getCurrentUser();
 
   const getData = async () => {
-    if(!userData?.id) return;
+    if (!currentUser?.id) return;
 
     try {
-      const data = await getNotificationsByUserId(userData?.id);
+      const data = await getNotificationsByUserId(currentUser?.id);
       setNotifications(data);
     }
     catch (e) {
@@ -39,7 +48,24 @@ const Topbar = () => {
   }
 
   useEffect(() => {
+    if (!currentUser) return;
+
     getData();
+
+    // start listening to real-time events for the user
+    socket.on(`notification-${currentUser.id}`, (newNotification: Notification) => {
+      addNotification(newNotification); // add new notification to store
+
+      // TODO: make it navigatable
+      toast({
+        title: newNotification.title,
+        description: newNotification.message,
+      })
+    });
+
+    return () => {
+      socket.off(`notification-${currentUser.id}`);
+    };
   }, []);
 
   return (
@@ -60,12 +86,12 @@ const Topbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='size-10' src={userData?.role === UserRole.PATIENT ? MOCK_PATIENT_IMAGE_PATH : MOCK_DOCTOR_IMAGE_PATH} />
+                  <ProfileAvatar className='size-10' src={currentUser?.role === UserRole.PATIENT ? MOCK_PATIENT_IMAGE_PATH : MOCK_DOCTOR_IMAGE_PATH} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <Link to={
-                  userData?.role === UserRole.PATIENT ? `/profile/${userData.id}` : `/dashboard/profile/${userData?.id}`
+                  currentUser?.role === UserRole.PATIENT ? `/profile/${currentUser.id}` : `/dashboard/profile/${currentUser?.id}`
                 }>
                   <DropdownMenuItem className='gap-3 cursor-pointer'>
                     <User />

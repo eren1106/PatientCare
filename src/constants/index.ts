@@ -32,3 +32,5 @@ export const GENDER_SELECT: SelectItem[] = [
 export const USER_SESSION_KEY = "USER_SESSION";
 
 export const APP_LOGO_URL = "/healthcare.png";
+
+export const SOCKET_IO_PATH = "/api/socket.io";
