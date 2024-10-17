@@ -1,23 +1,44 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import { useNotificationStore } from "@/hooks/useNotificationStore.hook"
-import { markNotificationAsRead } from "@/services/notification.service"
+import { Notification } from "@/interfaces/notification"
+import { getCurrentUser } from "@/services/auth.service"
+import { markNotificationAsClicked, markNotificationsAsReadByUserId } from "@/services/notification.service"
 import { timeAgo } from "@/utils"
 import { Dot } from "lucide-react"
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
 
 const NotificationDropdown = () => {
-  const { notifications, markNotificationAsRead: markNotificationAsReadInStore } = useNotificationStore();
+  const user = getCurrentUser();
 
-  const handleClickNotification = async (id: string) => {
+  const { notifications, markNotificationAsClicked: markNotificationAsClickedInStore, markAllNotificationsAsRead } = useNotificationStore();
+
+  const handleClickNotification = async (notification: Notification) => {
+    if(notification.isClicked) return; // no need to call api if already clicked
+    
     try {
-      await markNotificationAsRead(id);
-      markNotificationAsReadInStore(id);
+      await markNotificationAsClicked(notification.id);
+      markNotificationAsClickedInStore(notification.id);
     }
     catch (e) {
       console.error(e);
     }
   }
+
+  const markNotificationsAsRead = async () => {
+    if(!user) return;
+    // only call markAllNotificationsAsRead api if got unread notifications
+    const unReadNotification = notifications.find((notification) => !notification.isRead);
+    if(unReadNotification) {
+      await markNotificationsAsReadByUserId(user.id);
+      markAllNotificationsAsRead();
+    }
+  }
+  useEffect(() => {
+    markNotificationsAsRead();
+  }, [])
+  
 
   return (
     <div className="flex flex-col max-h-[30rem] w-screen sm:w-[24rem]">
@@ -36,7 +57,7 @@ const NotificationDropdown = () => {
                 to={notification.redirectUrl ?? window.location.pathname}
                 key={notification.id}
                 className=""
-                onClick={() => handleClickNotification(notification.id)}
+                onClick={() => handleClickNotification(notification)}
               >
                 <DropdownMenuItem className="flex items-start gap-3 p-3 cursor-pointer hover:bg-secondary">
                   <div className="flex flex-col gap-1">
@@ -45,7 +66,7 @@ const NotificationDropdown = () => {
                     <p className="text-muted-foreground text-sm">{timeAgo(notification.createdDatetime)}</p>
                   </div>
                   {
-                    !notification.isRead && <Dot className="fill-primary text-primary ml-auto" size={50} />
+                    !notification.isClicked && <Dot className="fill-primary text-primary ml-auto" size={50} />
                   }
                 </DropdownMenuItem>
               </Link>

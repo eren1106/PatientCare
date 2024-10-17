@@ -19,3 +19,21 @@ export const markNotificationAsRead = async (id: string) => {
     throw e;
   }
 };
+
+export const markNotificationsAsReadByUserId = async (userId: string) => {
+  try {
+    await apiRequest.put(`notifications/user/${userId}/mark-as-read`);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const markNotificationAsClicked = async (id: string) => {
+  try {
+    await apiRequest.put(`notifications/${id}/mark-as-clicked`);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
