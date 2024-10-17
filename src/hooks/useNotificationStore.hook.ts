@@ -24,8 +24,8 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   }),
   addNotification: (notification: Notification) => set((state) => ({
     notifications: [
-      ...state.notifications,
       notification,
+      ...state.notifications,
     ]
   })),
   markNotificationAsClicked: (notificationId: string) => set((state) => ({
