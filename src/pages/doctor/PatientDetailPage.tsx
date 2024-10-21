@@ -1,32 +1,23 @@
 import ProfileAvatar from "@/components/ProfileAvatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, MessageCircle, Trash } from "lucide-react";
+import {
+  Activity,
+  Copy,
+  DollarSign,
+  Edit,
+  MessageCircle,
+  Ruler,
+  Trash,
+  Users,
+  Weight,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from 'react-router-dom';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {
   Dialog,
@@ -40,55 +31,16 @@ import React from "react";
 import PatientRecordExerciseTabContent from "./exercises/components/PatientRecordExerciseTabContent";
 import PatientRecordQuestionnaireTab from "./questionnaire/components/PatientRecordQuestionnaireTab";
 import {
-  Appointment,
-  Assessment,
-  Exercise,
-  Injury,
+  createDefaultPatientRecord,
   PatientRecord,
-  User,
 } from "@/interfaces/dashboard";
 import useLoading from "@/hooks/useLoading.hook";
-import { deletePatientRecord, getPatientRecordDetails } from "@/services/dashboard.service";
-import { Separator } from "@/components/ui/separator";
+import {
+  deletePatientRecord,
+  getPatientRecordDetails,
+} from "@/services/dashboard.service";
 import EditPatientDetailsModal from "./EditPatientDetailsModal";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const defaultUser: User = {
-  id: "",
-  fullname: "",
-  username: "",
-  email: "",
-  profileImageUrl: null,
-  createdDatetime: "",
-};
-
-const defaultAppointment: Appointment[] = [];
-
-const defaultExercise: Exercise[] = [];
-
-const defaultAssessment: Assessment[] = [];
-
-const defaultInjury: Injury[] = [];
-
-const defaultPatientRecord: PatientRecord = {
-  id: "",
-  docotr_id: "",
-  patientId: "",
-  ic_no: "",
-  age: 0,
-  gender: "MALE",
-  weight: 0,
-  height: 0,
-  progressReport: "",
-  createdDatetime: new Date(),
-  updatedDatetime: new Date(),
-  doctor: defaultUser,
-  patient: defaultUser,
-  appointment: defaultAppointment,
-  exercise: defaultExercise,
-  assessment: defaultAssessment,
-  injuries: defaultInjury,
-};
 
 const SkeletonProfile = () => {
   return (
@@ -129,7 +81,9 @@ const PatientDetailPage = () => {
   const navigate = useNavigate();
   // Get data
   const { isLoading, withLoading } = useLoading();
-  const [record, setRecord] = useState<PatientRecord>(defaultPatientRecord);
+  const [record, setRecord] = useState<PatientRecord>(
+    createDefaultPatientRecord
+  );
 
   const getData = async () => {
     if (recordId) {
@@ -139,29 +93,28 @@ const PatientDetailPage = () => {
     }
   };
 
-
   // Remove patient
-  const [removeRecordId, setRemoveRecordId] = useState('');
-  const openDeleteModal = (patientRecordId : string) => {
+  const [removeRecordId, setRemoveRecordId] = useState("");
+  const openDeleteModal = (patientRecordId: string) => {
     setDeleteModal(true);
     setRemoveRecordId(patientRecordId);
   };
-  
+
   // Delete Modal
   const [deleteModal, setDeleteModal] = React.useState(false);
 
   const remove = async () => {
     try {
-      const deleteRecord = await deletePatientRecord(removeRecordId);
+      await deletePatientRecord(removeRecordId);
       toast({
         variant: "success",
         title: "Patient Record Deleted Successfully",
         description: "The patient record has been deleted.",
       });
-      navigate('/dashboard');
+      navigate("/dashboard");
       setDeleteModal(false);
-      setRemoveRecordId('');
-    } catch (e:any) {
+      setRemoveRecordId("");
+    } catch (e: any) {
       console.error(e);
       toast({
         variant: "destructive",
@@ -180,7 +133,6 @@ const PatientDetailPage = () => {
     setRefresh(false);
   }, []);
 
-
   useEffect(() => {
     if (refresh) {
       withLoading(fetchData);
@@ -195,56 +147,26 @@ const PatientDetailPage = () => {
     setRefresh(true);
   };
 
-  // Edit Modal
-  const [editModal, setEditModal] = React.useState(false);
-  const openEditModal = () => {
-    setEditModal(true);
-  };
-
-
   // Text Copy Logic
   const [textToCopy, setTextToCopy] = useState("");
   const [copyStatus, setCopyStatus] = useState(false);
   const onCopyText = () => {
     setCopyStatus(true);
-    setTimeout(() => setCopyStatus(false), 1000); // Reset status after 2 seconds
+    setTimeout(() => setCopyStatus(false), 1000);
   };
 
-  // Edit modal
+  // Edit
 
   const { toast } = useToast();
   const displayToastMessage = () => {
-    toast({
-      variant: "success",
-      title: "Copied",
-      description: "Copied text to your clipboard",
-    });
+    if (copyStatus) {
+      toast({
+        variant: "success",
+        title: "Copied",
+        description: "Copied text to your clipboard",
+      });
+    }
   };
-
-  const mockCompletedAssessments = [
-    {
-      name: "Knee Injury and Osteoarthritis Outcome Score",
-      status: "Completed",
-      review: "Good",
-      dateCreated: "2024-01-15",
-      dateCompleted: "2024-01-15",
-    },
-    {
-      name: "Knee Injury and Osteoarthritis Outcome Score",
-      status: "Assigned",
-      review: "Good",
-      dateCreated: "2024-02-20",
-      dateCompleted: "2024-01-15",
-    },
-    // Add more completed assessments here
-  ];
-
-  const mockExercises = [
-    "Exercise 1",
-    "Exercise 2",
-    "Exercise 3",
-    // Add more exercises here
-  ];
 
   return (
     <Card className="p-4">
@@ -257,15 +179,15 @@ const PatientDetailPage = () => {
             <div className="flex gap-6">
               <ProfileAvatar
                 className="size-32"
-                src="https://t3.ftcdn.net/jpg/04/97/68/08/360_F_497680856_nWYZ4OrUdRPAhcPYgaYDxKGV1jHqLjZL.jpg"
+                src={record.patient.profileImageUrl}
               />
               <div className="flex flex-col gap-3">
                 <h2>{record.patient.username}</h2>
                 <div className="flex flex-col text-sm  gap-1">
-                  <span>IC NO : {record.ic_no}</span>
-                  <span>Age : {record.age}</span>
+                  <span>IC NO : {record.patient.ic}</span>
+                  <span>Age : {record.patient.age}</span>
                   <Badge className="w-16 text-center" variant="secondary">
-                    {record.gender}
+                    {record.patient.gender}
                   </Badge>
                   <div className="flex gap-2 items-center">
                     <a
@@ -278,7 +200,10 @@ const PatientDetailPage = () => {
                       <Copy
                         className=" block hover:bg-gray-100"
                         size={14}
-                        onClick={displayToastMessage}
+                        onClick={() => {
+                          setTextToCopy(record.patient.email); // Set the text to copy when clicked
+                          displayToastMessage();
+                        }}
                       />
                     </CopyToClipboard>
                   </div>
@@ -287,10 +212,12 @@ const PatientDetailPage = () => {
             </div>
           )}
 
-          <Button className="flex gap-4" variant="default" size="lg">
-            <MessageCircle />
-            Message Patient
-          </Button>
+          <Link className="flex flex-start" to="/dashboard/chat">
+            <Button className="flex gap-4" size="lg">
+              <MessageCircle />
+              Message Patient
+            </Button>
+          </Link>
         </div>
         <div className="flex gap-2">
           <EditPatientDetailsModal
@@ -300,7 +227,9 @@ const PatientDetailPage = () => {
           <Button
             className="flex gap-2"
             variant="outline"
-            onClick={() => {openDeleteModal(record.id)}}
+            onClick={() => {
+              openDeleteModal(record.id);
+            }}
           >
             <Trash size={20} />
             Delete
@@ -317,89 +246,109 @@ const PatientDetailPage = () => {
 
         <TabsContent value="Overview">
           <section>
-            <Card className="flex  flex-col p-4 gap-8 w-full">
-              <div className="flex flex-col gap-5">
-                <h3 className="font-semibold">Vital Signs</h3>
-                {isLoading ? <SkeletonContent/> : (
-                  <ul>
-                  <li className="flex justify-between">
-                    <span className="text-light-foreground">Height (m) :</span>
+            {/* Vital Signs Section */}
+            <div className="flex flex-col gap-5">
+              <h3 className="font-semibold">Vital Signs</h3>
+              {isLoading ? (
+                <SkeletonContent />
+              ) : (
+                <div className="flex gap-2 w-1/2 mb-2">
+                  <Card className="flex-1">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Patient's Height (In meters)
+                      </CardTitle>
+                      <Ruler size={28} className="text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{record.height}</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="flex-1">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Patient's Weight (In kilograms)
+                      </CardTitle>
+                      <Weight size={28} className="text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{record.weight}</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </div>
 
-                    <span className="font-semibold">{record.height}</span>
-                  </li>
-
-                  <li className="flex justify-between">
-                    <span className="text-light-foreground">Weight (kg):</span>
-                    <span className="font-semibold">{record.weight}</span>
-                  </li>
-                </ul>
-                )}
+            {/* Injury Report Section */}
+            <div className="flex flex-col gap-5">
+              <h3 className="font-semibold">Injury Report</h3>
+              <div className="grid grid-cols-2 gap-6">
+                {record.injuries.map((injury) => (
+                  <Card
+                    key={injury.id}
+                    className="relative p-4 shadow-md rounded-lg"
+                  >
+                    <ul className="flex flex-col gap-4">
+                      <li className="flex flex-col">
+                        <span className="text-light-foreground">
+                          Pain Region:
+                        </span>
+                        <span className="font-semibold">
+                          {injury.painRegion || "N/A"}
+                        </span>
+                      </li>
+                      <li className="flex flex-col">
+                        <span className="text-light-foreground">
+                          NRS Pain Score:
+                        </span>
+                        <span className="font-semibold">
+                          {injury.painScore || "N/A"}
+                        </span>
+                      </li>
+                      <li className="flex flex-col">
+                        <span className="text-light-foreground">Duration:</span>
+                        <span className="font-semibold">
+                          {injury.duration || "N/A"}
+                        </span>
+                      </li>
+                      <li className="flex flex-col">
+                        <span className="text-light-foreground">
+                          Recurrent:
+                        </span>
+                        <Badge className="font-semibold w-fit">
+                          {injury.is_recurrent}
+                        </Badge>
+                      </li>
+                      <li className="flex flex-col">
+                        <span className="text-light-foreground">
+                          Additional Information:
+                        </span>
+                        <p className="text-sm">{injury.description || "N/A"}</p>
+                      </li>
+                    </ul>
+                    {/* Edit and Delete Icons */}
+                    <div className="absolute bottom-2 right-2 flex space-x-2">
+                      <Edit className="cursor-pointer" size={18} />
+                      <Trash className="cursor-pointer" size={18} />
+                    </div>
+                  </Card>
+                ))}
               </div>
-
-              <div className="flex flex-col gap-5">
-                <h3 className="font-semibold">Clinical Presentations</h3>
-                {record.injuries.map((injury) => {
-                  return (
-                    <section className=" p-2 ">
-                      <ul className="flex flex-col gap-3">
-                        <li className="flex justify-between">
-                          <span className="text-light-foreground">
-                            Pain Region :
-                          </span>
-                          <span className="font-semibold">
-                            {injury.painRegion ? injury.painRegion : "N/A"}
-                          </span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span className="text-light-foreground">
-                            NRS Pain Score :
-                          </span>
-                          <span className="font-semibold">
-                            {injury.painScore ? injury.painScore : "N/A"}
-                          </span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span className="text-light-foreground">
-                            Duration :
-                          </span>
-                          <span className="font-semibold">
-                            {injury.duration ? injury.duration : "N/A"}
-                          </span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span className="text-light-foreground">
-                            Recurrent :
-                          </span>
-                          <Badge className="font-semibold">
-                            {injury.is_recurrent ? injury.is_recurrent : "N/A"}
-                          </Badge>
-                        </li>
-                        <div className="flex flex-col gap-2">
-                          <span className="text-light-foreground">
-                            Additional Information :
-                          </span>
-                          <p className="text-sm">
-                            {injury.description ? injury.description : "N/A"}
-                          </p>
-                        </div>
-                      </ul>
-                      <Separator className="mt-2" />
-                    </section>
-                  );
-                })}
-              </div>
-            </Card>
+            </div>
           </section>
         </TabsContent>
         <TabsContent value="Assessment">
           {record.patientId && recordId && (
-            <PatientRecordQuestionnaireTab patientId={record.patientId} recordId={recordId} />
+            <PatientRecordQuestionnaireTab
+              patientId={record.patientId}
+              recordId={recordId}
+            />
           )}
         </TabsContent>
         <TabsContent value="Rehabilitation">
-          {
-            record.patientId && <PatientRecordExerciseTabContent patientId={record.patientId} />
-          }
+          {record.patientId && (
+            <PatientRecordExerciseTabContent patientId={record.patientId} />
+          )}
         </TabsContent>
       </Tabs>
 
@@ -412,7 +361,12 @@ const PatientDetailPage = () => {
             </p>
           </DialogHeader>
           <DialogFooter className="w-full">
-            <Button className="w-1/2" variant="destructive" type="submit" onClick={() => remove()}>
+            <Button
+              className="w-1/2"
+              variant="destructive"
+              type="submit"
+              onClick={() => remove()}
+            >
               Remove
             </Button>
             <DialogClose asChild>

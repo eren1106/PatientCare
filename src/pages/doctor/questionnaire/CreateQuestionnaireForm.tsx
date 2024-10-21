@@ -67,6 +67,7 @@ const CreateQuestionnaireForm = () => {
   const onSubmit = async (data: z.infer<typeof QuestionnaireSchema>) => {
     try {
       const createQuestionnaire = await insertQuestionnaire(data);
+      withLoading(createQuestionnaire);
       toast({
         variant: "success",
         title: "Questionnaire created!",
@@ -173,7 +174,7 @@ const CreateQuestionnaireForm = () => {
                       render={({ field: { value = [], onChange } }) => (
                         <>
                           {value.map(
-                            (option: { content: string }, optIndex: number) => (
+                            (_option: { content: string }, optIndex: number) => (
                               <div
                                 key={optIndex}
                                 className="flex items-center space-x-2 p-3"
