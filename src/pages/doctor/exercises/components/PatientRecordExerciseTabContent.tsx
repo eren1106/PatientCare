@@ -114,6 +114,8 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
         variant: "success",
         title: "Unassigned Exercise Successfully",
       });
+
+      refreshPage();
     }
     catch (e) {
       console.error(e);

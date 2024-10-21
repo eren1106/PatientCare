@@ -4,6 +4,7 @@ export interface Notification {
   title: string;
   message: string;
   isRead: boolean;
+  isClicked: boolean;
   redirectUrl?: string | null;
   createdDatetime: Date;
 };
