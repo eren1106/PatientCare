@@ -1,42 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Form } from "@/components/ui/form";
+import { CreatePatientRecord } from "@/services/dashboard.service";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -47,29 +15,31 @@ import {
 } from "@/services/dashboard.service";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
-import {
-  CreatePatientRecord,
-  User,
-} from "@/interfaces/dashboard";
-import SkeletonCard from "@/components/SkeletonCard";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { User } from "@/interfaces/dashboard";
+import GenericFormField from "@/components/GenericFormField";
+import { Trash2 } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 
 const formSchema = z.object({
-  patient: z.object({
-    id: z.string(),
-  }),
-  ic_no: z.string().min(1, { message: "Required." }),
-  age: z.number().min(0, { message: "Age must be a positive number." }),
-  gender: z.enum(["MALE", "FEMALE"]),
-  weight: z.number().min(0, { message: "Weight must be a positive number." }),
-  height: z.number().min(0, { message: "Height must be a positive number." }),
+  patient: z.string(),
+  weight: z.coerce
+    .number()
+    .min(0, { message: "Weight must be a positive number." }),
+  height: z.coerce
+    .number()
+    .min(0, { message: "Height must be a positive number." }),
+  injuries: z.array(
+    z
+      .object({
+        painRegion: z.string(),
+        painScore: z.coerce.number(),
+        duration: z.string(),
+        is_recurrent: z.enum(['YES', 'NO']),
+        description: z.string(),
+      })
+      
+  ),
 });
 
 interface InsertPatientRecordModalProps {
@@ -79,9 +49,6 @@ interface InsertPatientRecordModalProps {
 const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
   onPatientAdded,
 }) => {
-  const [open, setOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
-
   const { isLoading, withLoading } = useLoading();
   const [patient, setPatient] = useState<User[]>([]);
 
@@ -100,30 +67,24 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ic_no: "",
-      age: 0,
-      gender: "MALE",
+      patient: "No patient selected",
       weight: 0,
       height: 0,
+      injuries: [],
     },
   });
 
-  const { reset, setValue } = form;
-
-  
-  const [patientRecord, setPatientRecord] = useState<CreatePatientRecord>({
-    patientId: "",
-    ic_no: "",
-    age: 0,
-    gender: "",
-    weight: 0,
-    height: 0,
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "injuries",
   });
 
-  const addPatient = async (patientRecord:CreatePatientRecord) => {
+  const { reset } = form;
+
+  const addPatient = async (patientRecord: CreatePatientRecord) => {
     if (patientRecord) {
       try {
-        const data = await insertPatientRecord(patientRecord);
+        await insertPatientRecord(patientRecord);
         toast({
           variant: "success",
           title: "Patient Added Successfully",
@@ -131,7 +92,7 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
         });
 
         onPatientAdded();
-      } catch (e:any) {
+      } catch (e: any) {
         console.error(e);
         toast({
           variant: "destructive",
@@ -142,26 +103,19 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
     }
   };
 
-  
   function onSubmit(values: z.infer<typeof formSchema>) {
     setOpenDialog(false);
     const updatedRecord = {
-      patientId: values.patient.id,
-      ic_no: values.ic_no,
-      age: values.age,
-      gender: values.gender,
+      patientId: values.patient,
       weight: values.weight,
       height: values.height,
+      injury: values.injuries
     };
-    setPatientRecord(updatedRecord);
 
-    addPatient(updatedRecord); 
+    addPatient(updatedRecord);
 
     reset({
-      patient: { id: "" },
-      ic_no: "",
-      age: 0,
-      gender: "MALE",
+      patient: "",
       weight: 0,
       height: 0,
     });
@@ -170,229 +124,150 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
   useEffect(() => {
     if (openDialog) {
       reset({
-        patient: { id: "" },
-        ic_no: "",
-        age: 0,
-        gender: "MALE",
+        patient: "Select a patient",
         weight: 0,
         height: 0,
       });
     }
   }, [openDialog, reset]);
 
-  const handleSelect = (patient: User) => {
-    setSelectedPatient(patient);
-    setValue("patient", patient);
-    setOpen(false);
-  };
-
-  const getClassName = (selectedPatient: User | null, patient: User) => {
-    return cn(
-      "mr-2 h-4 w-4",
-      selectedPatient === patient ? "opacity-100" : "opacity-0"
-    );
-  };
-
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-      <DialogTrigger asChild>
+    <Sheet open={openDialog} onOpenChange={setOpenDialog}>
+      <SheetTrigger asChild>
         <Button variant="outline">Insert</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add new patient</DialogTitle>
-          <DialogDescription>
+      </SheetTrigger>
+      <SheetContent className="sm:max-w-[425px]">
+        <SheetHeader>
+          <SheetTitle>Add new patient</SheetTitle>
+          <SheetDescription>
             Insert a new patient record here
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <ScrollArea className="flex flex-col items-start ">
-              <FormField
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 p-1">
+            <ScrollArea className="h-[calc(100vh-220px)] sm:h-[calc(100vh-240px)] md:h-[calc(100vh-260px)]">
+              <div className="flex flex-col gap-1">
+              <GenericFormField
                 control={form.control}
                 name="patient"
-                render={() => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel>Patient</FormLabel>
-                    <div>
-                      <FormControl className="flex flex-col items-center justify-between">
-                        <Popover open={open} onOpenChange={setOpen}>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              aria-expanded={open}
-                              className="w-[200px] justify-between"
-                            >
-                              {selectedPatient
-                                ? selectedPatient.username
-                                : "Select a patient"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandList>
-                                <CommandInput placeholder="Search a patient" />
-                                <CommandEmpty>No patient found.</CommandEmpty>
-                                <CommandGroup>
-                                  {isLoading ? (
-                                    <SkeletonCard />
-                                  ) : (
-                                    patient.map((patient) => (
-                                      <CommandItem
-                                        key={patient.id}
-                                        value={patient.username}
-                                        onSelect={() => handleSelect(patient)}
-                                      >
-                                        <Check
-                                          className={getClassName(
-                                            selectedPatient,
-                                            patient
-                                          )}
-                                        />
-                                        {patient.username}
-                                      </CommandItem>
-                                    ))
-                                  )}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
+                label="Patient"
+                type="select"
+                placeholder="Select a patient"
+                options={patient.map((patient) => ({
+                  value: patient.id,
+                  label: patient.username,
+                }))}
               />
 
-              <FormField
-                control={form.control}
-                name="ic_no"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel className="w-24">IC</FormLabel>
-                    <div className="w-[200px]">
-                      <FormControl className="flex flex-col">
-                        <Input type="text" placeholder="IC Number" {...field} />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="age"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel className="w-24">Age</FormLabel>
-                    <div className="w-[200px]">
-                      <FormControl className="flex flex-col">
-                        <Input
-                          type="number"
-                          placeholder="Age"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value, 10))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel className="w-24">Gender</FormLabel>
-                    <div className="w-[200px]">
-                      <FormControl className="flex flex-col">
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select gender" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="MALE">Male</SelectItem>
-                            <SelectItem value="FEMALE">Female</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
+              <GenericFormField
                 control={form.control}
                 name="weight"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel className="w-24">Weight</FormLabel>
-                    <div className="w-[200px]">
-                      <FormControl className="flex flex-col">
-                        <Input
-                          type="number"
-                          placeholder="Weight"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
+                label="Weight"
+                type="number"
+                placeholder="Enter weight"
               />
 
-              <FormField
+              <GenericFormField
                 control={form.control}
                 name="height"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between">
-                    <FormLabel className="w-24">Height</FormLabel>
-                    <div className="w-[200px]">
-                      <FormControl className="flex flex-col">
-                        <Input
-                          type="number"
-                          placeholder="Height"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </div>
-                  </FormItem>
-                )}
+                label="Height"
+                type="number"
+                placeholder="Enter height"
               />
-            </ScrollArea>
-            <DialogFooter className="w-full">
+
+              {/* Injuries Field */}
+              <div>
+                <div className="flex justify-between items-center mt-5">
+                  <span className="font-semibold">Injuries</span>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() =>
+                      append({
+                        painRegion: "",
+                        painScore: 0,
+                        duration: "",
+                        is_recurrent: "NO",
+                        description: "",
+                      })
+                    }
+                  >
+                    Add Injury
+                  </Button>
+                </div>
+
+                {fields.map((field, index) => (
+                  <div key={field.id} className="relative border p-2 mt-5">
+                    <Badge variant="secondary">Injury {index + 1}</Badge>
+                    <Trash2
+                      size={26}
+                      color="#ff0000"
+                      className="absolute right-2 top-2  hover:bg-table-100 p-1 rounded-md"
+                      onClick={() => remove(index)}
+                    />
+                    <GenericFormField
+                      control={form.control}
+                      name={`injuries.${index}.painRegion`}
+                      label="Pain Region"
+                      type="input"
+                      placeholder="Enter pain region"
+                    />
+
+                    <GenericFormField
+                      control={form.control}
+                      name={`injuries.${index}.painScore`}
+                      label="Pain Score"
+                      type="number"
+                      placeholder="Enter pain score"
+                    />
+
+                    <GenericFormField
+                      control={form.control}
+                      name={`injuries.${index}.duration`}
+                      label="Duration"
+                      type="input"
+                      placeholder="Enter duration"
+                    />
+
+                    <GenericFormField
+                      control={form.control}
+                      name={`injuries.${index}.is_recurrent`}
+                      label="Recurrent?"
+                      type="select"
+                      options={[
+                        { value: "YES", label: "Yes" },
+                        { value: "NO", label: "No" }
+                      ]}
+                      placeholder="Select an option"
+                    />
+
+                    <GenericFormField
+                      control={form.control}
+                      name={`injuries.${index}.description`}
+                      label="Injury Description"
+                      type="textarea"
+                      placeholder="Describe the injury"
+                    />
+                  </div>
+                ))}
+              </div>
+              <SheetFooter className="w-full mt-5">
               <Button className="w-1/2" type="submit">
                 Insert
               </Button>
-              <DialogClose asChild>
+              <SheetClose asChild>
                 <Button className="w-1/2" type="button" variant="secondary">
                   Cancel
                 </Button>
-              </DialogClose>
-            </DialogFooter>
+              </SheetClose>
+            </SheetFooter>
+            </div>
+            </ScrollArea>
+           
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };
 

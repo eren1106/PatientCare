@@ -67,13 +67,52 @@ export const deletePatientRecord = async (patientRecordId: string) => {
   }
 };
 
-interface CreatePatientRecord {
+
+export const createInjury = async (injuryData: Injury): Promise<Injury> => {
+  try {
+    const res = await apiCaller.post('dashboard/injury', injuryData);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+
+export const updateInjury = async (injuryId: string, injuryData: Partial<Injury>) => {
+  try {
+    const res = await apiCaller.put(`dashboard/injury/${injuryId}`, injuryData);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+// Service to delete an injury
+export const deleteInjury = async (injuryId: string) => {
+  try {
+    const res = await apiCaller.delete(`dashboard/injury/${injuryId}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export interface CreatePatientRecord {
   patientId:string
-  ic_no:string,
-  age:number,
-  gender:string,
   weight:number,
   height:number,
+  injury: Injury[];
+}
+
+export interface Injury {
+  painRegion: string;
+  duration: string;
+  painScore: number;
+  is_recurrent: string;
+  description: string;
 }
 
 
