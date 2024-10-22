@@ -2,14 +2,7 @@ import ProfileAvatar from "@/components/ProfileAvatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Copy,
-  Edit,
-  MessageCircle,
-  Ruler,
-  Trash,
-  Weight,
-} from "lucide-react";
+import { Copy, Edit, MessageCircle, Ruler, Trash, Weight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
@@ -33,11 +26,14 @@ import {
 } from "@/interfaces/dashboard";
 import useLoading from "@/hooks/useLoading.hook";
 import {
+  deleteInjury,
   deletePatientRecord,
   getPatientRecordDetails,
+  Injury,
 } from "@/services/dashboard.service";
 import EditPatientDetailsModal from "./EditPatientDetailsModal";
 import { Skeleton } from "@/components/ui/skeleton";
+import InjuryForm from "./dashboard/components/InjuryForm";
 
 const SkeletonProfile = () => {
   return (
@@ -85,7 +81,6 @@ const PatientDetailPage = () => {
   const getData = async () => {
     if (recordId) {
       const data = await getPatientRecordDetails(recordId);
-      console.log(data);
       setRecord(data);
     }
   };
@@ -120,6 +115,7 @@ const PatientDetailPage = () => {
       });
     }
   };
+
   const [refresh, setRefresh] = useState(false);
   const fetchData = useCallback(async () => {
     if (recordId) {
@@ -152,7 +148,22 @@ const PatientDetailPage = () => {
     setTimeout(() => setCopyStatus(false), 1000);
   };
 
-  // Edit
+  // Handle edit injury
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInjury, setSelectedInjury] = useState<Injury | null>(null);
+  const [isCreateMode, setIsCreateMode] = useState(false);
+
+  const handleCreateClick = () => {
+    setIsCreateMode(true);  // Switch to create mode
+    setSelectedInjury(null);  // No injury selected for create mode
+    setOpenDialog(true);
+  };
+
+  const handleEditClick = (injury: Injury) => {
+    setIsCreateMode(false);  // Switch to update mode
+    setSelectedInjury(injury);
+    setOpenDialog(true);
+  };
 
   const { toast } = useToast();
   const displayToastMessage = () => {
@@ -162,6 +173,36 @@ const PatientDetailPage = () => {
         title: "Copied",
         description: "Copied text to your clipboard",
       });
+    }
+  };
+
+  const [deleteInjuryModal, setDeleteInjuryModal] = useState(false);
+  const [injuryIdToDelete, setInjuryIdToDelete] = useState<string | null>(null);
+
+  // Function to open the dialog with the injury ID
+  const handleDeleteClick = (id: string) => {
+    setInjuryIdToDelete(id);
+    setDeleteInjuryModal(true);
+  };
+
+  const removeInjury = async () => {
+    if (injuryIdToDelete) {
+      try {
+        await deleteInjury(injuryIdToDelete);
+        getData();
+        setDeleteInjuryModal(false);
+        toast({
+          variant: "success",
+          title: "Patient Injury Deleted Successfully",
+          description: "The patient injury has been deleted.",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Patient Injury Deleted Successfully",
+          description: "The patient injury has been deleted.",
+        });
+      }
     }
   };
 
@@ -278,7 +319,14 @@ const PatientDetailPage = () => {
 
             {/* Injury Report Section */}
             <div className="flex flex-col gap-5">
-              <h3 className="font-semibold">Injury Report</h3>
+              <div className="flex justify-between items-center justify-center">
+                <h3 className="font-semibold">Injury Report</h3>
+                <Button variant="secondary" onClick={handleCreateClick}>
+                  Create Injury
+                </Button>
+  
+              </div>
+
               <div className="grid grid-cols-2 gap-6">
                 {record.injuries.map((injury) => (
                   <Card
@@ -324,9 +372,17 @@ const PatientDetailPage = () => {
                       </li>
                     </ul>
                     {/* Edit and Delete Icons */}
-                    <div className="absolute bottom-2 right-2 flex space-x-2">
-                      <Edit className="cursor-pointer" size={18} />
-                      <Trash className="cursor-pointer" size={18} />
+                    <div className="absolute top-2 right-2 flex space-x-2">
+                      <Edit
+                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                        size={28}
+                        onClick={() => handleEditClick(injury)}
+                      />
+                      <Trash
+                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                        size={28}
+                        onClick={() => handleDeleteClick(injury.id)}
+                      />
                     </div>
                   </Card>
                 ))}
@@ -363,6 +419,40 @@ const PatientDetailPage = () => {
               variant="destructive"
               type="submit"
               onClick={() => remove()}
+            >
+              Remove
+            </Button>
+            <DialogClose asChild>
+              <Button className="w-1/2" type="button" variant="secondary">
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>{" "}
+      </Dialog>
+      {/* Render the UpdateInjuryForm dialog */}
+        <InjuryForm
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          injury={selectedInjury}
+          onUpdate={handlePatientEdited}
+          isCreateMode={isCreateMode}
+          patientRecordId={record.id}
+        />
+      
+      <Dialog open={deleteInjuryModal} onOpenChange={setDeleteInjuryModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Remove Injury</DialogTitle>
+            <p className="text-center p-2">
+              Are you sure to remove this injury?
+            </p>
+          </DialogHeader>
+          <DialogFooter className="w-full">
+            <Button
+              className="w-1/2"
+              variant="destructive"
+              onClick={removeInjury}
             >
               Remove
             </Button>

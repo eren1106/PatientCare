@@ -118,6 +118,31 @@ const DoctorDashboardPage = () => {
     record.patient.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Control delete injury modal
+  const [deleteInjuryModal, setDeleteInjuryModal] = useState(false);
+  const removeInjury = async () => {
+    try {
+      const deleteRecord = await deletePatientRecord(removeRecordId);
+      toast({
+        variant: "success",
+        title: "Patient Record Deleted Successfully",
+        description: "The patient record has been deleted.",
+      });
+      setPatientRecord((prevRecords) =>
+        prevRecords.filter((record) => record.id !== removeRecordId)
+      );
+      setDeleteModal(false);
+      setRemoveRecordId("");
+    } catch (e: any) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Delete Record Failed",
+        description: `${e.response.data.message}`,
+      });
+    }
+  };
+
   return (
     <div>
       <h2 className="font-semibold">Welcome back, Dr. Samiha </h2>
@@ -258,6 +283,7 @@ const DoctorDashboardPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };

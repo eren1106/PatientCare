@@ -68,7 +68,7 @@ export const deletePatientRecord = async (patientRecordId: string) => {
 };
 
 
-export const createInjury = async (injuryData: Injury): Promise<Injury> => {
+export const createInjury = async (injuryData: CreateInjury): Promise<Injury> => {
   try {
     const res = await apiCaller.post('dashboard/injury', injuryData);
     return res.data.data;
@@ -108,10 +108,20 @@ export interface CreatePatientRecord {
 }
 
 export interface Injury {
+  id : string
   painRegion: string;
   duration: string;
   painScore: number;
-  is_recurrent: string;
+  is_recurrent: "YES" | "NO" | undefined;
+  description: string;
+}
+
+export interface CreateInjury {
+  patientRecordId : string;
+  painRegion: string;
+  duration: string;
+  painScore: number;
+  is_recurrent: "YES" | "NO" | undefined;
   description: string;
 }
 
