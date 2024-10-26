@@ -1,17 +1,17 @@
 import { USER_SESSION_KEY } from "@/constants";
 import useCallStore from "@/hooks/useCallStore.hook";
 import { User } from "@/interfaces/user";
-import { apiCaller } from "@/utils";
+import { apiRequest } from "@/utils/apiRequest";
 
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    const res = await apiCaller.post(`auth/login`, {
+    const res = await apiRequest.post(`auth/login`, {
       email,
       password
     });
-    const user = res.data.data;
+    const user = res.data;
     sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
-    return res.data.data;
+    return user;
   } catch (e) {
     console.error(e);
     throw e;

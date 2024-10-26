@@ -39,7 +39,9 @@ const LoginForm = () => {
       const { email, password } = data;
       const res = await loginUser(email, password);
       //console.log("RES: ", res);
-      await initializeDevice();
+
+      // TODO: Currently it prevent me from login, uncomment this when it is fixed
+      // await initializeDevice();
 
       toast({
         title: "Login Successfully",

@@ -112,7 +112,8 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
       injury: values.injuries
     };
 
-    addPatient(updatedRecord);
+    // TODO: Currently it trigger error when i try run build, uncomment this when it is fixed
+    // addPatient(updatedRecord);
 
     reset({
       patient: "",
