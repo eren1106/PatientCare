@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
   Outlet,
   RouterProvider,
 } from "react-router-dom";
@@ -24,25 +25,39 @@ import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
 import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
-import AuthProvider from "./providers/auth-provider";
 import { ChatLayout } from "./pages/chat/chat-layout";
 import IncomingCall from "./pages/chat/call/incoming-call";
+import RegisterPage from "./pages/auth/RegisterPage";
+import { getCurrentUser } from "./services/auth.service";
+import { UserRole } from "./enums";
 
 const AppWrapper = () => {
 
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <div className="min-h-screen flex flex-col">
         <Outlet />
         <Toaster />
         <IncomingCall/>
 
       </div>
-    </AuthProvider>
+    // </AuthProvider>
   )
 }
 
 const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
+  const currentUser = getCurrentUser();
+  if (isDoctor) {
+    if (!currentUser) return <Navigate to="/auth/login" />;
+    if (currentUser.role === UserRole.PATIENT) return <Navigate to="/" />;
+    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+  }
+  else { // patient
+    if (!currentUser) return <Navigate to="/auth/login" />;
+    if (currentUser.role === UserRole.DOCTOR) return <Navigate to="/dashboard" />;
+    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+  }
+
   return (
     <>
       <Topbar />
@@ -52,6 +67,14 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
       </div >
       <Footer />
     </>
+  )
+}
+
+export const AuthWrapper = () => {
+  return (
+    <div className='w-screen h-screen bg-cyan-500 flex flex-col items-center justify-center'>
+      <Outlet />
+    </div>
   )
 }
 
@@ -195,8 +218,18 @@ const router = createBrowserRouter([
 
       // AUTH
       {
-        path: "login",
-        element: <LoginPage />
+        path: "auth",
+        element: <AuthWrapper />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />
+          },
+          {
+            path: "register",
+            element: <RegisterPage />
+          }
+        ]
       }
     ]
   }

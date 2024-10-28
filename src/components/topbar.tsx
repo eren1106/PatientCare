@@ -27,7 +27,7 @@ const Topbar = () => {
 
   const handleLogout = () => {
     logoutUser();
-    navigate("/login");
+    navigate("/auth/login");
   }
 
   const currentUser = getCurrentUser();
