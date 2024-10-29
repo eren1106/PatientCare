@@ -34,14 +34,11 @@ import { UserRole } from "./enums";
 const AppWrapper = () => {
 
   return (
-    // <AuthProvider>
-      <div className="min-h-screen flex flex-col">
-        <Outlet />
-        <Toaster />
-        <IncomingCall/>
-
-      </div>
-    // </AuthProvider>
+    <div className="min-h-screen flex flex-col">
+      <Outlet />
+      <Toaster />
+      <IncomingCall />
+    </div>
   )
 }
 
@@ -61,8 +58,10 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
   return (
     <>
       <Topbar />
-      <Sidebar isDoctor={isDoctor} />
-      <div className='flex-1 p-8 ml-60 mt-16'>
+      <div className='h-full w-60 fixed mt-16 hidden md:flex'>
+        <Sidebar isDoctor={isDoctor} />
+      </div>
+      <div className='flex-1 p-8 ml-0 md:ml-60 mt-8 md:mt-16'>
         <Outlet />
       </div >
       <Footer />
@@ -77,28 +76,6 @@ export const AuthWrapper = () => {
     </div>
   )
 }
-
-// const DoctorDashboardWrapper = () => {
-//   return (
-//     <div className="flex">
-//       <Sidebar isDoctor />
-//       <div className="container p-6">
-//         <Outlet />
-//       </div>
-//     </div>
-//   )
-// }
-
-// const PatientWrapper = () => {
-//   return (
-//     <div className="flex">
-//       <Sidebar />
-//       <div className="container p-6">
-//         <Outlet />
-//       </div>
-//     </div>
-//   )
-// }
 
 const router = createBrowserRouter([
   // PATIENT ROUTES
@@ -115,11 +92,11 @@ const router = createBrowserRouter([
             element: <PatientHomePage />,
           },
           {
-            path : "chat" ,
-            children : [
+            path: "chat",
+            children: [
               {
                 path: "",
-                element : <ChatLayout />
+                element: <ChatLayout />
               }
             ]
           },
@@ -161,11 +138,11 @@ const router = createBrowserRouter([
             element: <DoctorDashboardPage />,
           },
           {
-            path : "chat" ,
-            children : [
+            path: "chat",
+            children: [
               {
                 path: "",
-                element : <ChatLayout />
+                element: <ChatLayout />
               }
             ]
           },

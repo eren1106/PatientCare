@@ -57,9 +57,10 @@ const DASHBOARD_NAV_ITEMS = [
 
 interface SidebarProps {
   isDoctor?: boolean;
+  onNavItemClicked?: () => void;
 }
 
-const Sidebar = ({ isDoctor = false }: SidebarProps) => {
+const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   const location = useLocation();
   const navItems = isDoctor ? DASHBOARD_NAV_ITEMS : PATIENT_NAV_ITEMS;
 
@@ -80,14 +81,14 @@ const Sidebar = ({ isDoctor = false }: SidebarProps) => {
   }
 
   return (
-    <div className='h-full w-60 flex flex-col items-center p-6 gap-3 border-r fixed mt-16 bg-background'>
+    <div className='flex flex-col items-center p-6 gap-3 border-r bg-background'>
       {
         navItems.map((item) => {
           // to make selected tab have color
           const selectedClassname = checkIsSelected(item.to) ? "bg-secondary" : "";
 
           return (
-            <Link to={item.to} className="w-full" key={item.title}>
+            <Link to={item.to} className="w-full" key={item.title} onClick={onNavItemClicked}>
               <div className={cn("flex items-center justify-start gap-3 p-3 w-full rounded-lg", selectedClassname)}>
                 {item.icon}
                 <p>{item.title}</p>
