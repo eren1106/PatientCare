@@ -71,7 +71,7 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
 
 export const AuthWrapper = () => {
   return (
-    <div className='w-screen h-screen bg-cyan-500 flex flex-col items-center justify-center'>
+    <div className='w-screen h-screen bg-cyan-500 flex flex-col items-center justify-center p-3'>
       <Outlet />
     </div>
   )

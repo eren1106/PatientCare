@@ -13,7 +13,7 @@ interface AuthFormWrapperProps {
 const AuthFormWrapper = ({ isSignup = false, children, cardClassName }: AuthFormWrapperProps) => {
   return (
     <div className='flex items-center justify-center'>
-      <Card className={cn('w-96 p-6 shadow-xl', cardClassName)}>
+      <Card className={cn('sm:w-96 w-full p-6 shadow-xl  overflow-y-scroll max-h-[90vh]', cardClassName)}>
         <div className='flex justify-between items-center'>
           <h1 className='mb-2 text-center w-full'>{isSignup ? 'Sign up your account' : 'Welcome to PatientCare'}</h1>
           {/* <LinkButton href="/" variant="outline">

@@ -48,10 +48,10 @@ const RegisterForm = () => {
   }
 
   return (
-    <AuthFormWrapper isSignup={true} cardClassName='w-[40rem]'>
+    <AuthFormWrapper isSignup={true} cardClassName='sm:w-[40rem]'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
             <GenericFormField
               control={form.control}
               name="username"
