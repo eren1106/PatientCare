@@ -80,7 +80,7 @@ const Topbar = () => {
               <p className='text-lg md:text-2xl font-extrabold'>PatientCare</p>
             </Link>
           </div>
-          <div className='gap-4 hidden md:flex items-center'>
+          <div className='gap-4 flex items-center'>
             {/* NAV ITEMS */}
             <DropdownIcon
               icon={Bell}
@@ -90,7 +90,7 @@ const Topbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='size-10' src={getCurrentUser()?.profileImageUrl || MOCK_DOCTOR_IMAGE_PATH} />
+                  <ProfileAvatar className='md:size-10 size-8' src={getCurrentUser()?.profileImageUrl || MOCK_DOCTOR_IMAGE_PATH} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

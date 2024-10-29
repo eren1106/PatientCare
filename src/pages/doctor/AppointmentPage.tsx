@@ -102,33 +102,37 @@ const AppointmentPage: React.FC<AppointmentPageProps> = ({ isDoctor = true }) =>
           </Button>
         )
       }
-      <FullCalendar
-        // height={"85vh"}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        headerToolbar={{
-          left: "prev,next today",
-          center: "title",
-          // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-          right: "dayGridMonth,timeGridDay",
-        }}
-        initialView="dayGridMonth"
-        // editable={true}
-        selectable={true}
-        selectMirror={true}
-        dayMaxEvents={true}
-        select={handleDateClick}
-        eventClick={handleEventClick}
-        events={currentEvents} // Load events from state (mapped appointments)
-        eventContent={(eventInfo) => (
-          <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
-            <b>{eventInfo.event.title}</b>
-            {
-              eventInfo.event.start && eventInfo.event.end &&
-              <p className="text-xs">{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
-            }
-          </div>
-        )}
-      />
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-[40rem]">
+          <FullCalendar
+            // height={"85vh"}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+              right: "dayGridMonth,timeGridDay",
+            }}
+            initialView="dayGridMonth"
+            // editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            select={handleDateClick}
+            eventClick={handleEventClick}
+            events={currentEvents} // Load events from state (mapped appointments)
+            eventContent={(eventInfo) => (
+              <div className="h-full w-full flex flex-col gap-2 bg-primary text-primary-foreground p-2 rounded-md">
+                <b>{eventInfo.event.title}</b>
+                {
+                  eventInfo.event.start && eventInfo.event.end &&
+                  <p className="text-xs">{`${formatTime(eventInfo.event.start)} - ${formatTime(eventInfo.event.end)}`}</p>
+                }
+              </div>
+            )}
+          />
+        </div>
+      </div>
 
       <AppointmentList
         appointments={appointments}

@@ -58,7 +58,7 @@ const ExercisesPage = () => {
   return (
     <div>
       <div className="border border-gray-300 rounded-lg p-5 gap-2">
-        <div className="flex justify-between">
+        <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
           <DialogButton
             variant="default"
