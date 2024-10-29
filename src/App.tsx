@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
   Outlet,
   RouterProvider,
 } from "react-router-dom";
@@ -24,30 +25,43 @@ import DoctorProfilePage from "./pages/doctor/DoctorProfilePage";
 import LoginPage from "./pages/auth/LoginPage";
 import QuestionnaireDetailsPage from "./pages/doctor/questionnaire/QuestionnaireDetailsPage";
 import CreateQuestionnaireForm from "./pages/doctor/questionnaire/CreateQuestionnaireForm";
-import AuthProvider from "./providers/auth-provider";
 import { ChatLayout } from "./pages/chat/chat-layout";
 import IncomingCall from "./pages/chat/call/incoming-call";
+import RegisterPage from "./pages/auth/RegisterPage";
+import { getCurrentUser } from "./services/auth.service";
+import { UserRole } from "./enums";
 
 const AppWrapper = () => {
 
   return (
-    <AuthProvider>
-      <div className="min-h-screen flex flex-col">
-        <Outlet />
-        <Toaster />
-        <IncomingCall/>
-
-      </div>
-    </AuthProvider>
+    <div className="min-h-screen flex flex-col">
+      <Outlet />
+      <Toaster />
+      <IncomingCall />
+    </div>
   )
 }
 
 const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
+  const currentUser = getCurrentUser();
+  if (isDoctor) {
+    if (!currentUser) return <Navigate to="/auth/login" />;
+    if (currentUser.role === UserRole.PATIENT) return <Navigate to="/" />;
+    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+  }
+  else { // patient
+    if (!currentUser) return <Navigate to="/auth/login" />;
+    if (currentUser.role === UserRole.DOCTOR) return <Navigate to="/dashboard" />;
+    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+  }
+
   return (
     <>
       <Topbar />
-      <Sidebar isDoctor={isDoctor} />
-      <div className='flex-1 p-8 ml-60 mt-16'>
+      <div className='h-full w-60 fixed mt-16 hidden md:flex'>
+        <Sidebar isDoctor={isDoctor} />
+      </div>
+      <div className='flex-1 p-8 ml-0 md:ml-60 mt-8 md:mt-16'>
         <Outlet />
       </div >
       <Footer />
@@ -55,27 +69,13 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
   )
 }
 
-// const DoctorDashboardWrapper = () => {
-//   return (
-//     <div className="flex">
-//       <Sidebar isDoctor />
-//       <div className="container p-6">
-//         <Outlet />
-//       </div>
-//     </div>
-//   )
-// }
-
-// const PatientWrapper = () => {
-//   return (
-//     <div className="flex">
-//       <Sidebar />
-//       <div className="container p-6">
-//         <Outlet />
-//       </div>
-//     </div>
-//   )
-// }
+export const AuthWrapper = () => {
+  return (
+    <div className='w-screen h-screen bg-cyan-500 flex flex-col items-center justify-center p-3'>
+      <Outlet />
+    </div>
+  )
+}
 
 const router = createBrowserRouter([
   // PATIENT ROUTES
@@ -92,11 +92,11 @@ const router = createBrowserRouter([
             element: <PatientHomePage />,
           },
           {
-            path : "chat" ,
-            children : [
+            path: "chat",
+            children: [
               {
                 path: "",
-                element : <ChatLayout />
+                element: <ChatLayout />
               }
             ]
           },
@@ -138,11 +138,11 @@ const router = createBrowserRouter([
             element: <DoctorDashboardPage />,
           },
           {
-            path : "chat" ,
-            children : [
+            path: "chat",
+            children: [
               {
                 path: "",
-                element : <ChatLayout />
+                element: <ChatLayout />
               }
             ]
           },
@@ -195,8 +195,18 @@ const router = createBrowserRouter([
 
       // AUTH
       {
-        path: "login",
-        element: <LoginPage />
+        path: "auth",
+        element: <AuthWrapper />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />
+          },
+          {
+            path: "register",
+            element: <RegisterPage />
+          }
+        ]
       }
     ]
   }

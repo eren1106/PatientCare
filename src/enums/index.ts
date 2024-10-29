@@ -8,3 +8,8 @@ export enum UserRole {
   DOCTOR = "DOCTOR",
   ADMIN = "ADMIN",
 }
+
+export enum UserRoleRegister {
+  PATIENT = "PATIENT",
+  DOCTOR = "DOCTOR",
+}

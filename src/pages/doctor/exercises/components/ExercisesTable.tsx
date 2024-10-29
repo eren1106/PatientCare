@@ -55,7 +55,7 @@ const ExercisesTable = ({
                 <TableCell className="font-medium">{exercise.title}</TableCell>
                 <TableCell>{exercise.description}</TableCell>
                 <TableCell>{formatDate(exercise.createdDatetime)}</TableCell>
-                <TableCell className="flex items-center justify-start gap-2">
+                <TableCell className="flex sm:flex-row flex-col items-center justify-start gap-2">
                   <Link to={`${exercise.id}`}>
                     <Eye
                       size={36}

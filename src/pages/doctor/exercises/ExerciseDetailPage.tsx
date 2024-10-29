@@ -31,7 +31,11 @@ const ExerciseDetailPage = () => {
             <div className="flex flex-col gap-4">
               <h1>{exercise.title}</h1>
               <p>{exercise.description}</p>
-              {exercise.videoUrl && <YouTubeEmbed url={exercise.videoUrl} />}
+              {exercise.videoUrl && (
+                <div className="md:max-w-[50rem] w-full">
+                  <YouTubeEmbed url={exercise.videoUrl} />
+                </div>
+              )}
               <p>{exercise.content}</p>
             </div>
           )

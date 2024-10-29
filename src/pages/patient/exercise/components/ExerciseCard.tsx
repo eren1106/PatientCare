@@ -46,7 +46,7 @@ const ExerciseCard = ({
 
   return (
     <Link to={to || id}>
-      <Card className="w-[350px]">
+      <Card className="sm:w-[22rem] w-full">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
