@@ -13,6 +13,7 @@ import { toast } from './ui/use-toast';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { Notification } from '@/interfaces/notification';
+import SidebarSheet from './SidebarSheet';
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 const socket = io(serverUrl, {
@@ -27,7 +28,7 @@ const Topbar = () => {
 
   const handleLogout = () => {
     logoutUser();
-    navigate("/login");
+    navigate("/auth/login");
   }
 
   const currentUser = getCurrentUser();
@@ -72,11 +73,14 @@ const Topbar = () => {
     <>
       <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
         <div className='w-full flex justify-between items-center'>
-          <Link to="/" className='flex items-center gap-2'>
-            <img src={APP_LOGO_URL} alt="" className='size-6 md:size-8' />
-            <p className='text-lg md:text-2xl font-extrabold'>PatientCare</p>
-          </Link>
-          <div className='gap-4 hidden md:flex items-center'>
+          <div className='flex gap-2 items-center'>
+            <SidebarSheet />
+            <Link to="/" className='flex items-center gap-2'>
+              <img src={APP_LOGO_URL} alt="" className='size-6 md:size-8' />
+              <p className='text-lg md:text-2xl font-extrabold'>PatientCare</p>
+            </Link>
+          </div>
+          <div className='gap-4 flex items-center'>
             {/* NAV ITEMS */}
             <DropdownIcon
               icon={Bell}
@@ -86,7 +90,7 @@ const Topbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='size-10' src={getCurrentUser()?.profileImageUrl || MOCK_DOCTOR_IMAGE_PATH} />
+                  <ProfileAvatar className='md:size-10 size-8' src={getCurrentUser()?.profileImageUrl || MOCK_DOCTOR_IMAGE_PATH} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

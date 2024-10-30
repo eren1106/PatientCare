@@ -52,10 +52,19 @@ const PatientExerciseDetailPage = () => {
     <>
       {
         isLoading ? <Spinner /> : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-full">
             <h1>{dailyPatientExercise?.patientExercise.exercise.title}</h1>
             <p>{dailyPatientExercise?.patientExercise.exercise.description}</p>
-            {dailyPatientExercise?.patientExercise.exercise.videoUrl && <YouTubeEmbed url={dailyPatientExercise.patientExercise.exercise.videoUrl} />}
+            {
+              dailyPatientExercise?.patientExercise.exercise.videoUrl
+              && (
+                <div className="md:max-w-[50rem] w-full">
+                  <YouTubeEmbed
+                    url={dailyPatientExercise.patientExercise.exercise.videoUrl}
+                  />
+                </div>
+              )
+            }
             <p>{dailyPatientExercise?.patientExercise.exercise.content}</p>
             {
               dailyPatientExercise?.isCompleted

@@ -141,53 +141,53 @@ export const MOCK_DAILY_PATIENT_EXERCISES: DailyPatientExercise[] = [
   },
 ];
 
-export const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: 'ckn2qz1b800001g5mqu23l3x7',
-    userId: 'ckn2qz1b800001g5mqu23l3x1',
-    title: 'Welcome to our platform!',
-    message: 'Thank you for joining us. We hope you enjoy your experience!',
-    isRead: false,
-    redirectUrl: 'https://example.com/welcome',
-    createdDatetime: new Date(),
-  },
-  {
-    id: 'ckn2qz1b800001g5mqu23l3x8',
-    userId: 'ckn2qz1b800001g5mqu23l3x2',
-    title: 'New Feature Available',
-    message: 'Check out the new dashboard feature we just released.',
-    isRead: true,
-    redirectUrl: 'https://example.com/dashboard',
-    createdDatetime: new Date(),
-  },
-  {
-    id: 'ckn2qz1b800001g5mqu23l3x9',
-    userId: 'ckn2qz1b800001g5mqu23l3x3',
-    title: 'Update Required',
-    message: 'Please update your profile information to continue.',
-    isRead: false,
-    redirectUrl: 'https://example.com/update-profile',
-    createdDatetime: new Date(),
-  },
-  {
-    id: 'ckn2qz1b800001g5mqu23l3x10',
-    userId: 'ckn2qz1b800001g5mqu23l3x4',
-    title: 'Account Suspicious Activity',
-    message: 'We detected unusual login activity. Please review your account.',
-    isRead: true,
-    redirectUrl: 'https://example.com/security-check',
-    createdDatetime: new Date(),
-  },
-  {
-    id: 'ckn2qz1b800001g5mqu23l3x11',
-    userId: 'ckn2qz1b800001g5mqu23l3x5',
-    title: 'Subscription Expiring Soon',
-    message: 'Your subscription is about to expire. Renew now to avoid interruption.',
-    isRead: false,
-    redirectUrl: 'https://example.com/renew-subscription',
-    createdDatetime: new Date(),
-  },
-];
+// export const MOCK_NOTIFICATIONS: Notification[] = [
+//   {
+//     id: 'ckn2qz1b800001g5mqu23l3x7',
+//     userId: 'ckn2qz1b800001g5mqu23l3x1',
+//     title: 'Welcome to our platform!',
+//     message: 'Thank you for joining us. We hope you enjoy your experience!',
+//     isRead: false,
+//     redirectUrl: 'https://example.com/welcome',
+//     createdDatetime: new Date(),
+//   },
+//   {
+//     id: 'ckn2qz1b800001g5mqu23l3x8',
+//     userId: 'ckn2qz1b800001g5mqu23l3x2',
+//     title: 'New Feature Available',
+//     message: 'Check out the new dashboard feature we just released.',
+//     isRead: true,
+//     redirectUrl: 'https://example.com/dashboard',
+//     createdDatetime: new Date(),
+//   },
+//   {
+//     id: 'ckn2qz1b800001g5mqu23l3x9',
+//     userId: 'ckn2qz1b800001g5mqu23l3x3',
+//     title: 'Update Required',
+//     message: 'Please update your profile information to continue.',
+//     isRead: false,
+//     redirectUrl: 'https://example.com/update-profile',
+//     createdDatetime: new Date(),
+//   },
+//   {
+//     id: 'ckn2qz1b800001g5mqu23l3x10',
+//     userId: 'ckn2qz1b800001g5mqu23l3x4',
+//     title: 'Account Suspicious Activity',
+//     message: 'We detected unusual login activity. Please review your account.',
+//     isRead: true,
+//     redirectUrl: 'https://example.com/security-check',
+//     createdDatetime: new Date(),
+//   },
+//   {
+//     id: 'ckn2qz1b800001g5mqu23l3x11',
+//     userId: 'ckn2qz1b800001g5mqu23l3x5',
+//     title: 'Subscription Expiring Soon',
+//     message: 'Your subscription is about to expire. Renew now to avoid interruption.',
+//     isRead: false,
+//     redirectUrl: 'https://example.com/renew-subscription',
+//     createdDatetime: new Date(),
+//   },
+// ];
 
 
 // export const MOCK_PATIENT_LIST: Patient[] = [

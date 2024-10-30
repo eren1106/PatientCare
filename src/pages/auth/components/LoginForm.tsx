@@ -1,5 +1,3 @@
-'use client'
-
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -9,10 +7,10 @@ import { Form } from '@/components/ui/form'
 import GenericFormField from '@/components/GenericFormField'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-import { loginUser } from "@/services/auth.service"
+import { getCurrentUser, loginUser } from "@/services/auth.service"
 import { toast } from "@/components/ui/use-toast"
-import { UserRole } from "@/enums"
 import useCallStore from "@/hooks/useCallStore.hook"
+import { UserRole } from "@/enums"
 
 const LoginSchema = z.object({
   email: z.string().min(2, "Email required at least 3 characters"),
@@ -37,23 +35,23 @@ const LoginForm = () => {
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
       const { email, password } = data;
-      const res = await loginUser(email, password);
-      //console.log("RES: ", res);
-      await initializeDevice();
+      await withLoading(async () => await loginUser(email, password));
+
+      // TODO: Currently it prevent me from login, uncomment this when it is fixed
+      // await initializeDevice();
 
       toast({
         title: "Login Successfully",
         variant: "success"
       });
-      if(res.role === UserRole.DOCTOR) {
-        navigate("/dashboard");
 
+      const user = getCurrentUser();
+      if(user?.role === UserRole.DOCTOR) {
+        navigate("/dashboard");
         return;
       }
-      if(res.role === UserRole.PATIENT) {
+      if(user?.role === UserRole.PATIENT) {
         navigate("/");
-
-
         return;
       }
     }

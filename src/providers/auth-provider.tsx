@@ -1,5 +1,4 @@
-import { DASHBOARD_ROOT_PATH, USER_SESSION_KEY } from '@/constants';
-import { UserRole } from '@/enums';
+import { USER_SESSION_KEY } from '@/constants';
 import { ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
