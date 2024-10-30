@@ -1,7 +1,4 @@
-import DialogButton from "@/components/DialogButton";
-//import QuestionnaireForm from "./components/ExerciseForm";
 import QuestionnaireTable from "./components/QuestionnaireTable";
-import QuestionnaireDetailsPage from "./QuestionnaireDetailsPage";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { Questionnaire } from "@/interfaces/questionnaire";
@@ -17,7 +14,6 @@ const QuestionnairePage = () => {
 
   const { isLoading, withLoading } = useLoading();
   const [questionnaire, setQuestionnaire] = useState<Questionnaire[]>([]);
-  const [selectedEditQuestionnaire, setSelectedEditQuestionnaire] = useState<Questionnaire | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false)
   const navigate = useNavigate();
@@ -51,12 +47,6 @@ const QuestionnairePage = () => {
   }
 
 
-  
-  const handleClickEdit = (questionnaire: Questionnaire) => {
-    setSelectedEditQuestionnaire(questionnaire);
-    setShowEditModal(true);
-  }
-
   const handleClickCreate = () => {
     navigate('/dashboard/questionnaire/create');
   }
@@ -74,20 +64,8 @@ const QuestionnairePage = () => {
           questionnaires={questionnaire}
           loading={isLoading}
           onDelete={handleClickDelete}
-          onEdit={handleClickEdit}
         />
       </div>
-
-      {/* TODO: MAKE CREATE & EDIT THE SAME COMPONENT */}
-      {/* EDIT Questionnaire MODAL */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[42rem]">
-          <DialogHeader>
-            <DialogTitle>Edit Questionnaire</DialogTitle>
-          </DialogHeader>
-          {/* {selectedEditQuestionnaire ? <QuestionnaireForm Questionnaire={selectedEditQuestionnaire}/> : "No Questionnaire selected!"} */}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

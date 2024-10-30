@@ -1,31 +1,42 @@
-import { useForm, useFieldArray, Control } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import GenericFormField from "@/components/GenericFormField";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
-import useLoading from "@/hooks/useLoading.hook";
-import { useNavigate } from "react-router-dom";
+import { useForm, useFieldArray, Control } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { OptionTemplate, Questionnaire } from "@/interfaces/questionnaire";
 import { PlusCircle, Trash } from "lucide-react";
-import { insertQuestionnaire, getOptions } from "@/services/questionnaire.service";
 import { useEffect, useState } from "react";
-import { OptionTemplate } from "@/interfaces/questionnaire";
-import { getCurrentUser } from "@/services/auth.service";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { getOptions, updateQuestionnaire } from "@/services/questionnaire.service";
+import { toast } from "@/components/ui/use-toast";
+
+interface EditQuestionnaireFormProp {
+  questionnaire?: Questionnaire;
+  onHandleEdit: () => void;
+}
 
 const questionnaireSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  type: z.enum(["General", "Knee", "Shoulder"]),
-  index: z.string(),
+  title: z.string(),
+  description: z.string(),
   sections: z.array(
     z.object({
-      name: z.string().min(1, "Section name is required"),
-      description: z.string().min(1, "Section description is required"),
-      questions: z.array(
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      questionnaireId: z.string(),
+      question: z.array(
         z.object({
-          title: z.string().min(1, "Question title is required"),
-          optionId: z.string().min(1, "Option ID is required"),
+          id: z.string(),
+          title: z.string(),
+          optionId: z.string(),
+          // option: z.array(
+          //   z.object({
+          //     scaleValue: z.number(),
+          //     content: z.string().optional(),
+          //   })
+          // ).optional(),
         })
       ),
     })
@@ -34,19 +45,32 @@ const questionnaireSchema = z.object({
 
 type QuestionnaireFormValues = z.infer<typeof questionnaireSchema>;
 
-const CreateQuestionnaireForm = () => {
-  const { toast } = useToast();
-  //const { isLoading, withLoading } = useLoading();
-  const navigate = useNavigate();
-
+const EditQuestionnaireForm = ({
+  questionnaire,
+  onHandleEdit,
+}: EditQuestionnaireFormProp) => {
   const form = useForm<QuestionnaireFormValues>({
     resolver: zodResolver(questionnaireSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      index: "",
-      type: "General",
-      sections: [],
+      title: questionnaire?.title ?? "",
+      description: questionnaire?.description ?? "",
+      sections:
+        questionnaire?.sections?.map((section) => ({
+          id: section.id,
+          name: section.name,
+          description: section.description,
+          questionnaireId: section.questionnaireId,
+          question: section.question.map((question) => ({
+            id: question.id,
+            title: question.title,
+            optionId: question.optionId,
+            // option: question.optionTemplate.option.map((opt) => ({
+            //   id: opt.id,
+            //   scaleValue: opt.scaleValue,
+            //   content: opt.content,
+            // })),
+          })),
+        })) ?? [],
     },
   });
 
@@ -60,6 +84,30 @@ const CreateQuestionnaireForm = () => {
     fetchOptions();
   }, []);
 
+  useEffect(() => {
+    if (questionnaire) {
+      form.reset({
+        title: questionnaire.title,
+        description: questionnaire.description,
+        sections: questionnaire.sections.map((section) => ({
+          id: section.id,
+          name: section.name,
+          description: section.description,
+          questionnaireId: section.questionnaireId,
+          question: section.question.map((question) => ({
+            id: question.id,
+            title: question.title,
+            optionId: question.optionId,
+            // option: question.optionTemplate.option.map((opt) => ({
+            //   scaleValue: opt.scaleValue,
+            //   content: opt.content,
+            // })),
+          })),
+        })),
+      });
+    }
+  }, [questionnaire, form]);
+
   const {
     fields: sections,
     append: addSection,
@@ -69,30 +117,25 @@ const CreateQuestionnaireForm = () => {
     name: "sections",
   });
 
-  const onSubmit = async (data: QuestionnaireFormValues) => {
+  const onSubmit = async (data: z.infer<typeof questionnaireSchema>) => {
+    if(!questionnaire) return;
     try {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
-        return;
-      }
-      const payload = {
-        authorId: currentUser.id,
-        ...data,
-      };
-      await insertQuestionnaire(payload);
+      await updateQuestionnaire(questionnaire.id, data);
       toast({
-        title: "Creation Success",
+        title: "Update Success",
         variant: "success",
-        description: `Successfully created the questionnaire`,
-      });
-      navigate("/dashboard/questionnaires");
-    } catch (error: any) {
+        description: `Successfully updated the questionnaire`
+      })
+      onHandleEdit();
+    } catch (error : any) {
       toast({
-        title: "Creation Failed",
+        title: "Update Failed",
         variant: "destructive",
-        description: `Failed to create the questionnaire`,
-      });
+        description: `Failed to update the questionnaire`
+      })
+      onHandleEdit();
     }
+    
   };
 
   return (
@@ -112,25 +155,6 @@ const CreateQuestionnaireForm = () => {
             type="textarea"
             placeholder="Enter questionnaire description"
           />
-
-          <GenericFormField
-            control={form.control}
-            name="index"
-            label="Index"
-            placeholder="Enter questionnaire index"
-          />
-          <GenericFormField
-            control={form.control}
-            name="type"
-            label="Type"
-            type="select"
-            options={[
-              { value: "General", label: "General" },
-              { value: "Shoulder", label: "Shoulder" },
-              { value: "Knee", label: "Knee" },
-            ]}
-            placeholder="Select questionnaire type"
-          />
         </div>
 
         {sections.map((section, index) => (
@@ -139,6 +163,7 @@ const CreateQuestionnaireForm = () => {
             control={form.control}
             sectionIndex={index}
             sectionId={section.id}
+            questionnaire={questionnaire}
             removeSection={() => removeSection(index)}
             optionsTemplate={options}
           />
@@ -150,19 +175,25 @@ const CreateQuestionnaireForm = () => {
           className="w-full mt-2"
           onClick={() =>
             addSection({
+              id: "",
               name: "",
               description: "",
-              questions: [],
+              questionnaireId: "",
+              question: [],
             })
           }
         >
-          <PlusCircle size={20} />
           Add New Section
         </Button>
 
-        <Button type="submit" className="mt-5 w-full">
-          Create Questionnaire
-        </Button>
+        <div className="flex gap-5">
+          <Button type="submit" className="mt-5">
+            Save Changes
+          </Button>
+          <Button variant="destructive" className="mt-5">
+            Cancel
+          </Button>
+        </div>
       </form>
     </Form>
   );
@@ -173,6 +204,7 @@ interface SectionFieldProps {
   control: Control<QuestionnaireFormValues>;
   sectionIndex: number;
   sectionId: string;
+  questionnaire?: Questionnaire;
   removeSection: () => void;
   optionsTemplate: OptionTemplate[];
 }
@@ -180,6 +212,7 @@ interface SectionFieldProps {
 const SectionField = ({
   control,
   sectionIndex,
+  questionnaire,
   removeSection,
   optionsTemplate,
 }: SectionFieldProps) => {
@@ -189,13 +222,16 @@ const SectionField = ({
     remove: removeQuestion,
   } = useFieldArray({
     control,
-    name: `sections.${sectionIndex}.questions`,
+    name: `sections.${sectionIndex}.question`,
   });
+
+  
 
   return (
     <div className="p-5 bg-blue-100 rounded-md space-y-3">
       <div className="flex justify-between">
         <h2>Section {sectionIndex + 1}</h2>
+
         <Trash
           size={36}
           className="hover:bg-table-100 p-2 rounded-full"
@@ -221,15 +257,20 @@ const SectionField = ({
           key={question.id}
           control={control}
           sectionIndex={sectionIndex}
+          optionId={question.optionId}
           questionIndex={questionIndex}
           optionsTemplate={optionsTemplate}
+          // option={
+          //   questionnaire?.sections[sectionIndex].question[questionIndex]
+          //     .optionTemplate.option
+          // }
           removeQuestion={() => removeQuestion(questionIndex)}
         />
       ))}
 
       <Button
         type="button"
-        onClick={() => addQuestion({ title: "", optionId: "" })}
+        onClick={() => addQuestion({ id: "", title: "", optionId: "" })}
         variant="secondary"
         className="w-full gap-2"
       >
@@ -245,7 +286,9 @@ interface QuestionFieldProps {
   control: Control<QuestionnaireFormValues>;
   sectionIndex: number;
   questionIndex: number;
+  optionId: string;
   optionsTemplate: OptionTemplate[];
+  //option?: { id: string; scaleValue: number; content?: string }[];
   removeQuestion: () => void;
 }
 
@@ -254,7 +297,8 @@ const QuestionField = ({
   sectionIndex,
   questionIndex,
   removeQuestion,
-  optionsTemplate,
+  //option,
+  optionsTemplate
 }: QuestionFieldProps) => (
   <div className="flex flex-col gap-2">
     <div className="flex justify-between">
@@ -267,14 +311,14 @@ const QuestionField = ({
     </div>
     <GenericFormField
       control={control}
-      name={`sections.${sectionIndex}.questions.${questionIndex}.title`}
+      name={`sections.${sectionIndex}.question.${questionIndex}.title`}
       placeholder="Enter a new question"
       noLabel={true}
     />
 
     <GenericFormField
       control={control}
-      name={`sections.${sectionIndex}.questions.${questionIndex}.optionId`}
+      name={`sections.${sectionIndex}.question.${questionIndex}.optionId`}
       type="select"
       placeholder="Select an option template"
       options={optionsTemplate.map(option => ({
@@ -285,7 +329,25 @@ const QuestionField = ({
       }))}
       noLabel={true}
     />
+    {/* <RadioGroup>
+      <div className="flex flex-wrap gap-2 mt-5">
+        {option?.map((option, optionIndex) => (
+          <div
+            key={optionIndex}
+            className="flex items-center justify-center border border-black px-4 py-2 cursor-pointer space-x-2"
+          >
+            <RadioGroupItem
+              value={option.scaleValue.toString()}
+              id={`${optionIndex}-${option.scaleValue}`}
+            />
+            <Label htmlFor={`${optionIndex}-${option.scaleValue}`}>
+              {option.content} ({option.scaleValue})
+            </Label>
+          </div>
+        ))}
+      </div>
+    </RadioGroup> */}
   </div>
 );
 
-export default CreateQuestionnaireForm;
+export default EditQuestionnaireForm;
