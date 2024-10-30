@@ -1,23 +1,31 @@
-import AutoResizeTextarea from "@/components/AutoResizeTextarea";
 import Spinner from "@/components/Spinner";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroupItem } from "@/components/ui/radio-group";
 import useLoading from "@/hooks/useLoading.hook";
 import { Questionnaire } from "@/interfaces/questionnaire";
-import { getQuestionnaireById } from "@/services/questionnaire.service";
+import {
+  getQuestionnaireById,
+  updateQuestionnaire,
+} from "@/services/questionnaire.service";
 import { RadioGroup } from "@radix-ui/react-radio-group";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+
+import EditQuestionnaireForm from "./EditQuestionnaireForm";
 
 const QuestionnaireDetailsPage = () => {
   const { id } = useParams();
   const { isLoading, withLoading } = useLoading();
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
 
+  // Edit mode
+  const [isEditing, setIsEditing] = useState(false);
+
   const getData = async () => {
-    console.log(id);
     if (id) {
       const data = await getQuestionnaireById(id);
       setQuestionnaire(data);
@@ -26,42 +34,81 @@ const QuestionnaireDetailsPage = () => {
 
   useEffect(() => {
     withLoading(getData);
-  }, []);
+  }, [id]);
+
+  // Toggle edit mode
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    withLoading(getData);
+  }
+
   return (
     <Card className="p-5">
-      {isLoading && <Spinner />}
-      {!isLoading && questionnaire && (
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
+          <Spinner />
+        </div>
+      ) : (
         <>
-          <header className="flex flex-col gap-2">
-            <h1>{questionnaire.title}</h1>
-            <p>{questionnaire.description}</p>
-          </header>
+          <div className="flex justify-between items-center">
+            <h1>{questionnaire?.title}</h1>
+            <Button variant="secondary" onClick={handleEditClick}>
+              {isEditing ? "Cancel" : <Edit size={16} />}
+            </Button>
+          </div>
 
-          <Card className="mt-2 p-5 rounded-lg bg-light-blue">
-            <h2>Questions</h2>
-            {questionnaire.question.map((question, index) => (
-              <div key={question.id} className="flex flex-col gap-2">
-                <h3>{index + 1}.  {question.title}</h3>
-                {question.fieldType.name === 'Multiple Choice' && (
-                  <RadioGroup className="flex flex-col gap-1 p-3">
-                  {question.option.map((option) => (
-                    <div key={option.id} className="flex items-center space-x-2 ">
-                      <RadioGroupItem value={`question-${question.id}-option-${option.id}`} id={`question-${question.id}-option-${option.id}`} />
-                      <Label htmlFor={`question-${question.id}-option-${option.id}`}>{option.content}</Label>
+          {isEditing ? (
+            <EditQuestionnaireForm questionnaire={questionnaire} onHandleEdit={handleCancelEdit}/>
+          ) : (
+            <div className="flex flex-col gap-2 mt-2">
+              <p>{questionnaire?.description}</p>
+              {questionnaire?.sections.map((section, sectionIndex) => (
+                <div
+                  className="p-5 bg-blue-100 rounded-md space-y-3"
+                  key={section.id}
+                >
+                  <h2>
+                    Section {sectionIndex + 1} : {section.name}
+                  </h2>
+                  <p>{section.description}</p>
+                  {section.question.map((question, questionIndex) => (
+                    <div className="flex flex-col gap-2" key={question.id}>
+                      <p>
+                        {questionIndex + 1}. {question.title}
+                      </p>
+                      <RadioGroup>
+                        <div className="flex flex-wrap gap-2">
+                          {question.optionTemplate?.option.map(
+                            (option, optionIndex) => (
+                              <div
+                                key={optionIndex}
+                                className="flex items-center justify-center border border-black px-4 py-2 cursor-pointer space-x-2"
+                              >
+                                <RadioGroupItem
+                                  value={option.scaleValue.toString()}
+                                  id={`${question.id}-${option.scaleValue}`}
+                                />
+                                <Label
+                                  htmlFor={`${question.id}-${option.scaleValue}`}
+                                >
+                                  {option.content} ({option.scaleValue})
+                                </Label>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </RadioGroup>
                     </div>
                   ))}
-                </RadioGroup>
-                )}
-                {question.fieldType.name === 'Text' && (
-                  <AutoResizeTextarea />
-                )}
-              </div>
-            ))}
-          </Card>
+                </div>
+              ))}
+            </div>
+          )}
         </>
-      )}
-      {!isLoading && !questionnaire && (
-        <p>Questionnaire not found</p>
       )}
     </Card>
   );

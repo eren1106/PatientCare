@@ -1,7 +1,6 @@
-import { Assessment, CreateAssessment, Questionnaire } from "@/interfaces/questionnaire";
+import { Assessment, CreateAssessment, OptionTemplate, Questionnaire, Section, UpdateQuestionnaire } from "@/interfaces/questionnaire";
 import { apiCaller } from "@/utils";
 import { getCurrentUser } from "./auth.service";
-
 
 export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
     try {
@@ -11,6 +10,16 @@ export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
       console.error(e);
       throw e;
     }
+}
+
+export const getOptions = async (): Promise<OptionTemplate[]> => {
+  try {
+    const res = await apiCaller.get(`questionnaire/options`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 
@@ -36,8 +45,7 @@ export const getQuestionnaireById = async (id : string): Promise<Questionnaire> 
 
 export const insertQuestionnaire = async (questionnaire : CreateQuestionnaire) => {
   try {
-    const userId = getCurrentUser()?.id;
-    const res = await apiCaller.post(`questionnaire/create`, { questionnaire, authorId: userId });
+    const res = await apiCaller.post(`questionnaire/create`, { questionnaire });
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -57,7 +65,7 @@ export const insertAssessment = async (assessment : CreateAssessment) => {
 
 export const deleteQuestionnaire = async (questionnaireId : string) => {
   try {
-    const res = await apiCaller.put(`questionnaire/${questionnaireId}`);
+    const res = await apiCaller.delete(`questionnaire/${questionnaireId}`);
     return res.data.data;
   } catch (e) {
     console.error(e);
@@ -75,20 +83,35 @@ export const deleteAssessment = async (assessmentId : string) => {
   }
 }
 
-interface CreateOption {
-  content: string;
+
+export const updateQuestionnaire = async (id: String, data : UpdateQuestionnaire) => {
+  try {
+    const res = await apiCaller.put(`questionnaire/${id}`, data);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
+
 
 interface CreateQuestion {
   title: string;
-  type: 'Multiple Choice' | 'Text';
-  options?: CreateOption[];
+  optionId: string;
 }
 
 export interface CreateQuestionnaire {
   title: string;
   description: string;
   type: 'General' | 'Shoulder' | 'Knee';
+  index: string;
+  authorId: string;
+  sections: CreateSection[];
+}
+
+export interface CreateSection {
+  name: string;
+  description: string;
   questions: CreateQuestion[];
 }
 

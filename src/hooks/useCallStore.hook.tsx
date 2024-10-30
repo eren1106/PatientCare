@@ -34,19 +34,20 @@ const useCallStore = create<CallStore>((set, get) => ({
     }
 
     const device = new Device(token, {
-      logLevel: 1,
 
+  
+      logLevel: 5,
       // Opus generates better quality audio, but is not supported by all browsers.
       // If Opus is not supported, we use PCMU as a fallback.
       codecPreferences: [Call.Codec.Opus, Call.Codec.PCMU],
     });
 
     device.on("registered", () => {
-      console.log("Twilio.Device Ready to make and receive calls!");
+      //console.log("Twilio.Device Ready to make and receive calls!");
     });
     
     device.on("error", (error) => {
-      console.log("Twilio.Device Error: " + error.message);
+      //console.log("Twilio.Device Error: " + error.message);
     });
 
     device.on("incoming", (call) => {
@@ -67,7 +68,7 @@ const useCallStore = create<CallStore>((set, get) => ({
   },
 
   makeCall: async (recipientId: string) => {
-    console.log("Making call to", recipientId);
+    //console.log("Making call to", recipientId);
     const { device } = get();
     let params = { To: recipientId };
     if (device) {
@@ -78,13 +79,13 @@ const useCallStore = create<CallStore>((set, get) => ({
       let callStatus: CallStatus = CallStatus.MISSED; 
 
       call.on("accept", () => {
-        console.log("Call in progress...");
+        //console.log("Call in progress...");
         startTime = Date.now();
         callStatus = CallStatus.ACCEPTED;
       });
 
       call.on("disconnect", () => {
-        console.log("Call disconnected.");
+        //console.log("Call disconnected.");
         const endTime = Date.now();
         const duration = callStatus === CallStatus.ACCEPTED ? Math.round((endTime - startTime) / 1000) : 0;
         storeCallHistory(recipientId, callStatus, duration);
@@ -92,19 +93,19 @@ const useCallStore = create<CallStore>((set, get) => ({
       });
 
       call.on("cancel", () => {
-        console.log("Call canceled.");
+        //console.log("Call canceled.");
         storeCallHistory(recipientId, CallStatus.MISSED, 0);
         set({ currentCall: null });
       });
 
       call.on("reject", () => {
-        console.log("Call rejected.");
+        //console.log("Call rejected.");
         callStatus = CallStatus.REJECTED;
         storeCallHistory(recipientId, CallStatus.REJECTED, 0);
         set({ currentCall: null });
       });
     } else {
-      console.error('Twilio device not initialized');
+      //console.error('Twilio device not initialized');
     }
   },
 
@@ -128,7 +129,7 @@ const useCallStore = create<CallStore>((set, get) => ({
     const { currentCall } = get();
     if (currentCall) {
       currentCall.reject();
-      console.log("Rejected incoming call");
+      //console.log("Rejected incoming call");
       set({ currentCall: null });
     }
   },
@@ -165,16 +166,16 @@ const useCallStore = create<CallStore>((set, get) => ({
 }));
 
 function handleDisconnectedIncomingCall() {
-  console.log("Incoming call ended.");
+  //console.log("Incoming call ended.");
   useCallStore.setState({ currentCall: null });
 }
 
 function updateAllAudioDevices(device: Device) {
   // This function would update the UI with available audio devices
   // You might want to implement this in your UI components
-  console.log("Audio devices updated");
-  console.log("Speaker devices:", device?.audio?.speakerDevices.get());
-  console.log("Ringtone devices:", device?.audio?.ringtoneDevices.get());
+  //console.log("Audio devices updated");
+  ////console.log("Speaker devices:", device?.audio?.speakerDevices.get());
+  //console.log("Ringtone devices:", device?.audio?.ringtoneDevices.get());
 }
 
 
