@@ -98,7 +98,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
                     <div key={item.value} className="flex items-center justify-center border border-black px-4 py-2 cursor-pointer space-x-2 ">
                       <RadioGroupItem value={item.value} id={`${name}-${item.value}`} />
                       <Label htmlFor={`${name}-${item.value}`}>
-                        {item.label} ({item.value})
+                        {item.label}
                       </Label>
                     </div>
                   ))}

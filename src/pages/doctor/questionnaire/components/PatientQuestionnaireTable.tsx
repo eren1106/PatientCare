@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import { Assessment, Questionnaire } from '@/interfaces/questionnaire';
 import { Badge } from "@/components/ui/badge";
+import { formatDate } from '@/utils';
 
 
 interface QuestionnaireTableProps {
@@ -52,7 +53,7 @@ const PatientQuestionnaireTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {assessment.map((assessment) => (
+            {assessment.map((assessment: Assessment) => (
               <TableRow
                 className=""
                 key={assessment.id}
@@ -60,10 +61,12 @@ const PatientQuestionnaireTable = ({
                 <TableCell className="font-medium">{assessment.questionnaire.title}</TableCell>
                 <TableCell className="text-ellipsis">{assessment.questionnaire.description}</TableCell>
                 <TableCell><Badge>{assessment.questionnaire.type}</Badge></TableCell>
-                <TableCell>{new Date(assessment.questionnaire.createdDatetime).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(assessment.questionnaire.createdDatetime)}</TableCell>
                 <TableCell>
                   <div className="flex items-center justify-center gap-2 " >
-                  <Link to={`/dashboard/questionnaire/${assessment.questionnaire.id}`}>
+                  <Link 
+                    to={assessment ? `/dashboard/questionnaire/result/${(assessment as Assessment).id}` : `/dashboard/questionnaire/${(assessment as Assessment).questionnaire.id}`}
+                  >
                     <Eye
                       size={36}
                       className="hover:bg-muted p-2 rounded-full"
