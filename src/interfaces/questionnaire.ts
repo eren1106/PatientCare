@@ -60,7 +60,7 @@ export interface Assessment {
 }
 
 export interface CreateAssessment {
-  userId : string,
+  doctorId : string,
   questionnaireId : string,
   recordId : string
 }

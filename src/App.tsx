@@ -14,7 +14,7 @@ import AppointmentPage from "./pages/doctor/AppointmentPage";
 import { DASHBOARD_ROOT_PATH } from "./constants";
 import PatientExercisesPage from "./pages/patient/exercise/PatientExercisesPage";
 import PatientExerciseDetailPage from "./pages/patient/exercise/PatientExerciseDetailPage";
-import PatientQuestionnairePage from "./pages/patient/questionnaire/PatientQuestionnairePage";
+import PatientAssessmentPage from "./pages/patient/assessment/PatientAssessmentPage";
 import PatientDetailPage from "./pages/doctor/PatientDetailPage";
 import { Toaster } from "@/components/toaster";
 import ExercisesPage from "./pages/doctor/exercises/ExercisesPage";
@@ -30,6 +30,8 @@ import IncomingCall from "./pages/chat/call/incoming-call";
 import RegisterPage from "./pages/auth/RegisterPage";
 import { getCurrentUser } from "./services/auth.service";
 import { UserRole } from "./enums";
+import QuestionnaireResult from "./pages/doctor/questionnaire/QuestionnaireResult";
+import AssessmentDetailPage from "./pages/patient/assessment/AssessmentDetailPage";
 
 const AppWrapper = () => {
 
@@ -118,8 +120,18 @@ const router = createBrowserRouter([
             element: <AppointmentPage isDoctor={false} />,
           },
           {
-            path: "questionnaire/:id",
-            element: <PatientQuestionnairePage />
+            path: "assessment",
+            children : [
+              {
+                path : "",
+                element : <PatientAssessmentPage />
+              },
+              {
+                path : ":id",
+                element : <AssessmentDetailPage />
+              }
+            ],
+            
           },
           {
             path: "profile/:id",
@@ -160,6 +172,10 @@ const router = createBrowserRouter([
               {
                 path: "create",
                 element: <CreateQuestionnaireForm />
+              },
+              {
+                path: "result/:id",
+                element: <QuestionnaireResult />
               }
             ]
 

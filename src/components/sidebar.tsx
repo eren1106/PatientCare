@@ -15,6 +15,11 @@ const PATIENT_NAV_ITEMS = [
     icon: <Dumbbell />
   },
   {
+    to: "assessment",
+    title: "Assessment",
+    icon: <Newspaper />
+  },
+  {
     to : "chat",
     title: "Chat",
     icon: <MessageCircle />

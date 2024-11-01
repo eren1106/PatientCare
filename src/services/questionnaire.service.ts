@@ -23,7 +23,7 @@ export const getOptions = async (): Promise<OptionTemplate[]> => {
 }
 
 
-export const getAssessmentsByPatientId = async (id : string): Promise<Assessment[]> => {
+export const getAssessmentsByPatientRecordId = async (id : string): Promise<Assessment[]> => {
   try {
     const res = await apiCaller.get(`questionnaire/patient/${id}`);
     return res.data.data;
@@ -73,6 +73,16 @@ export const deleteQuestionnaire = async (questionnaireId : string) => {
   }
 }
 
+export const getAssessmentResult = async (assessmentId : string): Promise<AssessmentResult> => {
+  try {
+    const res = await apiCaller.get(`questionnaire/assessment/${assessmentId}/result`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 export const deleteAssessment = async (assessmentId : string) => {
   try {
     const res = await apiCaller.delete(`questionnaire/assessment/${assessmentId}`);
@@ -113,5 +123,32 @@ export interface CreateSection {
   name: string;
   description: string;
   questions: CreateQuestion[];
+}
+
+export interface AssessmentResult {
+  questionnaireName: string;
+  questionnaireType: string;
+  questionnaireIndex: string;
+  questionnaireStatus: string;
+  sectionScores: SectionScore[];
+  totalScore: number;
+}
+
+export interface SectionScore {
+  sectionName: string;
+  sectionScore: number;
+  sectionTotalScore: number;
+  questions: QuestionScore[];
+}
+
+export interface QuestionScore {
+  questionId: string;
+  questionTitle: string;
+  response: Response | null;
+}
+
+export interface Response {
+  scaleValue: number;
+  content: string | null;
 }
 

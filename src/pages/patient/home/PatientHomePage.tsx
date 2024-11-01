@@ -10,8 +10,9 @@ import { DailyPatientExercise } from "@/interfaces/exercise";
 import SkeletonCard from "@/components/SkeletonCard";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
 import { Assessment } from "@/interfaces/questionnaire";
-import { getAssessmentsByPatientId } from "@/services/questionnaire.service";
+import { getAssessmentsByPatientRecordId } from "@/services/questionnaire.service";
 import { MOCK_PATIENT_ID } from "@/constants/mocks";
+import { getCurrentUser } from "@/services/auth.service";
 
 const PatientHomePage = () => {
   const { isLoading, withLoading } = useLoading();
@@ -24,9 +25,11 @@ const PatientHomePage = () => {
   const getData = async () => {
     const data = await getDailyPatientExercises();
     setDailyPatientExercises(data);
-    const assessment = await getAssessmentsByPatientId(MOCK_PATIENT_ID);
-    setPatientAssessment(assessment);
-    console.log(assessment);
+    const currentUser = getCurrentUser();
+    if (currentUser && currentUser.id) {
+      const assessment = await getAssessmentsByPatientRecordId(currentUser.id);
+      setPatientAssessment(assessment);
+    }
   };
 
   useEffect(() => {
