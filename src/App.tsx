@@ -61,10 +61,10 @@ const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
   return (
     <>
       <Topbar />
-      <div className='h-full w-60 fixed mt-16 hidden md:flex'>
+      <div className='h-full w-56 fixed mt-16 hidden md:flex'>
         <Sidebar isDoctor={isDoctor} />
       </div>
-      <div className='flex-1 p-8 ml-0 md:ml-60 mt-8 md:mt-16'>
+      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16'>
         <Outlet />
       </div >
       <Footer />

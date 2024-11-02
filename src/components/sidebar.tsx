@@ -91,7 +91,7 @@ const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   }
 
   return (
-    <div className='flex flex-col items-center p-6 gap-3 border-r bg-background'>
+    <div className='flex flex-col items-center p-6 gap-3 border-r bg-background w-full'>
       {
         navItems.map((item) => {
           // to make selected tab have color
