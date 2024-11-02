@@ -1,4 +1,4 @@
-import { BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Users } from "lucide-react"
+import { Activity, BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Users } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { DASHBOARD_ROOT_PATH } from "@/constants"
@@ -28,7 +28,12 @@ const PATIENT_NAV_ITEMS = [
     to: "appointments",
     title: "Appointments",
     icon: <Calendar />
-  }
+  },
+  {
+    to: "tracking",
+    title: "Tracking",
+    icon: <Activity />
+  },
 ]
 
 const DASHBOARD_NAV_ITEMS = [

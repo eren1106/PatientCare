@@ -32,6 +32,7 @@ import { getCurrentUser } from "./services/auth.service";
 import { UserRole } from "./enums";
 import QuestionnaireResult from "./pages/doctor/questionnaire/QuestionnaireResult";
 import AssessmentDetailPage from "./pages/patient/assessment/AssessmentDetailPage";
+import TrackingPage from "./pages/patient/tracking/TrackingPage";
 
 const AppWrapper = () => {
 
@@ -131,7 +132,10 @@ const router = createBrowserRouter([
                 element : <AssessmentDetailPage />
               }
             ],
-            
+          },
+          {
+            path: "tracking",
+            element: <TrackingPage />
           },
           {
             path: "profile/:id",
