@@ -15,7 +15,6 @@ export interface Exercise {
 export interface DailyPatientExercise {
   id: string;
   patientId: string;
-  // patientExerciseId: string;
   patientExercise: PatientExercise;
   isCompleted: boolean;
   createdDatetime: Date | string;

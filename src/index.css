@@ -94,3 +94,9 @@ h4 {
   top: 0;
   left: 0;
 }
+
+/* FULLCALENDER */
+:root {
+  --fc-today-bg-color: #ffffff;
+  /* --fc-today-bg-color: rgb(244, 249, 255); */
+}

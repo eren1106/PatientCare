@@ -1,6 +1,7 @@
 import { MOCK_PATIENT_ID } from "@/constants";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
+import { apiRequest } from "@/utils/apiRequest";
 
 // TODO: remove all mock id
 
@@ -25,10 +26,21 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
   }
 };
 
+
 export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
   try {
     const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
     return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const getAllTimeDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
+  try {
+    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/all-daily`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
