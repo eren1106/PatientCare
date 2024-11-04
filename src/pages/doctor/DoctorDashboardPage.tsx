@@ -33,6 +33,8 @@ import SkeletonCard from "@/components/SkeletonCard";
 import SkeletonLoader from "@/components/SkeletonLoader";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { getCurrentUser } from "@/services/auth.service";
+import ProfileAvatar from "@/components/ProfileAvatar";
 
 const DoctorDashboardPage = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -118,34 +120,11 @@ const DoctorDashboardPage = () => {
     record.patient.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Control delete injury modal
-  const [deleteInjuryModal, setDeleteInjuryModal] = useState(false);
-  const removeInjury = async () => {
-    try {
-      const deleteRecord = await deletePatientRecord(removeRecordId);
-      toast({
-        variant: "success",
-        title: "Patient Record Deleted Successfully",
-        description: "The patient record has been deleted.",
-      });
-      setPatientRecord((prevRecords) =>
-        prevRecords.filter((record) => record.id !== removeRecordId)
-      );
-      setDeleteModal(false);
-      setRemoveRecordId("");
-    } catch (e: any) {
-      console.error(e);
-      toast({
-        variant: "destructive",
-        title: "Delete Record Failed",
-        description: `${e.response.data.message}`,
-      });
-    }
-  };
-
   return (
     <div>
-      <h2 className="font-semibold">Welcome back, Dr. Samiha </h2>
+      <h2 className="font-semibold">
+        Welcome back, Dr. {getCurrentUser()?.fullname}
+      </h2>
       <p className="text-sm text-gray-500 mt-1">
         Have a nice day and great work
       </p>
@@ -188,8 +167,10 @@ const DoctorDashboardPage = () => {
           <Table className="mt-2 w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="">Patient</TableHead>
+                <TableHead>Profile</TableHead>
+                <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Age</TableHead>
                 <TableHead>Upcoming Appointments</TableHead>
                 <TableHead>Date Created</TableHead>
                 <TableHead>Action</TableHead>
@@ -199,10 +180,17 @@ const DoctorDashboardPage = () => {
               {filteredRecords.length > 0 ? (
                 filteredRecords.map((record) => (
                   <TableRow key={record.id}>
+                    <TableCell>
+                      <ProfileAvatar
+                        src={record.patient.profileImageUrl ?? undefined}
+                        fallbackText={record.patient.fullname?.charAt(0)}
+                      />
+                    </TableCell>
                     <TableCell className="font-medium">
-                      {record.patient.username}
+                      {record.patient.fullname}
                     </TableCell>
                     <TableCell>{record.patient.email}</TableCell>
+                    <TableCell>{record.patient.age}</TableCell>
                     <TableCell>
                       {record.appointment.length > 0 ? (
                         <ul>
@@ -283,7 +271,6 @@ const DoctorDashboardPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 };

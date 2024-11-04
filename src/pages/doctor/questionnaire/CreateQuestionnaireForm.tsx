@@ -85,13 +85,14 @@ const CreateQuestionnaireForm = () => {
         variant: "success",
         description: `Successfully created the questionnaire`,
       });
-      navigate("/dashboard/questionnaires");
+      navigate("/dashboard/questionnaire");
     } catch (error: any) {
       toast({
         title: "Creation Failed",
         variant: "destructive",
         description: `Failed to create the questionnaire`,
       });
+      navigate("/dashboard/questionnaire");
     }
   };
 

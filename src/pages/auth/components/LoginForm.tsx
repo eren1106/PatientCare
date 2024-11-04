@@ -38,6 +38,7 @@ const LoginForm = () => {
       await withLoading(async () => await loginUser(email, password));
 
       // TODO: Currently it prevent me from login, uncomment this when it is fixed
+      // NOTE: No issue, just backend need to setup twilio, this api will require twilio token to work
       // await initializeDevice();
 
       toast({
@@ -46,7 +47,7 @@ const LoginForm = () => {
       });
 
       const user = getCurrentUser();
-      if(user?.role === UserRole.DOCTOR) {
+      if(user?.role === UserRole.DOCTOR || user?.role === UserRole.ADMIN) {
         navigate("/dashboard");
         return;
       }
@@ -56,12 +57,12 @@ const LoginForm = () => {
       }
     }
     catch (e: any) {
-      console.log(e);
+      const errorMessage = e.data?.data?.message || "Failed to login";
       toast({
         title: "Failed to login",
-        description: `${e.response.data.message}`,
+        description: errorMessage,
         variant: "destructive"
-      })
+      });
     }
   }
 

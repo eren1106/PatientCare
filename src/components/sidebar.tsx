@@ -1,7 +1,9 @@
-import { BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Users } from "lucide-react"
+import { BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Shield, Users } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { DASHBOARD_ROOT_PATH } from "@/constants"
+import { getCurrentUser } from "@/services/auth.service"
+import { UserRole } from "@/enums"
 
 const PATIENT_NAV_ITEMS = [
   {
@@ -30,6 +32,13 @@ const PATIENT_NAV_ITEMS = [
     icon: <Calendar />
   }
 ]
+
+const ADMIN_NAV_ITEM = {
+  to: "admin",
+  title: "Admin",
+  icon: <Shield />
+};
+
 
 const DASHBOARD_NAV_ITEMS = [
   {
@@ -63,17 +72,26 @@ const DASHBOARD_NAV_ITEMS = [
 interface SidebarProps {
   isDoctor?: boolean;
   onNavItemClicked?: () => void;
+
+  
 }
 
 const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   const location = useLocation();
-  const navItems = isDoctor ? DASHBOARD_NAV_ITEMS : PATIENT_NAV_ITEMS;
+  let navItems = isDoctor ? DASHBOARD_NAV_ITEMS : PATIENT_NAV_ITEMS;
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser?.role === UserRole.ADMIN;
+
+  if (isAdmin) {
+    navItems = [...navItems, ADMIN_NAV_ITEM];
+  }
+
 
   const checkIsSelected = (to: string): boolean => {
     const normalizePath = (path: string): string => path.replace(/\/+$/, ""); // Remove trailing slashes
 
     const currentPath = normalizePath(location.pathname);
-    const rootPath = normalizePath(isDoctor ? `/${DASHBOARD_ROOT_PATH}` : "/");
+    const rootPath = normalizePath(isDoctor || isAdmin ? `/${DASHBOARD_ROOT_PATH}` : "/");
     
     if (to === "") {
       // Check if the current path is exactly the root or dashboard root
@@ -81,7 +99,7 @@ const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
     }
 
     // Check if the current path matches the tab's path or starts with the tab's path
-    const pathPrefix = normalizePath(isDoctor ? `/${DASHBOARD_ROOT_PATH}/${to}` : `/${to}`);
+    const pathPrefix = normalizePath(isDoctor || isAdmin ? `/${DASHBOARD_ROOT_PATH}/${to}` : `/${to}`);
     return currentPath.startsWith(pathPrefix);
   }
 

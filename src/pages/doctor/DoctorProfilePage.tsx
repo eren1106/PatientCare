@@ -133,7 +133,7 @@ const DoctorProfilePage = () => {
                 />
                 <ProfileInfo
                   label="Registration Number"
-                  value={doctor?.doctorValidation.registrationNumber}
+                  value={doctor?.doctorValidation?.registrationNumber}
                 />
                 <ProfileInfo
                   label="Register Date"
