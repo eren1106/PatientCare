@@ -1,4 +1,4 @@
-import { Gender, UserRole } from "@/enums";
+import { DoctorRegistrationStatus, Gender, UserRole } from "@/enums";
 import { PatientRecord } from "./dashboard";
 import { PatientExercise } from "./exercise";
 
@@ -8,6 +8,7 @@ export interface User {
   fullname: string;
   email: string;
   profileImageUrl: string | null;
+  doctorRegistrationStatus : DoctorRegistrationStatus | null;
   createdDatetime: string;
   age: number;
   gender: Gender;

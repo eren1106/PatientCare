@@ -5,10 +5,8 @@ import * as React from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Form } from "@/components/ui/form";
 import { CreatePatientRecord } from "@/services/dashboard.service";
-
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 import {
   getAllPatient,
   insertPatientRecord,
@@ -39,7 +37,7 @@ const formSchema = z.object({
         description: z.string(),
       })
       
-  ),
+  ).optional(),
 });
 
 interface InsertPatientRecordModalProps {
@@ -109,11 +107,12 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
       patientId: values.patient,
       weight: values.weight,
       height: values.height,
-      injury: values.injuries
+      injury: values.injuries?.map(injury => ({
+        ...injury
+      }))
     };
 
-    // TODO: Currently it trigger error when i try run build, uncomment this when it is fixed
-    // addPatient(updatedRecord);
+    addPatient(updatedRecord);
 
     reset({
       patient: "",

@@ -10,5 +10,14 @@ export const RegisterSchema = z.object({
   age: z.coerce.number().min(1, "Age required at least 1"),
   gender: z.nativeEnum(Gender),
   role: z.nativeEnum(UserRoleRegister),
-});
+  registrationNumber: z.string().optional(),
+}).refine((data) => {
+  if (data.role === UserRoleRegister.DOCTOR) {
+    return !!data.registrationNumber;
+  }
+  return true;
+}, {
+  message: "Registration number is required for doctors",
+  path: ["registrationNumber"],
+});;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;

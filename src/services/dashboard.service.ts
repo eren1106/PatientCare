@@ -104,7 +104,7 @@ export interface CreatePatientRecord {
   patientId:string
   weight:number,
   height:number,
-  injury: Injury[];
+  injury?: CreateInjury[];
 }
 
 export interface Injury {
@@ -117,7 +117,6 @@ export interface Injury {
 }
 
 export interface CreateInjury {
-  patientRecordId : string;
   painRegion: string;
   duration: string;
   painScore: number;

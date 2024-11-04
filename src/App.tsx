@@ -33,6 +33,8 @@ import { UserRole } from "./enums";
 import QuestionnaireResult from "./pages/doctor/questionnaire/QuestionnaireResult";
 import AssessmentDetailPage from "./pages/patient/assessment/AssessmentDetailPage";
 import TrackingPage from "./pages/patient/tracking/TrackingPage";
+import AdminPage from "./pages/admin/AdminPage";
+import AuthGuard from "./pages/admin/components/AuthGuard";
 
 const AppWrapper = () => {
 
@@ -45,17 +47,17 @@ const AppWrapper = () => {
   )
 }
 
-const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
+const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
   const currentUser = getCurrentUser();
   if (isDoctor) {
     if (!currentUser) return <Navigate to="/auth/login" />;
     if (currentUser.role === UserRole.PATIENT) return <Navigate to="/" />;
-    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+    //if (currentUser.role === UserRole.ADMIN) return <Navigate to="/dashboard" />;
   }
   else { // patient
     if (!currentUser) return <Navigate to="/auth/login" />;
     if (currentUser.role === UserRole.DOCTOR) return <Navigate to="/dashboard" />;
-    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/admin" />;
+    if (currentUser.role === UserRole.ADMIN) return <Navigate to="/dashboard" />;
   }
 
   return (
@@ -144,10 +146,12 @@ const router = createBrowserRouter([
         ]
       },
 
+      
+
       // DOCTOR DASHBOARD ROUTES
       {
         path: DASHBOARD_ROOT_PATH,
-        element: <MainWrapper isDoctor />,
+        element: <MainWrapper isDoctor/>,
         children: [
           {
             path: "",
@@ -209,9 +213,20 @@ const router = createBrowserRouter([
           {
             path: "profile/:id",
             element: <DoctorProfilePage />
+          },
+
+          // Admin Page
+          {
+            path: "admin",
+            element: (
+              <AuthGuard requiredRole={UserRole.ADMIN}>
+                <AdminPage />
+              </AuthGuard>
+            ),
           }
         ]
       },
+
 
       // AUTH
       {

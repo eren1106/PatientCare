@@ -13,3 +13,9 @@ export enum UserRoleRegister {
   PATIENT = "PATIENT",
   DOCTOR = "DOCTOR",
 }
+
+export enum DoctorRegistrationStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
