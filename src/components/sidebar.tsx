@@ -1,4 +1,4 @@
-import { BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Shield, Users } from "lucide-react"
+import { Activity, BarChart2, Calendar, Dumbbell, Home, MessageCircle, Newspaper, Shield, Users } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { DASHBOARD_ROOT_PATH } from "@/constants"
@@ -30,7 +30,12 @@ const PATIENT_NAV_ITEMS = [
     to: "appointments",
     title: "Appointments",
     icon: <Calendar />
-  }
+  },
+  {
+    to: "tracking",
+    title: "Tracking",
+    icon: <Activity />
+  },
 ]
 
 const ADMIN_NAV_ITEM = {
@@ -104,7 +109,7 @@ const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   }
 
   return (
-    <div className='flex flex-col items-center p-6 gap-3 border-r bg-background'>
+    <div className='flex flex-col items-center p-6 gap-3 border-r bg-background w-full'>
       {
         navItems.map((item) => {
           // to make selected tab have color

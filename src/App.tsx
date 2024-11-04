@@ -32,6 +32,7 @@ import { getCurrentUser } from "./services/auth.service";
 import { UserRole } from "./enums";
 import QuestionnaireResult from "./pages/doctor/questionnaire/QuestionnaireResult";
 import AssessmentDetailPage from "./pages/patient/assessment/AssessmentDetailPage";
+import TrackingPage from "./pages/patient/tracking/TrackingPage";
 import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
 
@@ -62,10 +63,10 @@ const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
   return (
     <>
       <Topbar />
-      <div className='h-full w-60 fixed mt-16 hidden md:flex'>
-        <Sidebar isDoctor={isDoctor}/>
+      <div className='h-full w-56 fixed mt-16 hidden md:flex'>
+        <Sidebar isDoctor={isDoctor} />
       </div>
-      <div className='flex-1 p-8 ml-0 md:ml-60 mt-8 md:mt-16'>
+      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16'>
         <Outlet />
       </div >
       <Footer />
@@ -133,7 +134,10 @@ const router = createBrowserRouter([
                 element : <AssessmentDetailPage />
               }
             ],
-            
+          },
+          {
+            path: "tracking",
+            element: <TrackingPage />
           },
           {
             path: "profile/:id",
