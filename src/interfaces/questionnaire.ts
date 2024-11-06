@@ -42,7 +42,7 @@ export interface OptionTemplate {
 }
 
 // Options
-interface Option {
+export interface Option {
   id: string;
   optionTemplateId : string;
   scaleValue : number;

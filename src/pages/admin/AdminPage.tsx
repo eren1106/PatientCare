@@ -12,6 +12,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Doctor} from '@/interfaces/user';
 import { DoctorRegistrationStatus } from '@/enums';
 import { Button } from '@/components/ui/button';
+import OptionTemplateManager from './components/OptionTemplateManager';
 
 const DoctorStatusSchema = z.object({
   doctorId: z.string(),
@@ -59,6 +60,7 @@ const AdminPage = () => {
   };
 
   return (
+    <>
     <Card className="p-6">
       <h1 className="text-2xl font-bold mb-6">Admin - Doctor Registration</h1>
       <Table>
@@ -116,7 +118,10 @@ const AdminPage = () => {
           ))}
         </TableBody>
       </Table>
+      
     </Card>
+    <OptionTemplateManager />
+    </>
   );
 };
 
