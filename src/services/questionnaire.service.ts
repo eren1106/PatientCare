@@ -104,6 +104,63 @@ export const updateQuestionnaire = async (id: String, data : UpdateQuestionnaire
   }
 }
 
+export const getAllOptionTemplates = async (): Promise<OptionTemplate[]> => {
+  try {
+    const res = await apiCaller.get('questionnaire/optionTemplate');
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const createOptionTemplate = async (data: CreateOptionTemplateRequest) => {
+  try {
+    const res = await apiCaller.post('questionnaire/optionTemplate', data);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const updateOptionTemplate = async (id: string, data: UpdateOptionTemplate) => {
+  try {
+    const res = await apiCaller.put(`questionnaire/optionTemplate/${id}`, data);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const deleteOptionTemplate = async (id: string) => {
+  try {
+    const res = await apiCaller.delete(`questionnaire/optionTemplate/${id}`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+
+export interface UpdateOptionTemplate {
+  scaleType: string;
+  options: Option[];
+}
+
+export interface Option {
+  id? : string;
+  scaleValue: number;
+  content: string;
+}
+
+export interface CreateOptionTemplateRequest {
+  scaleType: string;
+  options: Option[];
+}
+
 
 interface CreateQuestion {
   title: string;
