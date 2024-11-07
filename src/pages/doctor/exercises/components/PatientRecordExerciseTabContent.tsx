@@ -15,19 +15,18 @@ import { useToast } from "@/components/ui/use-toast";
 import { getExercises } from "@/services/exercise.service";
 import { refreshPage } from "@/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import PatientExerciseForm from "../../dashboard/components/PatientExerciseForm";
+import Spinner from "@/components/Spinner";
 
 const PatientExerciseSchema = z.object({
   exerciseId: z.string().min(1),
   sets: z.coerce.number().nonnegative(),
-  // sets: z.preprocess((a) => parseInt(z.string().parse(a), 10),
-  //   z.number().gte(1, 'Must be 1 and above')),
 });
 
-const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
+const PatientRecordExerciseTabContent = ({ patientId }: { patientId: string }) => {
   // const { recordId } = useParams(); // id = patient's ID
   const { isLoading, withLoading } = useLoading();
   const { toast } = useToast();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [patientExercises, setPatientExercises] = useState<PatientExercise[]>([]);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [selectedEditPatientExercise, setSelectedEditPatientExercise] = useState<PatientExercise | null>(null);
@@ -38,8 +37,7 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
       setPatientExercises(patientExercisesData);
     }
 
-    const exercisesData = await getExercises();
-    setExercises(exercisesData);
+    // const exercisesData = await getExercises();
   }
 
   useEffect(() => {
@@ -52,59 +50,6 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
       sets: 1,
     }
   });
-
-  const onSubmit = async (data: z.infer<typeof PatientExerciseSchema>) => {
-    if (!patientId) return;
-    const {
-      exerciseId,
-      sets,
-    } = data;
-
-    console.log("PATIENT ID: ", patientId)
-    try {
-      if (showEditModal) {
-        // edit patient exercise
-        await updatePatientExercise({
-          patientId,
-          exerciseId,
-          sets,
-          patientExerciseId: selectedEditPatientExercise?.id,
-        });
-
-        toast({
-          variant: "success",
-          title: "Exercise Updated Successfully",
-        });
-      }
-      else {
-        // create patient exercise
-        await createPatientExercise({
-          patientId,
-          exerciseId,
-          sets,
-        });
-
-        toast({
-          variant: "success",
-          title: "Exercise Assigned Successfully",
-        });
-      }
-
-      refreshPage();
-    }
-    catch (e: any) {
-      console.error(e);
-      toast({
-        variant: "destructive",
-        title: "Failed",
-        description: `${e.response.data.message}`,
-      });
-    }
-  };
-
-  const handleSelectExercise = (id: string) => {
-    form.setValue("exerciseId", id);
-  }
 
   const handleClickDelete = async (id: string) => {
     try {
@@ -129,10 +74,10 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
 
   const handleClickEdit = (patientExercise: PatientExercise) => {
     setSelectedEditPatientExercise(patientExercise);
-    form.reset({
-      exerciseId: patientExercise.exercise.id,
-      sets: patientExercise.sets,
-    });
+    // form.reset({
+    //   exerciseId: patientExercise.exercise.id,
+    //   sets: patientExercise.sets,
+    // });
     setShowEditModal(true);
   }
 
@@ -141,6 +86,7 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
     if (open) form.reset();
   }
 
+  if (isLoading) return <Spinner />
   return (
     <div className="mt-5">
       <div className="flex justify-between items-center">
@@ -151,46 +97,7 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
           variant="default"
           title="Assign Exercise"
           content={
-            <div className="flex flex-col gap-3">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-3'>
-                  <FormField
-                    control={form.control}
-                    name="exerciseId"
-                    render={() => (
-                      <FormItem className="flex flex-col gap-1">
-                        <FormLabel>Exercise</FormLabel>
-                        <FormControl>
-                          <Combobox
-                            items={exercises.map((exercise) => ({
-                              label: exercise.title,
-                              value: exercise.id,
-                            }))}
-                            onSelect={handleSelectExercise}
-                            placeholder="Select Exercise..."
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <GenericFormField
-                    control={form.control}
-                    name="sets"
-                    label="Sets"
-                    type="number"
-                    placeholder="Set how many set per day"
-                  />
-
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                  >
-                    Submit
-                  </Button>
-                </form>
-              </Form>
-            </div>
+            <PatientExerciseForm patientId={patientId} />
           }>Assign Exercise</DialogButton>
       </div>
       <PatientExercisesTable
@@ -199,52 +106,27 @@ const PatientRecordExerciseTabContent = ({patientId}: {patientId: string}) => {
         onEdit={handleClickEdit}
       />
 
-      {/* TODO: MAKE CREATE & EDIT THE SAME COMPONENT */}
       {/* EDIT PATIENT EXERCISE MODAL */}
       <Dialog open={showEditModal} onOpenChange={handleChangeEditModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Edit Assigned Exercise</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-3'>
-              <FormField
-                control={form.control}
-                name="exerciseId"
-                render={() => (
-                  <FormItem className="flex flex-col gap-1">
-                    <FormLabel>Exercise</FormLabel>
-                    <FormControl>
-                      <Combobox
-                        items={exercises.map((exercise) => ({
-                          label: exercise.title,
-                          value: exercise.id,
-                        }))}
-                        onSelect={handleSelectExercise}
-                        placeholder="Select Exercise..."
-                        initialValue={form.getValues("exerciseId")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          {
+            selectedEditPatientExercise && (
+              <PatientExerciseForm
+                patientId={patientId}
+                patientExerciseId={selectedEditPatientExercise.id}
+                defaultValues={{
+                  exerciseId: selectedEditPatientExercise.exercise.id,
+                  sets: selectedEditPatientExercise.sets,
+                  reps: selectedEditPatientExercise.reps,
+                  frequency: selectedEditPatientExercise.frequency,
+                  duration: selectedEditPatientExercise.duration,
+                }}
               />
-              <GenericFormField
-                control={form.control}
-                name="sets"
-                label="Sets"
-                type="number"
-                placeholder="Set how many set per day"
-              />
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-              >
-                Submit
-              </Button>
-            </form>
-          </Form>
+            )
+          }
         </DialogContent>
       </Dialog>
     </div>

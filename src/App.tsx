@@ -35,6 +35,7 @@ import AssessmentDetailPage from "./pages/patient/assessment/AssessmentDetailPag
 import TrackingPage from "./pages/patient/tracking/TrackingPage";
 import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
+import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
 
 const AppWrapper = () => {
 
@@ -209,6 +210,10 @@ const router = createBrowserRouter([
           {
             path: "appointments",
             element: <AppointmentPage />
+          },
+          {
+            path: "tracking",
+            element: <DoctorTrackingPage />
           },
           {
             path: "profile/:id",

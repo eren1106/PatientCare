@@ -24,6 +24,14 @@ export interface DailyPatientExercise {
 export interface PatientExercise {
   id: string;
   exercise: Exercise;
+  reps: number;
   sets: number;
+  frequency: number;
+  duration: number;
   createdDatetime: Date | string;
+}
+
+export interface ExerciseCompetionSummary {
+  day: number;
+  percentage: number;
 }

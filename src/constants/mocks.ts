@@ -1,4 +1,4 @@
-import { DailyPatientExercise, Exercise, PatientExercise } from "@/interfaces/exercise";
+import { DailyPatientExercise, Exercise, ExerciseCompetionSummary, PatientExercise } from "@/interfaces/exercise";
 import { Notification } from "@/interfaces/notification";
 
 export const MOCK_PATIENT_ID = "clxr5b60g000214nuqvj27lxo";
@@ -68,78 +68,78 @@ export const MOCK_EXERCISES: Exercise[] = [
   },
 ];
 
-export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
-  {
-    id: "1",
-    exercise: MOCK_EXERCISES[0],
-    sets: 3,
-    createdDatetime: new Date("2024-06-01"),
-  },
-  {
-    id: "2",
-    exercise: MOCK_EXERCISES[1],
-    sets: 2,
-    createdDatetime: new Date("2024-06-01"),
-  },
-  {
-    id: "3",
-    exercise: MOCK_EXERCISES[2],
-    sets: 4,
-    createdDatetime: new Date("2024-06-01"),
-  },
-  {
-    id: "4",
-    exercise: MOCK_EXERCISES[3],
-    sets: 1,
-    createdDatetime: new Date("2024-06-01"),
-  },
-  {
-    id: "5",
-    exercise: MOCK_EXERCISES[4],
-    sets: 3,
-    createdDatetime: new Date("2024-06-01"),
-  },
-];
+// export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
+//   {
+//     id: "1",
+//     exercise: MOCK_EXERCISES[0],
+//     sets: 3,
+//     createdDatetime: new Date("2024-06-01"),
+//   },
+//   {
+//     id: "2",
+//     exercise: MOCK_EXERCISES[1],
+//     sets: 2,
+//     createdDatetime: new Date("2024-06-01"),
+//   },
+//   {
+//     id: "3",
+//     exercise: MOCK_EXERCISES[2],
+//     sets: 4,
+//     createdDatetime: new Date("2024-06-01"),
+//   },
+//   {
+//     id: "4",
+//     exercise: MOCK_EXERCISES[3],
+//     sets: 1,
+//     createdDatetime: new Date("2024-06-01"),
+//   },
+//   {
+//     id: "5",
+//     exercise: MOCK_EXERCISES[4],
+//     sets: 3,
+//     createdDatetime: new Date("2024-06-01"),
+//   },
+// ];
 
-export const MOCK_DAILY_PATIENT_EXERCISES: DailyPatientExercise[] = [
-  {
-    id: "1",
-    patientId: "1",
-    isCompleted: false,
-    createdDatetime: new Date("2024-06-01"),
-    patientExercise: MOCK_PATIENT_EXERCISES[0],
-  },
-  {
-    id: "2",
-    patientId: "1",
-    isCompleted: true,
-    createdDatetime: new Date("2024-06-01"),
-    completedDatetime: new Date(),
-    patientExercise: MOCK_PATIENT_EXERCISES[0],
-  },
-  {
-    id: "3",
-    patientId: "1",
-    isCompleted: false,
-    createdDatetime: new Date("2024-06-01"),
-    patientExercise: MOCK_PATIENT_EXERCISES[0],
-  },
-  {
-    id: "4",
-    patientId: "1",
-    isCompleted: true,
-    createdDatetime: new Date("2024-06-01"),
-    completedDatetime: new Date(),
-    patientExercise: MOCK_PATIENT_EXERCISES[0],
-  },
-  {
-    id: "5",
-    patientId: "1",
-    isCompleted: false,
-    createdDatetime: new Date("2024-06-01"),
-    patientExercise: MOCK_PATIENT_EXERCISES[0],
-  },
-];
+// export const MOCK_DAILY_PATIENT_EXERCISES: DailyPatientExercise[] = [
+//   {
+//     id: "1",
+//     patientId: "1",
+//     isCompleted: false,
+//     createdDatetime: new Date("2024-06-01"),
+//     patientExercise: MOCK_PATIENT_EXERCISES[0],
+//   },
+//   {
+//     id: "2",
+//     patientId: "1",
+//     isCompleted: true,
+//     createdDatetime: new Date("2024-06-01"),
+//     completedDatetime: new Date(),
+//     patientExercise: MOCK_PATIENT_EXERCISES[0],
+//   },
+//   {
+//     id: "3",
+//     patientId: "1",
+//     isCompleted: false,
+//     createdDatetime: new Date("2024-06-01"),
+//     patientExercise: MOCK_PATIENT_EXERCISES[0],
+//   },
+//   {
+//     id: "4",
+//     patientId: "1",
+//     isCompleted: true,
+//     createdDatetime: new Date("2024-06-01"),
+//     completedDatetime: new Date(),
+//     patientExercise: MOCK_PATIENT_EXERCISES[0],
+//   },
+//   {
+//     id: "5",
+//     patientId: "1",
+//     isCompleted: false,
+//     createdDatetime: new Date("2024-06-01"),
+//     patientExercise: MOCK_PATIENT_EXERCISES[0],
+//   },
+// ];
 
 // export const MOCK_NOTIFICATIONS: Notification[] = [
 //   {
@@ -353,7 +353,51 @@ export const userData: User[] = [
   }
 ];
 
+export const MOCK_EXERCISE_COMPLETION_SUMMARY: ExerciseCompetionSummary[] = [
+  {
+    day: 1,
+    percentage: 50,
+  },
+  {
+    day: 2,
+    percentage: 100,
+  },
+  {
+    day: 3,
+    percentage: 25,
+  },
+  {
+    day: 4,
+    percentage: 33,
+  },
+  {
+    day: 5,
+    percentage: 75,
+  },
+  {
+    day: 6,
+    percentage: 50,
+  },
+  {
+    day: 7,
+    percentage: 100,
+  },
+  {
+    day: 8,
+    percentage: 25,
+  },
+  {
+    day: 9,
+    percentage: 33,
+  },
+  {
+    day: 10,
+    percentage: 75,
+  },
+]
 
+
+// TODO: DONT PUT AT MOCK FILE
 export type UserData = (typeof userData)[number];
 
 export const loggedInUserData = {
