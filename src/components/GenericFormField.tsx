@@ -9,12 +9,13 @@ import { DatePicker } from './DatePicker';
 import { TimePicker } from './TimePicker';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
+import Combobox from './Combobox';
 
 interface GenericFormFieldProps {
   control: any;
   name: string;
   label?: string;
-  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email' | 'date' | 'time' | 'option';
+  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email' | 'date' | 'time' | 'option' | 'combobox';
   placeholder?: string;
   options?: Option[];
   minRows?: number;
@@ -87,24 +88,35 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
             )
             break;
 
-            case 'option':
-              res = (
-                <RadioGroup
-                  onValueChange={(value) => field.onChange(value)}
-                  defaultValue={field.value}
-                  className="flex md:flex-row flex-col w-full md:w-auto"
-                >
-                  {options?.map((item) => (
-                    <div key={item.value} className="flex items-center justify-center border border-black px-4 py-2 cursor-pointer space-x-2 ">
-                      <RadioGroupItem value={item.value} id={`${name}-${item.value}`} />
-                      <Label htmlFor={`${name}-${item.value}`}>
-                        {item.label}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              );
-              break;
+          case 'option':
+            res = (
+              <RadioGroup
+                onValueChange={(value) => field.onChange(value)}
+                defaultValue={field.value}
+                className="flex md:flex-row flex-col w-full md:w-auto"
+              >
+                {options?.map((item) => (
+                  <div key={item.value} className="flex items-center justify-center border border-black px-4 py-2 cursor-pointer space-x-2 ">
+                    <RadioGroupItem value={item.value} id={`${name}-${item.value}`} />
+                    <Label htmlFor={`${name}-${item.value}`}>
+                      {item.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            );
+            break;
+
+          case 'combobox':
+            res = (
+              <Combobox
+                items={options || []}
+                onSelect={field.onChange}
+                placeholder={placeholder}
+                initialValue={field.value}
+              />
+            )
+            break;
           default:
             res = <></>;
             break;
