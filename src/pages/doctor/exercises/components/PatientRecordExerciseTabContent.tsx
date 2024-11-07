@@ -119,7 +119,10 @@ const PatientRecordExerciseTabContent = ({ patientId }: { patientId: string }) =
                 patientExerciseId={selectedEditPatientExercise.id}
                 defaultValues={{
                   exerciseId: selectedEditPatientExercise.exercise.id,
-                  sets: selectedEditPatientExercise.sets
+                  sets: selectedEditPatientExercise.sets,
+                  reps: selectedEditPatientExercise.reps,
+                  frequency: selectedEditPatientExercise.frequency,
+                  duration: selectedEditPatientExercise.duration,
                 }}
               />
             )

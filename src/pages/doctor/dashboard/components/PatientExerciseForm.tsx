@@ -107,10 +107,31 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
       />
       <GenericFormField
         control={form.control}
+        name="reps"
+        label="Reps"
+        type="number"
+        placeholder="Set how many reps"
+      />
+      <GenericFormField
+        control={form.control}
         name="sets"
         label="Sets"
         type="number"
-        placeholder="Set how many set per day"
+        placeholder="Set how many sets"
+      />
+      <GenericFormField
+        control={form.control}
+        name="frequency"
+        label="Frequency per week"
+        type="number"
+        placeholder="Set frequency per week"
+      />
+      <GenericFormField
+        control={form.control}
+        name="duration"
+        label="Duration"
+        type="number"
+        placeholder="Set duration"
       />
       <FormButton
         type="submit"
