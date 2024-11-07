@@ -22,7 +22,7 @@ const PATIENT_NAV_ITEMS = [
     icon: <Newspaper />
   },
   {
-    to : "chat",
+    to: "chat",
     title: "Chat",
     icon: <MessageCircle />
   },
@@ -62,7 +62,7 @@ const DASHBOARD_NAV_ITEMS = [
     icon: <Newspaper />
   },
   {
-    to : "chat",
+    to: "chat",
     title: "Chat",
     icon: <MessageCircle />
   },
@@ -71,14 +71,18 @@ const DASHBOARD_NAV_ITEMS = [
     title: "Appointments",
     icon: <Calendar />
   },
-
+  {
+    to: "tracking",
+    title: "Tracking",
+    icon: <Activity />
+  },
 ]
 
 interface SidebarProps {
   isDoctor?: boolean;
   onNavItemClicked?: () => void;
 
-  
+
 }
 
 const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
@@ -97,7 +101,7 @@ const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
 
     const currentPath = normalizePath(location.pathname);
     const rootPath = normalizePath(isDoctor || isAdmin ? `/${DASHBOARD_ROOT_PATH}` : "/");
-    
+
     if (to === "") {
       // Check if the current path is exactly the root or dashboard root
       return currentPath === rootPath;

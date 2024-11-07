@@ -30,3 +30,8 @@ export interface PatientExercise {
   duration: number;
   createdDatetime: Date | string;
 }
+
+export interface ExerciseCompetionSummary {
+  day: number;
+  percentage: number;
+}

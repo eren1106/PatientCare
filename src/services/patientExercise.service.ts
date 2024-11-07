@@ -1,5 +1,5 @@
 import { MOCK_PATIENT_ID } from "@/constants";
-import { DailyPatientExercise } from "@/interfaces/exercise";
+import { DailyPatientExercise, ExerciseCompetionSummary } from "@/interfaces/exercise";
 import { apiCaller } from "@/utils";
 import { apiRequest } from "@/utils/apiRequest";
 
@@ -40,6 +40,16 @@ export const getDailyPatientExerciseById = async (id: string): Promise<DailyPati
 export const getAllTimeDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
   try {
     const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/all-daily`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const getExerciseCompletionSummaryByPatientId = async (patientId: string): Promise<ExerciseCompetionSummary[]> => {
+  try {
+    const res = await apiRequest.get(`patients/${patientId}/exercises/completion-summary`);
     return res.data;
   } catch (e) {
     console.error(e);
