@@ -60,8 +60,7 @@ const ExerciseCompletionGraph = () => {
       const getSummaries = await getExerciseCompletionSummaryByPatientId(getPatients[0].id);
       setPatients(getPatients);
       setSelectedPatientId(getPatients[0].id);
-      // setSummaries(getSummaries);
-      setSummaries(MOCK_EXERCISE_COMPLETION_SUMMARY); // TODO: dont use mock, this just for demo purpose, use seed to populate dailyPatientExercise data
+      setSummaries(getSummaries);
     }
     catch (e) {
       console.error(e);
