@@ -2,7 +2,7 @@ import ExerciseCard from "../exercise/components/ExerciseCard";
 import { Card } from "@/components/ui/card";
 import ProfileAvatar from "@/components/ProfileAvatar";
 import { Button } from "@/components/ui/button";
-import { CircleUser, Send } from "lucide-react";
+import { CircleUser, Dumbbell, Newspaper, Send } from "lucide-react";
 import { Link } from "react-router-dom";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
@@ -11,8 +11,8 @@ import SkeletonCard from "@/components/SkeletonCard";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
 import { Assessment } from "@/interfaces/questionnaire";
 import { getAssessmentsByPatientRecordId } from "@/services/questionnaire.service";
-import { MOCK_PATIENT_ID } from "@/constants/mocks";
 import { getCurrentUser } from "@/services/auth.service";
+import NumberTicker from "@/components/ui/number-ticker";
 
 const PatientHomePage = () => {
   const { isLoading, withLoading } = useLoading();
@@ -26,9 +26,9 @@ const PatientHomePage = () => {
     const data = await getDailyPatientExercises();
     setDailyPatientExercises(data);
     const currentUser = getCurrentUser();
-    if (currentUser && currentUser.id) {
+    if (currentUser?.id) {
       const assessment = await getAssessmentsByPatientRecordId(currentUser.id);
-      setPatientAssessment(assessment);
+      if (assessment.length > 0) setPatientAssessment(assessment);
     }
   };
 
@@ -37,10 +37,60 @@ const PatientHomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1>Welcome, John</h1>
-      <section className="flex flex-col gap-4">
-        <h2>Your pending exercises</h2>
+    <div className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto">
+      <h1>Welcome Back, John</h1>
+      <div className="flex items-center justify-normal md:justify-around flex-col md:flex-row  gap-6">
+        <Card
+          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer"
+          onClick={(e) => { e.preventDefault(); window.location.replace('/#pending-exercises') }}
+        >
+          <div className="flex items-center gap-1">
+            <div className="bg-primary size-9 rounded-lg flex items-center justify-center">
+              <Dumbbell className="text-primary-foreground size-5" />
+            </div>
+            <h4 className="">Pending Exercises:</h4>
+          </div>
+          {
+            dailyPatientExercises.length > 0 ? (
+              <NumberTicker
+                value={dailyPatientExercises.length}
+                className="text-6xl font-bold my-auto"
+              />
+            ) : (
+              <p className="text-6xl font-bold my-auto">0</p>
+            )
+          }
+        </Card>
+        <Card
+          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer"
+          onClick={(e) => { e.preventDefault(); window.location.replace('/#pending-assessments') }}
+        >
+          <div className="flex items-center gap-1">
+            <div className="bg-purple-500 size-9 rounded-lg flex items-center justify-center">
+              <Newspaper className="text-primary-foreground size-5" />
+            </div>
+            <h4 className="">Pending Assessments:</h4>
+          </div>
+          {
+            patientAssessment.length > 0 ? (
+              <NumberTicker
+                value={patientAssessment.length}
+                className="text-6xl font-bold my-auto"
+              />
+            ) : (
+              <p className="text-6xl font-bold my-auto">0</p>
+            )
+          }
+        </Card>
+      </div>
+      <section className="flex flex-col gap-4" id="pending-exercises">
+        {
+          dailyPatientExercises.length > 0 ? (
+            <div className="flex items-center gap-3">
+              <h3>Your pending exercises for today ({dailyPatientExercises.length})</h3>
+            </div>
+          ) : <h3>Congrats, you completed all the exercises for today!</h3>
+        }
         {isLoading ? (
           <SkeletonCard />
         ) : (
@@ -67,21 +117,21 @@ const PatientHomePage = () => {
           </div>
         )}
       </section>
-      <section className="flex flex-col gap-4">
+      <section className="flex flex-col gap-4" id="pending-assessments">
         <h2>Your pending assessment</h2>
         <div className="flex gap-4">
-        {patientAssessment.map((assessment, index) => {
-          return (
-            <Link to={`questionnaire/${assessment.questionnaire.id}`} key={index}>
-              <Card className="p-4 w-min flex flex-col gap-3">
-                <h2 className="whitespace-nowrap">{assessment.questionnaire.title}</h2>
-                <p className="whitespace-nowrap">Assigned by Dr. Samiha</p>
-              </Card>
-            </Link>
-          );
-        })}
+          {patientAssessment.map((assessment, index) => {
+            return (
+              <Link to={`questionnaire/${assessment.questionnaire.id}`} key={index}>
+                <Card className="p-4 w-min flex flex-col gap-3">
+                  <h2 className="whitespace-nowrap">{assessment.questionnaire.title}</h2>
+                  <p className="whitespace-nowrap">Assigned by Dr. Samiha</p>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
-        
+
       </section>
       <section className="flex flex-col gap-4">
         <h2>Your assigned doctor</h2>

@@ -1,3 +1,4 @@
+import SkeletonCard from "@/components/SkeletonCard";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -51,7 +52,7 @@ const PatientExerciseDetailPage = () => {
   return (
     <>
       {
-        isLoading ? <Spinner /> : (
+        isLoading ? <SkeletonCard /> : (
           <div className="flex flex-col gap-4 w-full">
             <h1>{dailyPatientExercise?.patientExercise.exercise.title}</h1>
             <p>{dailyPatientExercise?.patientExercise.exercise.description}</p>
