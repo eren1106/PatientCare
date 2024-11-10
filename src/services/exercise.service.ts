@@ -1,10 +1,10 @@
 import { Exercise } from "@/interfaces/exercise";
-import { apiCaller } from "@/utils";
+import { apiRequest } from "@/utils/apiRequest";
 
 export const getExercises = async (): Promise<Exercise[]> => {
   try {
-    const res = await apiCaller.get(`exercises`);
-    return res.data.data;
+    const res = await apiRequest.get(`exercises`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -13,8 +13,8 @@ export const getExercises = async (): Promise<Exercise[]> => {
 
 export const getExerciseById = async (id: string): Promise<Exercise> => {
   try {
-    const res = await apiCaller.get(`exercises/${id}`);
-    return res.data.data;
+    const res = await apiRequest.get(`exercises/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -37,14 +37,14 @@ export const createExercise = async ({
   videoUrl,
 }: ExerciseDTO) => {
   try {
-    const res = await apiCaller.post(`exercises`, {
+    const res = await apiRequest.post(`exercises`, {
       title,
       description,
       difficulty,
       content,
       videoUrl,
     });
-    return res.data.data;
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -60,7 +60,7 @@ export const updateExercise = async ({
   videoUrl,
 }: ExerciseDTO) => {
   try {
-    const res = await apiCaller.put(`exercises/${id}`, {
+    const res = await apiRequest.put(`exercises/${id}`, {
       id,
       title,
       description,
@@ -68,7 +68,7 @@ export const updateExercise = async ({
       content,
       videoUrl,
     });
-    return res.data.data;
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -77,10 +77,20 @@ export const updateExercise = async ({
 
 export const deleteExerciseById = async (id: string) => {
   try {
-    const res = await apiCaller.delete(`exercises/${id}`);
-    return res.data.data;
+    const res = await apiRequest.delete(`exercises/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
+
+export const getAllExerciseCategories = async () => {
+  try {
+    const res = await apiRequest.get(`exercises/exercise-categories`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}

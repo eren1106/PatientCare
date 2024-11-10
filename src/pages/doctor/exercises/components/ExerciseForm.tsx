@@ -1,23 +1,19 @@
 import GenericFormField from '@/components/GenericFormField'
+import Spinner from '@/components/Spinner'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useToast } from '@/components/ui/use-toast'
 import { EXERCISE_DIFFICULTY } from '@/constants'
 import useLoading from '@/hooks/useLoading.hook'
 import { Exercise } from '@/interfaces/exercise'
-import { createExercise, updateExercise } from '@/services/exercise.service'
+import { ExerciseCategory } from '@/interfaces/exerciseCategory'
+import { ExerciseSchema, ExerciseSchemaType } from '@/schemas/exercise.schema'
+import { createExercise, getAllExerciseCategories, updateExercise } from '@/services/exercise.service'
 import { refreshPage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod';
-
-const ExerciseSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  content: z.string(),
-  difficulty: z.string(),
-  videoUrl: z.string().min(1),
-});
 
 interface ExerciseFormProps {
   exercise?: Exercise;
@@ -26,8 +22,8 @@ interface ExerciseFormProps {
 const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
   const { toast } = useToast();
 
-  // TODO: check how to implement withLoading in this page
-  const { isLoading, withLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
+  const [exerciseCategories, setExerciseCategories] = useState<ExerciseCategory[]>([]);
 
   const form = useForm<z.infer<typeof ExerciseSchema>>({
     resolver: zodResolver(ExerciseSchema),
@@ -37,49 +33,35 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
       content: exercise?.content ?? "",
       difficulty: exercise?.difficulty ?? "EASY",
       videoUrl: exercise?.videoUrl ?? "",
+      exerciseCategoryId: exercise?.exerciseCategoryId ?? "",
     }
   })
 
-  const onSubmit = async (data: z.infer<typeof ExerciseSchema>) => {
+  const onSubmit = async (data: ExerciseSchemaType) => {
     try {
-      const {
-        title,
-        description,
-        content,
-        difficulty,
-        videoUrl
-      } = data;
       if (exercise) {
         // update exercise
         await updateExercise({
           id: exercise.id,
-          title,
-          description,
-          content,
-          difficulty,
-          videoUrl
+          ...data,
         });
 
         toast({
           variant: "success",
           title: "Exercise updated!",
-          description: `Exercise (${title}) has been updated successfully`,
+          description: `Exercise has been updated successfully`,
         });
       }
       else {
         // create exercise
         await createExercise({
-          title,
-          description,
-          content,
-          difficulty,
-          videoUrl
+          ...data,
         });
 
         toast({
           variant: "success",
           title: "Exercise created!",
-          description: `New exercise (${title}) has been created successfully`,
+          description: `New exercise (${data.title}) has been created successfully`,
         });
 
         form.reset();
@@ -96,6 +78,32 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
       });
     }
   }
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const fetchedExerciseCategories = await getAllExerciseCategories();
+      setExerciseCategories(fetchedExerciseCategories);
+    }
+    catch (e) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: `Error occured - ${e}`,
+      });
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (isLoading) return <Spinner />;
 
   return (
     <Form {...form}>
@@ -129,6 +137,19 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
         />
         <GenericFormField
           control={form.control}
+          name="exerciseCategoryId"
+          label="Exercise Category"
+          placeholder="Select exercise category"
+          type='select'
+          options={exerciseCategories.map((category) => (
+            {
+              label: category.title,
+              value: category.id
+            }))
+          }
+        />
+        <GenericFormField
+          control={form.control}
           name="videoUrl"
           label="Video Url"
           placeholder="Copy and paste the example exercise video link at here"
@@ -136,7 +157,7 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={form.formState.isSubmitting}
         >
           Submit
         </Button>
