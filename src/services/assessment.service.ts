@@ -30,6 +30,16 @@ export const createAssessmentResponse = async (response: CreateResponse[]) => {
   }
 }
 
+export const createAssessmentAnalysis = async (assessmentId: string) => {
+  try {
+    const res = await apiCaller.post(`assessment/exerciseSuggestion`, { id : assessmentId });
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 export interface PatientAssessment {
     assessmentId : string;
     questionnaireName : string;

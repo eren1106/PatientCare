@@ -55,7 +55,6 @@ export function Sidebar({ chats, onSelectChat, selectedChat, onChatsUpdate }: Si
     fetchPatients();
   }, [isModalOpen]);
 
-  
 
   
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -109,7 +108,6 @@ export function Sidebar({ chats, onSelectChat, selectedChat, onChatsUpdate }: Si
           </Button>
         </div>
       </div>
-
       <nav className="grid gap-1 px-2 ">
         {chats.map((chat) => (
           <Button

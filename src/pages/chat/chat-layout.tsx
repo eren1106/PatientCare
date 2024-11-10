@@ -1,10 +1,12 @@
 
-import { useCallback, useEffect} from "react";
+import { useCallback, useEffect, useState} from "react";
 import { Sidebar } from "./chat-sidebar";
 import { Chat } from "./chat";
 import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler} from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
 import useChatStore from "@/hooks/useChatStore.hook";
+import { Button } from "@/components/ui/button";
+
 
 
 interface ChatLayoutProps {
@@ -59,26 +61,35 @@ export function ChatLayout({
 
 
   };
-  
-  return (
-    <div className="flex justify-between   w-full">
-      <div className="w-2/5">
-      <Sidebar
-          chats={chats}
-          onSelectChat={handleSelectChat}
-          selectedChat={selectedUser}
-          onChatsUpdate={handleChatsUpdate}
-        />
-      </div>
 
-      <div className="w-3/5 border rounded-md ">
-      {selectedUser && (
-          <Chat
-            selectedUser={selectedUser}
-          />
-        )}
-      </div>
-      
+
+
+  return (
+    <div className="flex justify-between w-full">
+      {chats.length === 0 ? (
+        <div className="w-full text-center py-4">
+          <p className="text-lg font-semibold">No users available</p>
+          <p className="text-sm text-gray-500 mt-2">There are currently no users to chat with.</p>
+        </div>
+      ) : (
+        <div className="flex w-full">
+          <div className="w-2/5">
+            <Sidebar
+              chats={chats}
+              onSelectChat={handleSelectChat}
+              selectedChat={selectedUser}
+              onChatsUpdate={handleChatsUpdate}
+            />
+          </div>
+
+          <div className="w-3/5 border rounded-md">
+            {selectedUser && (
+              <Chat selectedUser={selectedUser} />
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

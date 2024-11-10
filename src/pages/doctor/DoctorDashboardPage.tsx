@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { getCurrentUser } from "@/services/auth.service";
 import ProfileAvatar from "@/components/ProfileAvatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const DoctorDashboardPage = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -122,32 +123,38 @@ const DoctorDashboardPage = () => {
 
   return (
     <div>
-      <h2 className="font-semibold">
-        Welcome back, Dr. {getCurrentUser()?.fullname}
-      </h2>
+      <div className="flex items-center">
+        <h2 className="font-semibold">
+          Welcome back, Dr. {getCurrentUser()?.fullname}
+        </h2>
+        <span className="text-3xl animate-wave origin-wave inline-block">
+          👋
+        </span>
+      </div>
+
       <p className="text-sm text-gray-500 mt-1">
         Have a nice day and great work
       </p>
-      <section className="w-full flex gap-5 mt-5 ">
-        <div className="w-1/5 flex items-center justify-center px-4 py-6 gap-4 bg-purple-400 rounded-lg">
-          <div className="rounded-full bg-purple-300 p-3 ">
-            <Calendar color="#ffffff" />
-          </div>
-          <span className="flex flex-col ">
-            <h3 className="text-white font-semibold">12</h3>
-            <p className="text-white text-xs">Appointments</p>
-          </span>
-        </div>
+      <section className="grid grid-cols-2 gap-3 mt-2">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <User/>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{patientRecord.length}</div>
+          </CardContent>
+        </Card>
 
-        <div className="w-1/5 flex items-center justify-center px-4 py-6 gap-4 bg-blue-400 rounded-lg">
-          <div className="rounded-full bg-blue-300 p-3 ">
-            <User color="#ffffff" />
-          </div>
-          <span className="flex flex-col ">
-            <h3 className="text-white font-semibold">{patientRecord.length}</h3>
-            <p className="text-white text-xs">Total Patients</p>
-          </span>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Upcoming Appointments</CardTitle>
+            <Calendar/>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{patientRecord.length}</div>
+          </CardContent>
+        </Card>
       </section>
       <div className="border border-gray-300 rounded-lg p-5 mt-10 gap-2">
         <div className="flex justify-between">
@@ -237,7 +244,7 @@ const DoctorDashboardPage = () => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
+                  <TableCell colSpan={7} className="text-center">
                     No patient records found.
                   </TableCell>
                 </TableRow>

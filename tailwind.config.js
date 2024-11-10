@@ -78,6 +78,16 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		keyframes: {
+			'wave-animation': {
+          		'0%': { transform: 'rotate(0deg)' },
+          		'15%': { transform: 'rotate(14deg)' },
+          		'30%': { transform: 'rotate(-8deg)' },
+          		'40%': { transform: 'rotate(14deg)' },
+          		'50%': { transform: 'rotate(-4deg)' },
+          		'60%': { transform: 'rotate(10deg)' },
+          		'70%': { transform: 'rotate(0deg)' },
+          		'100%': { transform: 'rotate(0deg)' },
+        	},
   			'accordion-down': {
   				from: {
   					height: '0'
@@ -115,8 +125,12 @@ module.exports = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+			'wave': 'wave-animation 2.5s infinite',
+  		},
+		transformOrigin: {
+		  'wave': '70% 70%',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

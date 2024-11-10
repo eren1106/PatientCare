@@ -1,6 +1,7 @@
 import { Assessment, CreateAssessment, OptionTemplate, Questionnaire, Section, UpdateQuestionnaire } from "@/interfaces/questionnaire";
 import { apiCaller } from "@/utils";
 import { getCurrentUser } from "./auth.service";
+import { Exercise } from "@/interfaces/exercise";
 
 export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
     try {
@@ -185,12 +186,24 @@ export interface CreateSection {
 export interface AssessmentResult {
   questionnaireName: string;
   questionnaireType: string;
+  exerciseSuggestions: ExerciseSuggestion[] | [];
   questionnaireIndex: string;
   questionnaireStatus: string;
   sectionScores: SectionScore[];
   totalScore: number;
 }
 
+export interface ExerciseSuggestion {
+  id : string;
+  analysis : string;
+  suggestion : Suggestion[];
+}
+
+export interface Suggestion {
+  id : string;
+  exerciseTitle : string;
+  exerciseId : string;
+}
 export interface SectionScore {
   sectionName: string;
   sectionScore: number;
