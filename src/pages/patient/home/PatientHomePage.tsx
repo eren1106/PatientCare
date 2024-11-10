@@ -11,7 +11,6 @@ import SkeletonCard from "@/components/SkeletonCard";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
 import { Assessment } from "@/interfaces/questionnaire";
 import { getAssessmentsByPatientRecordId } from "@/services/questionnaire.service";
-import { MOCK_PATIENT_ID } from "@/constants/mocks";
 import { getCurrentUser } from "@/services/auth.service";
 
 const PatientHomePage = () => {
@@ -37,10 +36,16 @@ const PatientHomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1>Welcome, John</h1>
+    <div className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto">
+      <h1>Welcome Back, John</h1>
       <section className="flex flex-col gap-4">
-        <h2>Your pending exercises</h2>
+        {
+          dailyPatientExercises.length > 0 ? (
+            <div className="flex items-center gap-3">
+              <h3>Your pending exercises for today ({dailyPatientExercises.length})</h3>
+            </div>
+          ) : <h3>Congrats, you completed all the exercises for today!</h3>
+        }
         {isLoading ? (
           <SkeletonCard />
         ) : (
@@ -70,18 +75,18 @@ const PatientHomePage = () => {
       <section className="flex flex-col gap-4">
         <h2>Your pending assessment</h2>
         <div className="flex gap-4">
-        {patientAssessment.map((assessment, index) => {
-          return (
-            <Link to={`questionnaire/${assessment.questionnaire.id}`} key={index}>
-              <Card className="p-4 w-min flex flex-col gap-3">
-                <h2 className="whitespace-nowrap">{assessment.questionnaire.title}</h2>
-                <p className="whitespace-nowrap">Assigned by Dr. Samiha</p>
-              </Card>
-            </Link>
-          );
-        })}
+          {patientAssessment.map((assessment, index) => {
+            return (
+              <Link to={`questionnaire/${assessment.questionnaire.id}`} key={index}>
+                <Card className="p-4 w-min flex flex-col gap-3">
+                  <h2 className="whitespace-nowrap">{assessment.questionnaire.title}</h2>
+                  <p className="whitespace-nowrap">Assigned by Dr. Samiha</p>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
-        
+
       </section>
       <section className="flex flex-col gap-4">
         <h2>Your assigned doctor</h2>

@@ -29,7 +29,6 @@ import {
 } from "@/services/dashboard.service";
 import { PatientRecord, PatientTable } from "@/interfaces/dashboard";
 import useLoading from "@/hooks/useLoading.hook";
-import SkeletonCard from "@/components/SkeletonCard";
 import SkeletonLoader from "@/components/SkeletonLoader";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
