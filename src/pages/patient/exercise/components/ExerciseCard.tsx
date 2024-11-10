@@ -48,10 +48,10 @@ const ExerciseCard = ({
         <img
           src={thumbnailUrl || MOCK_EXERCISES[0].thumbnailUrl}
           alt="exercise thumbnail"
-          className="size-28 object-cover rounded-xl"
+          className="size-full sm:size-28 object-cover rounded-xl"
         />
         <div className="flex flex-col gap-2 w-full">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center flex-wrap">
             <h2>{title}</h2>
             <Badge
               variant={isCompleted ? "default" : "destructive"}
