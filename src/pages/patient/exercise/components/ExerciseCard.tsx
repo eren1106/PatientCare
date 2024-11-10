@@ -9,7 +9,7 @@ interface ExerciseCardProps {
   id: string;
   title: string;
   description: string;
-  isCompleted: boolean;
+  isCompleted?: boolean;
   thumbnailUrl?: string;
   to?: string;
 }
