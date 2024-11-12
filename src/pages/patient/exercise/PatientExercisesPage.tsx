@@ -19,7 +19,7 @@ const PatientExercisesPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-[40rem] w-full mx-auto">
       <h1>Exercises that are assigned to you</h1>
       {
         isLoading ? <SkeletonCard /> : (

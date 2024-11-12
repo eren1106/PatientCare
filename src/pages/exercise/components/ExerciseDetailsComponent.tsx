@@ -19,7 +19,7 @@ const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
   return (
     <>
       {
-        props.isLoading || !props.dailyPatientExercise ? <SkeletonCard /> : (
+        props.isLoading || !props.exercise ? <SkeletonCard /> : (
           <div className="flex flex-col gap-4 w-full">
             <h1>{props.exercise.title}</h1>
             <p>{props.exercise.description}</p>
