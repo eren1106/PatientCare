@@ -119,6 +119,14 @@ module.exports = {
   				to: {
   					height: '0'
   				}
+  			},
+			'slide-in-right': {
+    			'0%': { transform: 'translateX(100%)' },
+    			'100%': { transform: 'translateX(0)' }
+  			},
+  			'slide-out-right': {
+    			'0%': { transform: 'translateX(0)' },
+    			'100%': { transform: 'translateX(100%)' }
   			}
   		},
   		animation: {
@@ -127,6 +135,8 @@ module.exports = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
 			'wave': 'wave-animation 2.5s infinite',
+			'slide-in': 'slide-in-right 0.3s ease-out',
+  			'slide-out': 'slide-out-right 0.3s ease-out'
   		},
 		transformOrigin: {
 		  'wave': '70% 70%',
