@@ -1,6 +1,7 @@
 export interface Exercise {
   id: string;
   exerciseCategoryId: string;
+  exerciseCategory: ExerciseCategory;
   thumbnailUrl?: string;
   title: string;
   description: string;
@@ -34,4 +35,10 @@ export interface PatientExercise {
 export interface ExerciseCompetionSummary {
   day: number;
   percentage: number;
+}
+
+export interface ExerciseCategory {
+  id: string;
+  title: string;
+  description: string;
 }

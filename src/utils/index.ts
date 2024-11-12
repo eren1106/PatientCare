@@ -64,3 +64,11 @@ export const checkIsToday = (date: Date): boolean => {
     date.getFullYear() === today.getFullYear()
   );
 }
+
+export function convertEnumToTitleCase(input: string): string {
+  return input
+      .toLowerCase()                 // Convert the string to lowercase
+      .split('_')                    // Split by underscores
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .join(' ');                    // Join the words with a space
+}
