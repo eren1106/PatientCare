@@ -1,12 +1,10 @@
-import SkeletonCard from "@/components/SkeletonCard";
-import Spinner from "@/components/Spinner";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import YouTubeEmbed from "@/components/YouTubeEmbed";
 import useLoading from "@/hooks/useLoading.hook";
 import { DailyPatientExercise } from "@/interfaces/exercise";
+import ExerciseDetailsComponent from "@/pages/exercise/components/ExerciseDetailsComponent";
 import { completePatientExercise, getDailyPatientExerciseById } from "@/services/patientExercise.service";
 import { refreshPage } from "@/utils";
+import { set } from "date-fns";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,11 +13,18 @@ const PatientExerciseDetailPage = () => {
 
   const { isLoading, withLoading } = useLoading();
   const [dailyPatientExercise, setDailyPatientExercise] = useState<DailyPatientExercise | null>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const getData = async () => {
-    if (id) {
-      const data = await getDailyPatientExerciseById(id);
-      setDailyPatientExercise(data);
+    try {
+      if (id) {
+        const data = await getDailyPatientExerciseById(id);
+        setDailyPatientExercise(data);
+        setIsCompleted(data.isCompleted);
+      }
+    }
+    catch (e) {
+      console.error(e);
     }
   }
 
@@ -31,13 +36,15 @@ const PatientExerciseDetailPage = () => {
     if (!id) return;
     try {
       await completePatientExercise(id);
+      setIsCompleted(true);
+
       toast({
         title: "Marked as complete!",
         description: "Congrats on completing this exercise for today!",
         variant: "success"
       });
 
-      refreshPage();
+      // refreshPage();
     }
     catch (e) {
       console.error(e);
@@ -50,32 +57,15 @@ const PatientExerciseDetailPage = () => {
   };
 
   return (
-    <>
-      {
-        isLoading ? <SkeletonCard /> : (
-          <div className="flex flex-col gap-4 w-full">
-            <h1>{dailyPatientExercise?.patientExercise.exercise.title}</h1>
-            <p>{dailyPatientExercise?.patientExercise.exercise.description}</p>
-            {
-              dailyPatientExercise?.patientExercise.exercise.videoUrl
-              && (
-                <div className="md:max-w-[50rem] w-full">
-                  <YouTubeEmbed
-                    url={dailyPatientExercise.patientExercise.exercise.videoUrl}
-                  />
-                </div>
-              )
-            }
-            <p>{dailyPatientExercise?.patientExercise.exercise.content}</p>
-            {
-              dailyPatientExercise?.isCompleted
-                ? <p className="text-lg font-bold text-primary">You had completed this exercise for today!</p>
-                : <Button onClick={handleMarkComplete} className="w-min">Mark as complete</Button>
-            }
-          </div>
-        )
-      }
-    </>
+    <div className="max-w-[50rem] w-full mx-auto">
+      <ExerciseDetailsComponent
+        isLoading={isLoading}
+        exercise={dailyPatientExercise?.patientExercise.exercise!}
+        dailyPatientExercise={dailyPatientExercise!}
+        handleMarkComplete={handleMarkComplete}
+        isCompleted={isCompleted}
+      />
+    </div>
   )
 }
 

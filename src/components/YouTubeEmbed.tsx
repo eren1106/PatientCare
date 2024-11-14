@@ -1,15 +1,15 @@
 import { cn } from '@/lib/utils';
-import React from 'react';
 import ReactPlayer from 'react-player/youtube';
 
 interface YouTubeEmbedProps {
   url: string;
   className?: string;
+  wrapperClassName?: string;
 }
 
-const YouTubeEmbed: React.FC<YouTubeEmbedProps> = ({ url, className }) => {
+const YouTubeEmbed = ({ url, className, wrapperClassName }: YouTubeEmbedProps) => {
   return (
-    <div className="player-wrapper">
+    <div className={cn("player-wrapper", wrapperClassName)}>
       <ReactPlayer
         className={cn('react-player', className)}
         url={url}
