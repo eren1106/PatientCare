@@ -64,9 +64,9 @@ const QuestionnaireTable = ({
           <TableHeader>
             <TableRow>
               <TableHead className="w-[8rem]">Title</TableHead>
-              <TableHead className="w-[8rem]">Type</TableHead>
-              <TableHead className="w-[8rem]">Index</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead className=" w-[8rem]">Type</TableHead>
+              <TableHead className="hidden sm:table-cell w-[8rem]">Index</TableHead>
+              <TableHead className="hidden sm:table-cell">Description</TableHead>
               <TableHead className="w-[8rem]">
                 {assessment ? "Date Assigned" : "Date Created"}
               </TableHead>
@@ -79,13 +79,13 @@ const QuestionnaireTable = ({
                 <TableCell className="font-medium">
                   {questionnaire.title}
                 </TableCell>
-                <TableCell>
+                <TableCell >
                   <Badge>{questionnaire.type}</Badge>
                 </TableCell>
-                <TableCell>
+                <TableCell className="hidden sm:table-cell">
                   <Badge variant="secondary">{questionnaire.index}</Badge>
                 </TableCell>
-                <TableCell className="md:truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-xs">
+                <TableCell className="hidden sm:table-cell md:truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-xs">
                   {questionnaire.description}
                 </TableCell>
 

@@ -11,6 +11,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { getOptions, updateQuestionnaire } from "@/services/questionnaire.service";
 import { toast } from "@/components/ui/use-toast";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react";
+import useLoading from '@/hooks/useLoading.hook';
+import { useNavigate } from "react-router-dom";
 
 interface EditQuestionnaireFormProp {
   questionnaire?: Questionnaire;
@@ -49,6 +53,8 @@ const EditQuestionnaireForm = ({
   questionnaire,
   onHandleEdit,
 }: EditQuestionnaireFormProp) => {
+
+  const navigate = useNavigate();
   const form = useForm<QuestionnaireFormValues>({
     resolver: zodResolver(questionnaireSchema),
     defaultValues: {
@@ -117,6 +123,31 @@ const EditQuestionnaireForm = ({
     name: "sections",
   });
 
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const { isLoading, withLoading } = useLoading();
+
+  
+  const handleSaveClick = () => {
+    setIsSaveDialogOpen(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsCancelDialogOpen(true);
+  };
+
+  const handleConfirmSave = async () => {
+    setIsSaveDialogOpen(false);
+    await withLoading(async () => {
+      await form.handleSubmit(onSubmit)();
+    });
+  };
+
+  const handleConfirmCancel = () => {
+    navigate("/dashboard/questionnaire");
+  };
+
+
   const onSubmit = async (data: z.infer<typeof questionnaireSchema>) => {
     if(!questionnaire) return;
     try {
@@ -139,6 +170,7 @@ const EditQuestionnaireForm = ({
   };
 
   return (
+    <>
     <Form {...form}>
       <form className="mt-2" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-5 bg-slate-100 p-5 rounded-md mb-5">
@@ -187,15 +219,75 @@ const EditQuestionnaireForm = ({
         </Button>
 
         <div className="flex gap-5">
-          <Button type="submit" className="mt-5">
-            Save Changes
-          </Button>
-          <Button variant="destructive" className="mt-5">
-            Cancel
-          </Button>
-        </div>
+            <Button 
+              type="button" 
+              className="mt-5 w-full"
+              disabled={isLoading}
+              onClick={handleSaveClick}
+            >
+              Save
+            </Button>
+
+            <Button
+              onClick={handleCancelClick}
+              variant="destructive"
+              type="button"
+              className="mt-5 w-full"
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+          </div>
       </form>
     </Form>
+
+     {/* Save Dialog */}
+     <AlertDialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Save Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to save these changes to the questionnaire?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsSaveDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSave} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Cancel Dialog */}
+      <AlertDialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Editing</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel? Any unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsCancelDialogOpen(false)}>
+              No, continue editing
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmCancel}>
+              Yes, cancel
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
