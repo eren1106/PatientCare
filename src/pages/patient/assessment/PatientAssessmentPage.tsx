@@ -10,6 +10,9 @@ import {
 import ProfileAvatar from "@/components/ProfileAvatar";
 import { Link, useParams } from "react-router-dom";
 import { getCurrentUser } from "@/services/auth.service";
+import AssessmentCard from "../components/AssessmentCard";
+import useLoading from "@/hooks/useLoading.hook";
+import Spinner from "@/components/Spinner";
 
 const PatientAssessmentPage = () => {
   const patientId = getCurrentUser()?.id;
@@ -18,7 +21,8 @@ const PatientAssessmentPage = () => {
     PatientAssessment[]
   >([]);
   const [filter, setFilter] = useState<string>("All");
-
+  
+  const { isLoading, withLoading } = useLoading();
   const fetchAssessments = async (patientId: string) => {
     try {
       const result = await getAllAssessmentsByPatientId(patientId);
@@ -31,7 +35,7 @@ const PatientAssessmentPage = () => {
 
   useEffect(() => {
     if (patientId) {
-      fetchAssessments(patientId);
+      withLoading(() => fetchAssessments(patientId));
     }
   }, [patientId]);
 
@@ -47,7 +51,7 @@ const PatientAssessmentPage = () => {
   };
 
   return (
-    <Card className="p-6 h-screen">
+    <Card className="p-6">
       <h1 className="text-2xl font-bold mb-6">Patient Assessments</h1>
       <Tabs defaultValue="All" onValueChange={handleFilterChange}>
         <TabsList className="mb-4">
@@ -57,16 +61,16 @@ const PatientAssessmentPage = () => {
           <TabsTrigger value="Completed">Completed</TabsTrigger>
         </TabsList>
         <TabsContent value="All">
-          <AssessmentGrid assessments={filteredAssessments} />
+          <AssessmentGrid assessments={filteredAssessments} isLoading={isLoading}/>
         </TabsContent>
         <TabsContent value="Assigned">
-          <AssessmentGrid assessments={filteredAssessments} />
+          <AssessmentGrid assessments={filteredAssessments} isLoading={isLoading}/>
         </TabsContent>
         <TabsContent value="In Progress">
-          <AssessmentGrid assessments={filteredAssessments} />
+          <AssessmentGrid assessments={filteredAssessments} isLoading={isLoading}/>
         </TabsContent>
         <TabsContent value="Completed">
-          <AssessmentGrid assessments={filteredAssessments} />
+          <AssessmentGrid assessments={filteredAssessments} isLoading={isLoading} />
         </TabsContent>
       </Tabs>
     </Card>
@@ -75,60 +79,20 @@ const PatientAssessmentPage = () => {
 
 const AssessmentGrid = ({
   assessments,
+  isLoading,
 }: {
   assessments: PatientAssessment[];
+  isLoading: boolean;
 }) => {
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 gap-4">
       {assessments.length > 0 ? (
         assessments.map((assessment, index) => (
-          <Card key={index} className="p-4 flex flex-col justify-between">
-            <div className="flex flex-col gap-2">
-              <h2 className="text-lg font-semibold">
-                {assessment.questionnaireName}
-              </h2>
-              <div className="flex gap-2">
-                <Badge variant="secondary">
-                  {assessment.questionnaireType}
-                </Badge>
-                <Badge variant="default">{assessment.status}</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground">Assigned By:</p>
-              <div className="flex mt-2">
-                <ProfileAvatar
-                  src={assessment.profileImageUrl}
-                  size="md"
-                  fallbackText={assessment.doctorName.charAt(0)}
-                />
-                  <div className="ml-4 space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {assessment.doctorName}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {assessment.doctorEmail}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-            <div className="mt-4">
-              {assessment.status === "Completed" && (
-                <Link to={`/assessment/${assessment.assessmentId}`}>
-                  <Button variant="outline">View Details</Button>
-                </Link>
-              )}
-              {assessment.status === "In Progress" && (
-                <Link to={`/assessment/${assessment.assessmentId}`}>
-                <Button variant="outline">Continue Assessment</Button>
-                </Link>
-              )}
-              {assessment.status === "Assigned" && (
-                <Link to={`/assessment/${assessment.assessmentId}`}>
-                <Button variant="outline">Start Assessment</Button>
-                </Link>
-              )}
-            </div>
-          </Card>
+              <AssessmentCard key={index} assessment={assessment} />
         ))
       ) : (
         <p className="text-center col-span-full">

@@ -7,12 +7,14 @@ import { useEffect } from "react";
 
 interface ChatProps {
   selectedUser: Chats;
+  setShowMobileChat: (show: boolean) => void;
 }
 
-export function Chat({ selectedUser }: ChatProps) {
+export function Chat({ selectedUser , setShowMobileChat}: ChatProps) {
   const setMessages = useChatStore((state) => state.setMessages);
 
 
+  
   useEffect(() => {
     const loadMessages = async () => {
       try {
@@ -28,7 +30,7 @@ export function Chat({ selectedUser }: ChatProps) {
 
   return (
     <div className="flex flex-col justify-between w-full ">
-      <ChatTopbar />
+      <ChatTopbar setShowMobileChat={setShowMobileChat}/>
         <ChatList
           selectedUser={selectedUser}
         />
