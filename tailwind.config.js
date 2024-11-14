@@ -70,7 +70,10 @@ module.exports = {
   			},
   			pink: {
   				DEFAULT: '#ffe4e4'
-  			}
+  			},
+			green : {
+				DEFAULT: '#228B22'
+			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

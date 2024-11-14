@@ -121,8 +121,8 @@ const DoctorDashboardPage = () => {
   );
 
   return (
-    <div>
-      <div className="flex items-center">
+    <div >
+      <div className="flex items-center ">
         <h2 className="font-semibold">
           Welcome back, Dr. {getCurrentUser()?.fullname}
         </h2>
@@ -134,7 +134,7 @@ const DoctorDashboardPage = () => {
       <p className="text-sm text-gray-500 mt-1">
         Have a nice day and great work
       </p>
-      <section className="grid grid-cols-2 gap-3 mt-2">
+      <section className="grid grid-cols-1 mt-2 sm:grid-cols-2 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
@@ -155,11 +155,11 @@ const DoctorDashboardPage = () => {
           </CardContent>
         </Card>
       </section>
-      <div className="border border-gray-300 rounded-lg p-5 mt-10 gap-2">
-        <div className="flex justify-between">
-          <span className="text-xl font-semibold">Patient Record</span>
+      <div className="border border-gray-300 rounded-lg p-3 sm:p-5 mt-5 sm:mt-10 gap-2">
+        <div  className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0">
+          <span className="text-lg sm:text-xl font-semibold">Patient Record</span>
           <Input
-            className="w-1/3 "
+            className="w-full sm:w-1/3"
             type="text"
             placeholder="Search a patient..."
             value={searchQuery}
@@ -175,10 +175,10 @@ const DoctorDashboardPage = () => {
               <TableRow>
                 <TableHead>Profile</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Age</TableHead>
-                <TableHead>Upcoming Appointments</TableHead>
-                <TableHead>Date Created</TableHead>
+                <TableHead className="hidden sm:table-cell">Email</TableHead>
+                <TableHead className="hidden sm:table-cell">Age</TableHead>
+                <TableHead>Appointments</TableHead>
+                <TableHead className="hidden sm:table-cell">Date Created</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -195,8 +195,8 @@ const DoctorDashboardPage = () => {
                     <TableCell className="font-medium">
                       {record.patient.fullname}
                     </TableCell>
-                    <TableCell>{record.patient.email}</TableCell>
-                    <TableCell>{record.patient.age}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{record.patient.email}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{record.patient.age}</TableCell>
                     <TableCell>
                       {record.appointment.length > 0 ? (
                         <ul>
@@ -211,10 +211,10 @@ const DoctorDashboardPage = () => {
                           ))}
                         </ul>
                       ) : (
-                        "No Appointments"
+                        <Badge variant="secondary">-</Badge>
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       {/* <Badge variant="secondary">
                         {convertDateFormat(
                           new Date(record.patient.createdDatetime)

@@ -15,7 +15,7 @@ import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { User } from "@/interfaces/dashboard";
 import GenericFormField from "@/components/GenericFormField";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 
@@ -136,17 +136,17 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
       <SheetTrigger asChild>
         <Button variant="outline">Insert</Button>
       </SheetTrigger>
-      <SheetContent className="sm:max-w-[425px]">
-        <SheetHeader>
-          <SheetTitle>Add new patient</SheetTitle>
-          <SheetDescription>
+      <SheetContent className="sm:max-w-[425px] overflow-hidden">
+        <SheetHeader className="px-1">
+          <SheetTitle className="text-lg sm:text-xl">Add new patient</SheetTitle>
+          <SheetDescription className="text-sm">
             Insert a new patient record here
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 p-1">
-            <ScrollArea className="h-[calc(100vh-220px)] sm:h-[calc(100vh-240px)] md:h-[calc(100vh-260px)]">
-              <div className="flex flex-col gap-1">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full mt-2">
+           
+              <div className="space-y-1 px-1 ">
               <GenericFormField
                 control={form.control}
                 name="patient"
@@ -162,7 +162,7 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
               <GenericFormField
                 control={form.control}
                 name="weight"
-                label="Weight"
+                label="Weight (kg)"
                 type="number"
                 placeholder="Enter weight"
               />
@@ -170,18 +170,19 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
               <GenericFormField
                 control={form.control}
                 name="height"
-                label="Height"
+                label="Height (m)"
                 type="number"
                 placeholder="Enter height"
               />
 
               {/* Injuries Field */}
-              <div>
-                <div className="flex justify-between items-center mt-5">
+              <div className="flex-1 min-h-0"> 
+                <div className="flex justify-between items-center mt-3 mb-3">
                   <span className="font-semibold">Injuries</span>
                   <Button
                     type="button"
                     variant="secondary"
+                    size="sm"
                     onClick={() =>
                       append({
                         painRegion: "",
@@ -192,19 +193,26 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
                       })
                     }
                   >
+                    
                     Add Injury
                   </Button>
                 </div>
-
+                <ScrollArea className="h-[calc(100vh-450px)] px-1">
+                <div className="space-y-4 pr-4">
                 {fields.map((field, index) => (
-                  <div key={field.id} className="relative border p-2 mt-5">
-                    <Badge variant="secondary">Injury {index + 1}</Badge>
-                    <Trash2
-                      size={26}
-                      color="#ff0000"
-                      className="absolute right-2 top-2  hover:bg-table-100 p-1 rounded-md"
+                  <div key={field.id} className="relative border rounded-lg p-4 bg-gray-50">
+                    <div className="flex justify-between items-center mb-4">
+                    <Badge variant="green">Injury {index + 1}</Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => remove(index)}
-                    />
+                      className="h-8 w-8 p-0"
+                    >
+                      <Trash2 size={16} className="text-red-500" />
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
                     <GenericFormField
                       control={form.control}
                       name={`injuries.${index}.painRegion`}
@@ -213,21 +221,23 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
                       placeholder="Enter pain region"
                     />
 
-                    <GenericFormField
-                      control={form.control}
-                      name={`injuries.${index}.painScore`}
-                      label="Pain Score"
-                      type="number"
-                      placeholder="Enter pain score"
-                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <GenericFormField
+                        control={form.control}
+                        name={`injuries.${index}.painScore`}
+                        label="Pain Score"
+                        type="number"
+                        placeholder="Score"
+                      />
 
-                    <GenericFormField
-                      control={form.control}
-                      name={`injuries.${index}.duration`}
-                      label="Duration"
-                      type="input"
-                      placeholder="Enter duration"
-                    />
+                      <GenericFormField
+                        control={form.control}
+                        name={`injuries.${index}.duration`}
+                        label="Duration"
+                        type="input"
+                        placeholder="Duration"
+                      />
+                    </div>
 
                     <GenericFormField
                       control={form.control}
@@ -238,31 +248,35 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
                         { value: "YES", label: "Yes" },
                         { value: "NO", label: "No" }
                       ]}
-                      placeholder="Select an option"
+                      placeholder="Select"
                     />
 
                     <GenericFormField
                       control={form.control}
                       name={`injuries.${index}.description`}
-                      label="Injury Description"
+                      label="Description"
                       type="textarea"
                       placeholder="Describe the injury"
                     />
                   </div>
+                  </div>
                 ))}
+                </div>
+                </ScrollArea>
               </div>
-              <SheetFooter className="w-full mt-5">
-              <Button className="w-1/2" type="submit">
-                Insert
-              </Button>
+              <SheetFooter className="w-full mt-5 flex gap-2 px-1">
+              
               <SheetClose asChild>
-                <Button className="w-1/2" type="button" variant="secondary">
+                <Button className="flex-1" type="button" variant="secondary">
                   Cancel
                 </Button>
               </SheetClose>
+              <Button className="flex-1" type="submit">
+                Insert
+              </Button>
             </SheetFooter>
             </div>
-            </ScrollArea>
+
            
           </form>
         </Form>
