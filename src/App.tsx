@@ -182,17 +182,24 @@ const router = createBrowserRouter([
                 path: "create",
                 element: <CreateQuestionnaireForm />
               },
-              {
-                path: "result/:id",
-                element: <QuestionnaireResult />
-              }
+             
             ]
 
 
           },
           {
             path: "patients/:recordId",
-            element: <PatientDetailPage />,
+            children:[
+              {
+                path: "",
+                element: <PatientDetailPage />
+              },
+              {
+                path: "questionnaire/:id/result",
+                element: <QuestionnaireResult />
+              }
+            ],
+            
           },
           {
             path: "exercises",

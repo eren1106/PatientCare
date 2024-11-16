@@ -89,8 +89,9 @@ const PatientRecordExerciseTabContent = ({ patientId }: { patientId: string }) =
   if (isLoading) return <Spinner />
   return (
     <div className="mt-5">
-      <div className="flex justify-between items-center">
-        <h2>Assigned Exercises</h2>
+      <div className="flex justify-between items-center px-2">
+        <span className="text-md sm:text-lg font-semibold ">Assigned Exercises</span>
+
 
         {/* CREATE PATIENT EXERCISE */}
         <DialogButton
