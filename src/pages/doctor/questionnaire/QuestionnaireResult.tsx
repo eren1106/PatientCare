@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/accordion";
 import { getExerciseById } from "@/services/exercise.service";
 import { Exercise } from "@/interfaces/exercise";
-import { MOCK_EXERCISES } from "@/constants/mocks";
 import { AlertCircle } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -140,7 +139,7 @@ const QuestionnaireResult = () => {
                   </CardHeader>
                   <CardContent>
                     <img
-                      src={s.thumbnailUrl || MOCK_EXERCISES[0].thumbnailUrl}
+                      src={s.thumbnailUrl}
                       alt="exercise thumbnail"
                     />
                   </CardContent>

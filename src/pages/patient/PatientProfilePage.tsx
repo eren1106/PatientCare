@@ -1,7 +1,7 @@
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
-import { MOCK_PATIENT_IMAGE_PATH } from '@/constants'
+import { DEFAULT_AVATAR_URL, MOCK_PATIENT_IMAGE_PATH } from '@/constants'
 import { Edit, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import PatientProfileForm from './components/PatientProfileForm';
@@ -110,7 +110,7 @@ const PatientProfilePage = () => {
             </div>
             <div className='flex gap-6'>
               <ProfileAvatar
-                src={MOCK_PATIENT_IMAGE_PATH}
+                src={patient?.profileImageUrl || DEFAULT_AVATAR_URL}
                 className='size-48'
               />
               <div className='flex flex-col gap-3 w-full'>
