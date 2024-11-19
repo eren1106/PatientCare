@@ -57,7 +57,7 @@ const QuestionnairePage = () => {
       <div className="border border-gray-300 rounded-lg p-5 gap-2">
         <div className="flex justify-between">
           <span className="text-xl font-semibold">Questionnaire</span>
-          <Button onClick={handleClickCreate}>Create Questionnaire</Button>
+          <Button size="sm" onClick={handleClickCreate}>Create Questionnaire</Button>
         </div>
 
         <QuestionnaireTable

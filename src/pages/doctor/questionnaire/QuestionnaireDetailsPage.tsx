@@ -6,18 +6,18 @@ import useLoading from "@/hooks/useLoading.hook";
 import { Questionnaire } from "@/interfaces/questionnaire";
 import {
   getQuestionnaireById,
-  updateQuestionnaire,
 } from "@/services/questionnaire.service";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
-
+import { ArrowLeft, Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import EditQuestionnaireForm from "./EditQuestionnaireForm";
 
 const QuestionnaireDetailsPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { isLoading, withLoading } = useLoading();
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
@@ -46,6 +46,10 @@ const QuestionnaireDetailsPage = () => {
     withLoading(getData);
   }
 
+  const handleNavigation = () => {
+    navigate("/dashboard/questionnaire");
+  }
+
   return (
     <Card className="p-5">
       {isLoading ? (
@@ -55,7 +59,10 @@ const QuestionnaireDetailsPage = () => {
       ) : (
         <>
           <div className="flex justify-between items-center">
-            <h1>{questionnaire?.title}</h1>
+            <Button variant="ghost" onClick={handleNavigation}>
+              <ArrowLeft size={18} />
+            </Button>
+            <h1 className="text-2xl">{questionnaire?.title}</h1>
             <Button variant="secondary" onClick={handleEditClick}>
               {isEditing ? "Cancel" : <Edit size={16} />}
             </Button>

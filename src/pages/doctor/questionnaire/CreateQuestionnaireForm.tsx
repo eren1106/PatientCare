@@ -7,11 +7,24 @@ import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import useLoading from "@/hooks/useLoading.hook";
 import { useNavigate } from "react-router-dom";
-import { PlusCircle, Trash } from "lucide-react";
-import { insertQuestionnaire, getOptions } from "@/services/questionnaire.service";
+import { Loader2, PlusCircle, Trash } from "lucide-react";
+import {
+  insertQuestionnaire,
+  getOptions,
+} from "@/services/questionnaire.service";
 import { useEffect, useState } from "react";
 import { OptionTemplate } from "@/interfaces/questionnaire";
 import { getCurrentUser } from "@/services/auth.service";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const questionnaireSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -38,6 +51,9 @@ const CreateQuestionnaireForm = () => {
   const { toast } = useToast();
   //const { isLoading, withLoading } = useLoading();
   const navigate = useNavigate();
+
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const { isLoading, withLoading } = useLoading();
 
   const form = useForm<QuestionnaireFormValues>({
     resolver: zodResolver(questionnaireSchema),
@@ -69,6 +85,27 @@ const CreateQuestionnaireForm = () => {
     name: "sections",
   });
 
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+
+  const handleCancel = () => {
+    setIsCancelDialogOpen(true);
+  };
+
+  const handleConfirmCancel = () => {
+    navigate("/dashboard/questionnaire");
+  };
+
+  const handleCreate = () => {
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleConfirmCreate = async () => {
+    setIsCreateDialogOpen(false);
+    await withLoading(async () => {
+      await form.handleSubmit(onSubmit)();
+    });
+  };
+
   const onSubmit = async (data: QuestionnaireFormValues) => {
     try {
       const currentUser = getCurrentUser();
@@ -97,75 +134,155 @@ const CreateQuestionnaireForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form className="mt-2" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-5 bg-slate-100 p-5 rounded-md mb-5">
-          <GenericFormField
-            control={form.control}
-            name="title"
-            label="Title"
-            placeholder="Enter questionnaire title"
-          />
-          <GenericFormField
-            control={form.control}
-            name="description"
-            label="Description"
-            type="textarea"
-            placeholder="Enter questionnaire description"
-          />
+    <div>
+      <div className="flex flex-col  mb-6">
+        <span className="text-xl font-semibold">Create Questionnaire</span>
+        <span className="text-sm text-muted-foreground">
+          Create a new questionnaire for patient assessment
+        </span>
+      </div>
+      <Form {...form}>
+        <form className="mt-2" onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-5 bg-slate-100 p-5 rounded-md mb-5">
+            <GenericFormField
+              control={form.control}
+              name="title"
+              label="Title"
+              placeholder="Enter questionnaire title"
+            />
+            <GenericFormField
+              control={form.control}
+              name="description"
+              label="Description"
+              type="textarea"
+              placeholder="Enter questionnaire description"
+            />
 
-          <GenericFormField
-            control={form.control}
-            name="index"
-            label="Index"
-            placeholder="Enter questionnaire index"
-          />
-          <GenericFormField
-            control={form.control}
-            name="type"
-            label="Type"
-            type="select"
-            options={[
-              { value: "General", label: "General" },
-              { value: "Shoulder", label: "Shoulder" },
-              { value: "Knee", label: "Knee" },
-            ]}
-            placeholder="Select questionnaire type"
-          />
-        </div>
+            <GenericFormField
+              control={form.control}
+              name="index"
+              label="Index"
+              placeholder="Enter questionnaire index"
+            />
+            <GenericFormField
+              control={form.control}
+              name="type"
+              label="Type"
+              type="select"
+              options={[
+                { value: "General", label: "General" },
+                { value: "Shoulder", label: "Shoulder" },
+                { value: "Knee", label: "Knee" },
+              ]}
+              placeholder="Select questionnaire type"
+            />
+          </div>
 
-        {sections.map((section, index) => (
-          <SectionField
-            key={section.id}
-            control={form.control}
-            sectionIndex={index}
-            sectionId={section.id}
-            removeSection={() => removeSection(index)}
-            optionsTemplate={options}
-          />
-        ))}
+          {sections.map((section, index) => (
+            <SectionField
+              key={section.id}
+              control={form.control}
+              sectionIndex={index}
+              sectionId={section.id}
+              removeSection={() => removeSection(index)}
+              optionsTemplate={options}
+            />
+          ))}
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full mt-2"
-          onClick={() =>
-            addSection({
-              name: "",
-              description: "",
-              questions: [],
-            })
-          }
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full mt-2"
+            onClick={() =>
+              addSection({
+                name: "",
+                description: "",
+                questions: [],
+              })
+            }
+          >
+            <PlusCircle size={20} />
+            Add New Section
+          </Button>
+
+          <div className="flex gap-5">
+            <Button
+              type="button"
+              className="mt-5 w-full"
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
+
+            <Button
+              onClick={handleCancel}
+              variant="destructive"
+              type="button"
+              className="mt-5 w-full"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+
+        <AlertDialog
+          open={isCancelDialogOpen}
+          onOpenChange={setIsCancelDialogOpen}
         >
-          <PlusCircle size={20} />
-          Add New Section
-        </Button>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to cancel?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. Your progress will be lost.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsCancelDialogOpen(false)}>
+                No, continue editing
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmCancel}>
+                Yes, cancel
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
-        <Button type="submit" className="mt-5 w-full">
-          Create Questionnaire
-        </Button>
-      </form>
-    </Form>
+        {/* Create Dialog */}
+        <AlertDialog
+          open={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Create New Questionnaire</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to create this questionnaire?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsCreateDialogOpen(false)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmCreate}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Create"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Form>
+    </div>
   );
 };
 
@@ -278,11 +395,14 @@ const QuestionField = ({
       name={`sections.${sectionIndex}.questions.${questionIndex}.optionId`}
       type="select"
       placeholder="Select an option template"
-      options={optionsTemplate.map(option => ({
+      options={optionsTemplate.map((option) => ({
         value: option.id,
-        label: option.scaleType === "NUMERIC_SCALE"
-          ? option.scaleType
-          : option.scaleType + " - " + option.option.map(opt => opt.content).join(", ")
+        label:
+          option.scaleType === "NUMERIC_SCALE"
+            ? option.scaleType
+            : option.scaleType +
+              " - " +
+              option.option.map((opt) => opt.content).join(", "),
       }))}
       noLabel={true}
     />

@@ -2,7 +2,7 @@ import ProfileAvatar from "@/components/ProfileAvatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Edit, MessageCircle, Ruler, Trash, Weight } from "lucide-react";
+import { ArrowLeft, Copy, Edit, MessageCircle, Ruler, Trash, Weight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
@@ -34,10 +34,10 @@ import {
 import EditPatientDetailsModal from "./EditPatientDetailsModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import InjuryForm from "./dashboard/components/InjuryForm";
-
+import { Separator } from "@/components/ui/separator";
 const SkeletonProfile = () => {
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col gap-6 m-auto">
       <Skeleton className="rounded-full h-[8rem] w-[8rem]" />
       <div className="flex flex-col gap-3">
         <Skeleton className="h-6 w-[8rem]" />
@@ -154,13 +154,13 @@ const PatientDetailPage = () => {
   const [isCreateMode, setIsCreateMode] = useState(false);
 
   const handleCreateClick = () => {
-    setIsCreateMode(true);  // Switch to create mode
-    setSelectedInjury(null);  // No injury selected for create mode
+    setIsCreateMode(true); // Switch to create mode
+    setSelectedInjury(null); // No injury selected for create mode
     setOpenDialog(true);
   };
 
   const handleEditClick = (injury: Injury) => {
-    setIsCreateMode(false);  // Switch to update mode
+    setIsCreateMode(false); // Switch to update mode
     setSelectedInjury(injury);
     setOpenDialog(true);
   };
@@ -207,94 +207,125 @@ const PatientDetailPage = () => {
   };
 
   return (
-    <Card className="p-4">
+    <Card className="relative p-4 sm:p-6">
+      <Button variant="ghost" className="absolute" onClick={()=> { navigate("/dashboard");}}>
+        <ArrowLeft />
+      </Button>
       {/*Patient Profile Section*/}
-      <section className="flex justify-between">
+      <section className="flex flex-col">
         <div className="flex flex-col gap-4">
           {isLoading ? (
             <SkeletonProfile />
           ) : (
-            <div className="flex gap-6">
-              <ProfileAvatar
-                className="size-32"
-                src={record.patient.profileImageUrl}
-              />
-              <div className="flex flex-col gap-3">
-                <h2>{record.patient.username}</h2>
-                <div className="flex flex-col text-sm  gap-1">
-                  <span>IC NO : {record.patient.ic}</span>
-                  <span>Age : {record.patient.age}</span>
-                  <Badge className="w-16 text-center" variant="secondary">
+            <div className="flex flex-col">
+              <div className="flex justify-center ">
+                <ProfileAvatar
+                  className="size-24 sm:size-32"
+                  src={record.patient.profileImageUrl}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-2">
+                    {record.patient.username}
+                  </h2>
+                  <Badge className="text-center" variant="secondary">
                     {record.patient.gender}
                   </Badge>
-                  <div className="flex gap-2 items-center">
-                    <a
-                      className="text-blue-600 hover:text-blue-400"
-                      href={`mailto:${record.patient.email}`}
+                </div>
+
+                <div className="flex flex-col items-center gap-2">
+                  {/* Edit and Delete Buttons */}
+                  <div className="flex gap-2">
+                    <EditPatientDetailsModal
+                      record={record}
+                      onChangeState={handlePatientEdited}
+                    />
+                    <Button
+                      className="flex gap-2"
+                      variant="outline"
+                      onClick={() => {
+                        openDeleteModal(record.id);
+                      }}
                     >
-                      {record.patient.email}
-                    </a>
-                    <CopyToClipboard text={textToCopy} onCopy={onCopyText}>
-                      <Copy
-                        className=" block hover:bg-gray-100"
-                        size={14}
-                        onClick={() => {
-                          setTextToCopy(record.patient.email); // Set the text to copy when clicked
-                          displayToastMessage();
-                        }}
-                      />
-                    </CopyToClipboard>
+                      <Trash size={20} />
+                      Delete
+                    </Button>
+                  </div>
+
+                  {/* Message Button */}
+                  <Link to="/dashboard/chat">
+                    <Button size="lg" className="flex items-center gap-2">
+                      <MessageCircle className="h-5 w-5" />
+                      Message Patient
+                    </Button>
+                  </Link>
+                </div>
+
+                <Separator />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">IC:</span>
+                    <span className="font-medium">{record.patient.ic}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Age:</span>
+                    <span className="font-medium">{record.patient.age}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 col-span-full">
+                    <span className="text-muted-foreground">Email:</span>
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <a
+                        className="text-blue-600 hover:text-blue-400 truncate"
+                        href={`mailto:${record.patient.email}`}
+                      >
+                        {record.patient.email}
+                      </a>
+                      <CopyToClipboard text={textToCopy} onCopy={onCopyText}>
+                        <Copy
+                          className=" block hover:bg-gray-100"
+                          size={14}
+                          onClick={() => {
+                            setTextToCopy(record.patient.email); // Set the text to copy when clicked
+                            displayToastMessage();
+                          }}
+                        />
+                      </CopyToClipboard>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
-
-          <Link className="flex flex-start" to="/dashboard/chat">
-            <Button className="flex gap-4" size="lg">
-              <MessageCircle />
-              Message Patient
-            </Button>
-          </Link>
-        </div>
-        <div className="flex gap-2">
-          <EditPatientDetailsModal
-            record={record}
-            onChangeState={handlePatientEdited}
-          />
-          <Button
-            className="flex gap-2"
-            variant="outline"
-            onClick={() => {
-              openDeleteModal(record.id);
-            }}
-          >
-            <Trash size={20} />
-            Delete
-          </Button>
         </div>
       </section>
 
-      <Tabs defaultValue="Overview" className="w-full mt-4">
-        <TabsList>
+      <Tabs defaultValue="Overview" className="w-full mt-4 ">
+        <div className="flex justify-center  sm:justify-start ">
+        <TabsList className="w-fit ">
           <TabsTrigger value="Overview">Overview</TabsTrigger>
           <TabsTrigger value="Assessment">Assessment</TabsTrigger>
           <TabsTrigger value="Rehabilitation">Rehabilitation</TabsTrigger>
         </TabsList>
-
+        </div>
+        
         <TabsContent value="Overview">
           <section>
             {/* Vital Signs Section */}
-            <div className="flex flex-col gap-5">
-              <h3 className="font-semibold">Vital Signs</h3>
+            <div className="flex flex-col gap-5 mt-5 px-2">
+              <span className="text-md sm:text-lg font-semibold ">Vital Signs</span>
               {isLoading ? (
                 <SkeletonContent />
               ) : (
-                <div className="flex gap-2 w-1/2 mb-2">
+                <div className="flex gap-2 mb-2">
                   <Card className="flex-1">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
-                        Patient's Height (In meters)
+                        Height (In meters)
                       </CardTitle>
                       <Ruler size={28} className="text-muted-foreground" />
                     </CardHeader>
@@ -305,7 +336,7 @@ const PatientDetailPage = () => {
                   <Card className="flex-1">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
-                        Patient's Weight (In kilograms)
+                        Weight (In kilograms)
                       </CardTitle>
                       <Weight size={28} className="text-muted-foreground" />
                     </CardHeader>
@@ -318,22 +349,35 @@ const PatientDetailPage = () => {
             </div>
 
             {/* Injury Report Section */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 px-2">
               <div className="flex justify-between items-center justify-center">
-                <h3 className="font-semibold">Injury Report</h3>
+                <span className="text-md sm:text-lg font-semibold ">Injury Report</span>
                 <Button variant="secondary" onClick={handleCreateClick}>
                   Create Injury
                 </Button>
-  
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {record.injuries.map((injury) => (
                   <Card
                     key={injury.id}
-                    className="relative p-4 shadow-md rounded-lg"
+                    className="relative p-4 sm:p-6 shadow-md rounded-lg hover:shadow-lg transition-shadow"
                   >
-                    <ul className="flex flex-col gap-4">
+                    {/* Edit and Delete Icons */}
+                    <div className="absolute top-3 right-3 flex gap-1">
+                      <Edit
+                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                        size={28}
+                        onClick={() => handleEditClick(injury)}
+                      />
+                      <Trash
+                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                        size={28}
+                        onClick={() => handleDeleteClick(injury.id)}
+                      />
+                    </div>
+
+                    <ul className="flex flex-col gap-3">
                       <li className="flex flex-col">
                         <span className="text-light-foreground">
                           Pain Region:
@@ -371,19 +415,6 @@ const PatientDetailPage = () => {
                         <p className="text-sm">{injury.description || "N/A"}</p>
                       </li>
                     </ul>
-                    {/* Edit and Delete Icons */}
-                    <div className="absolute top-2 right-2 flex space-x-2">
-                      <Edit
-                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
-                        size={28}
-                        onClick={() => handleEditClick(injury)}
-                      />
-                      <Trash
-                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
-                        size={28}
-                        onClick={() => handleDeleteClick(injury.id)}
-                      />
-                    </div>
                   </Card>
                 ))}
               </div>
@@ -431,15 +462,15 @@ const PatientDetailPage = () => {
         </DialogContent>{" "}
       </Dialog>
       {/* Render the UpdateInjuryForm dialog */}
-        <InjuryForm
-          open={openDialog}
-          onClose={() => setOpenDialog(false)}
-          injury={selectedInjury}
-          onUpdate={handlePatientEdited}
-          isCreateMode={isCreateMode}
-          patientRecordId={record.id}
-        />
-      
+      <InjuryForm
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        injury={selectedInjury}
+        onUpdate={handlePatientEdited}
+        isCreateMode={isCreateMode}
+        patientRecordId={record.id}
+      />
+
       <Dialog open={deleteInjuryModal} onOpenChange={setDeleteInjuryModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

@@ -40,9 +40,9 @@ const PatientExercisesTable = ({
           <TableHeader>
             <TableRow>
               <TableHead className="w-[14rem]">Title</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead className='hidden sm:table-cell'>Description</TableHead>
               <TableHead className="w-[6rem]">Sets</TableHead>
-              <TableHead className="w-[8rem]">Date Created</TableHead>
+              <TableHead className="w-[8rem] ">Date Created</TableHead>
               <TableHead className="w-[8rem]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -56,7 +56,7 @@ const PatientExercisesTable = ({
                     key={patientExercise.id}
                   >
                     <TableCell className="font-medium">{exercise.title}</TableCell>
-                    <TableCell>{exercise.description}</TableCell>
+                    <TableCell className='hidden sm:table-cell'>{exercise.description}</TableCell>
                     <TableCell>{patientExercise.sets}</TableCell>
                     <TableCell>{new Date(exercise.createdDatetime).toLocaleDateString()}</TableCell>
                     <TableCell className="flex items-center justify-start gap-2 ">
