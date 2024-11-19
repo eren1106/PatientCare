@@ -49,7 +49,7 @@ const DoctorProfilePage = () => {
     }
     catch (e) {
       // NO USER FOUND
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
   }
@@ -67,7 +67,7 @@ const DoctorProfilePage = () => {
         title: "Account Deleted Successfully",
       });
       logoutUser();
-      navigate("/login");
+      navigate("/auth/login");
     }
     catch (e: any) {
       console.error(e);

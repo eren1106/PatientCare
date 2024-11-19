@@ -1,3 +1,4 @@
+import FormButton from "@/components/FormButton";
 import GenericFormField from "@/components/GenericFormField";
 import ProfilePictureUploader from "@/components/ProfilePictureUploader";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ const PatientProfileSchema = z.object({
     )
     .optional(),
   fullname: z.string().min(1),
-  age: z.number(),
+  age: z.coerce.number(),
   gender: z.string(),
   ic: z.string(),
 });
@@ -52,19 +53,16 @@ const PatientProfileForm = ({
 
   const onSubmit = async (data: z.infer<typeof PatientProfileSchema>) => {
     try {
-      const {
-        fullname,
-        age,
-        gender,
-        ic
-      } = data;
+      const formData = new FormData();
+
+      const { image, ...dataWithoutImage } = data;
+      formData.append("json", JSON.stringify(dataWithoutImage));
+      if (image) formData.append("imageFile", image);
+
       // update profile
       await updateProfile({
         id: profile.id,
-        fullname,
-        age,
-        gender,
-        ic
+        formData,
       });
 
       toast({
@@ -128,12 +126,11 @@ const PatientProfileForm = ({
           placeholder="IC"
         />
 
-        <Button
-          type="submit"
+        <FormButton
           disabled={isLoading}
         >
           Submit
-        </Button>
+        </FormButton>
       </form>
     </Form>
   )

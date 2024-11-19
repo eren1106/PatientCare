@@ -14,6 +14,7 @@ import { Patient } from '@/interfaces/user';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { logoutUser } from '@/services/auth.service';
+import SkeletonCard from '@/components/SkeletonCard';
 
 interface ProfileInfoProps {
   label: string;
@@ -48,7 +49,7 @@ const PatientProfilePage = () => {
     }
     catch (e) {
       // NO USER FOUND
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
   }
@@ -66,7 +67,7 @@ const PatientProfilePage = () => {
         title: "Account Deleted Successfully",
       });
       logoutUser();
-      navigate("/login");
+      navigate("/auth/login");
     }
     catch (e: any) {
       console.error(e);
@@ -81,7 +82,7 @@ const PatientProfilePage = () => {
   return (
     <div>
       {
-        isLoading ? <Spinner /> : (
+        isLoading ? <SkeletonCard /> : (
           <Card className='p-6 max-w-[44rem]'>
             <div className='flex gap-2 justify-end'>
               <DialogButton
