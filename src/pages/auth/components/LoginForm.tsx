@@ -39,7 +39,7 @@ const LoginForm = () => {
 
       // TODO: Currently it prevent me from login, uncomment this when it is fixed
       // NOTE: No issue, just backend need to setup twilio, this api will require twilio token to work
-      // await initializeDevice();
+      //await initializeDevice();
 
       toast({
         title: "Login Successfully",
