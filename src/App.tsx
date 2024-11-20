@@ -36,11 +36,13 @@ import TrackingPage from "./pages/patient/tracking/TrackingPage";
 import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
 import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
+import { MessageProvider } from "./providers/message-provider";
 
 const AppWrapper = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      
       <Outlet />
       <Toaster />
       <IncomingCall />

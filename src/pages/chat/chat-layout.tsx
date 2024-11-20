@@ -6,6 +6,8 @@ import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregi
 import { getCurrentUser } from "@/services/auth.service";
 import useChatStore from "@/hooks/useChatStore.hook";
 import { ArrowLeft } from 'lucide-react'; 
+import { useMessageStore } from '@/stores/messageStore';
+import { useLocation } from "react-router-dom";
 
 
 
@@ -18,6 +20,10 @@ interface ChatLayoutProps {
 export function ChatLayout({
 
 }: ChatLayoutProps) {
+  const incrementCount = useMessageStore((state) => state.incrementCount);
+  const resetCount = useMessageStore((state) => state.resetCount);
+  const location = useLocation();
+
   const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
  
   const loadChats = useCallback(async () => {
@@ -43,13 +49,25 @@ export function ChatLayout({
       addMessage(message);
       updateChatWithNewMessage(message);
       loadChats();
+      if (message.toUserId === userId) {
+        incrementCount();
+      }
     });
 
     return () => {
       unregisterMessageHandler();
       disconnectSocket();
     };
-  }, [loadChats, addMessage, updateChatWithNewMessage]);
+  }, [loadChats, addMessage, updateChatWithNewMessage, incrementCount]);
+
+  useEffect(() => {
+    if (location.pathname.includes('/chat')) {
+      resetCount();
+    }
+  }, [location, resetCount]);
+
+
+  
 
   const handleSelectChat = (chat: Chats) => {
 
