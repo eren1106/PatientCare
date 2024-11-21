@@ -119,8 +119,8 @@ const PatientRecordQuestionnaireTab = ({
 
   return (
     <div className="mt-5">
-      <div className="flex justify-between items-center">
-        <h2>Assigned Questionnaire</h2>
+      <div className="flex justify-between items-center px-2">
+        <span className="text-md sm:text-lg font-semibold ">Assigned Questionnaire</span>
 
         {/* Assign Patient Questionnaire */}
         <DialogButton
@@ -165,6 +165,7 @@ const PatientRecordQuestionnaireTab = ({
         </DialogButton>
       </div>
       <PatientQuestionnaireTable
+        recordId={recordId}
         onDelete={handleClickDelete}
         assessment={assessment}
       />

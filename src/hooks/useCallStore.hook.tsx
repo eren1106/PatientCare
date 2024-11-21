@@ -36,7 +36,7 @@ const useCallStore = create<CallStore>((set, get) => ({
     const device = new Device(token, {
 
   
-      logLevel: 5,
+      logLevel: 1,
       // Opus generates better quality audio, but is not supported by all browsers.
       // If Opus is not supported, we use PCMU as a fallback.
       codecPreferences: [Call.Codec.Opus, Call.Codec.PCMU],

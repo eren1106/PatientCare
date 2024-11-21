@@ -81,7 +81,7 @@ import { getCurrentUser } from "@/services/auth.service";
         emitSocketMessage({
           fromUserId: userId,
           toUserId: selectedUserId,
-          message: message.trim(),
+          message: "👍",
           createdDatetime: new Date(),
         });
       } catch (error) {

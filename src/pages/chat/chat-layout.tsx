@@ -5,7 +5,7 @@ import { Chat } from "./chat";
 import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler} from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
 import useChatStore from "@/hooks/useChatStore.hook";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft } from 'lucide-react'; 
 
 
 
@@ -58,8 +58,13 @@ export function ChatLayout({
 
   const handleChatsUpdate = () => {
     loadChats();
+  };
 
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
+  const handleMobileSelectChat = (chat : Chats) => {
+    handleSelectChat(chat);
+    setShowMobileChat(true);
   };
 
 
@@ -73,21 +78,24 @@ export function ChatLayout({
         </div>
       ) : (
         <div className="flex w-full">
-          <div className="w-2/5">
-            <Sidebar
-              chats={chats}
-              onSelectChat={handleSelectChat}
-              selectedChat={selectedUser}
-              onChatsUpdate={handleChatsUpdate}
-            />
-          </div>
+      <div className={`${showMobileChat ? 'hidden sm:block' : 'w-full'} sm:w-2/5`}>
+        <Sidebar
+          chats={chats}
+          onSelectChat={handleMobileSelectChat}
+          selectedChat={selectedUser}
+          onChatsUpdate={handleChatsUpdate}
+        />
+      </div>
 
-          <div className="w-3/5 border rounded-md">
-            {selectedUser && (
-              <Chat selectedUser={selectedUser} />
-            )}
-          </div>
-        </div>
+      <div className={`${!showMobileChat ? 'hidden sm:block' : 'w-full block animate-slide-in'} sm:w-3/5 border rounded-md`}>
+      {selectedUser && (
+        <Chat 
+          selectedUser={selectedUser} 
+           setShowMobileChat={setShowMobileChat}
+        />
+      )}
+    </div>
+    </div>
       )}
 
     </div>

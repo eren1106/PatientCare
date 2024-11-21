@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   getAssessmentDetails,
   AssessmentDetails,
@@ -21,9 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
-
 const AssessmentSchema = z.object({
   sections: z.array(
     z.object({
@@ -55,6 +54,10 @@ const AssessmentDetailPage = () => {
   const [assessmentDetails, setAssessmentDetails] =
     useState<AssessmentDetails | null>(null);
 
+  const location = useLocation();
+  const assessmentDetail = location.state?.assessmentDetails;
+  const isCompleted = assessmentDetail?.status === "Completed";
+
   const fetchAssessmentDetails = async (id: string) => {
     try {
       const result = await getAssessmentDetails(id);
@@ -65,7 +68,7 @@ const AssessmentDetailPage = () => {
           questions: section.questions.map((question) => ({
             questionId: question.id,
             optionId: question.answer || "",
-            responseId: question.responseId
+            responseId: question.responseId,
           })),
         })),
       });
@@ -74,27 +77,37 @@ const AssessmentDetailPage = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (id) {
+  //     withLoading(() => fetchAssessmentDetails(id));
+  //   }
+  // }, [id]);
+
   useEffect(() => {
-    if (id) {
+    if (!assessmentDetails && id) {
       withLoading(() => fetchAssessmentDetails(id));
+    } else {
+      setAssessmentDetails(assessmentDetail);
     }
-  }, [id]);
+  }, [id, assessmentDetail]);
 
   const onSubmit = async (data: AssessmentSchemaType) => {
     try {
-      if (id){
-        const cleanedData = data.sections.flatMap(section =>
+      if (id) {
+        const cleanedData = data.sections.flatMap((section) =>
           section.questions
-            .filter(question => question.optionId !== null && question.optionId !== "")
-            .map(question => ({
+            .filter(
+              (question) =>
+                question.optionId !== null && question.optionId !== ""
+            )
+            .map((question) => ({
               assessmentId: id,
               questionId: question.questionId,
               optionId: question.optionId as string,
               responseId: question.responseId,
             }))
         );
-  
-        
+
         await createAssessmentResponse(cleanedData);
 
         toast({
@@ -102,7 +115,7 @@ const AssessmentDetailPage = () => {
           title: "Assessment Response Submitted Successfully",
           description: "The assessment response has been submitted.",
         });
-        navigate('/assessment');
+        navigate("/assessment");
       }
     } catch (e: any) {
       toast({
@@ -125,9 +138,8 @@ const AssessmentDetailPage = () => {
   };
 
   const handleConfirmCancel = () => {
-    navigate('/assessment');
+    navigate("/assessment");
   };
-
 
   return (
     <Card className="p-6">
@@ -156,25 +168,57 @@ const AssessmentDetailPage = () => {
                       <h2 className="text-xl font-semibold">
                         Section {sectionIndex + 1} : {section.sectionName}
                       </h2>
+                      
                       <p className="text-sm text-gray-600">
                         {section.sectionDescription}
                       </p>
                       {section.questions.map((question, questionIndex) => (
                         <div key={question.title} className="mt-4">
-                          <GenericFormField
-                            control={form.control}
-                            name={`sections.${sectionIndex}.questions.${questionIndex}.optionId`}
-                            label={`${question.title}`}
-                            type="option"
-                            options={question.options.map((option) => ({
-                              value: option.optionId,
-                              label:
-                                (option?.content ?? "") + option.scaleValue ||
-                                "",
-                            }))}
-                            placeholder="Select an option"
-                            noLabel={false}
-                          />
+                          {isCompleted ? (
+                            // Read-only view for completed assessments
+                            <div className="space-y-2">
+                              <p className="font-medium">{question.title}</p>
+                              <div className="pl-4 flex flex-col sm:flex-row gap-2">
+                                {question.options.map((option) => {
+                                  const isSelected =
+                                    option.optionId === question.answer;
+                                  return (
+                                    <div
+                                      key={option.optionId}
+                                      className={`p-2 rounded ${
+                                        isSelected ? "bg-blue-100" : ""
+                                      }`}
+                                    >
+                                      <span
+                                        className={
+                                          isSelected ? "font-bold" : ""
+                                        }
+                                      >
+                                        {option.content} ({option.scaleValue})
+                                        {isSelected && " ✓"}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            // Interactive form for non-completed assessments
+                            <GenericFormField
+                              control={form.control}
+                              name={`sections.${sectionIndex}.questions.${questionIndex}.optionId`}
+                              label={`${question.title}`}
+                              type="option"
+                              options={question.options.map((option) => ({
+                                value: option.optionId,
+                                label:
+                                  (option?.content ?? "") + option.scaleValue ||
+                                  "",
+                              }))}
+                              placeholder="Select an option"
+                              noLabel={false}
+                            />
+                          )}
                         </div>
                       ))}
                     </div>
@@ -183,16 +227,21 @@ const AssessmentDetailPage = () => {
               ) : (
                 <p>No assessment details available.</p>
               )}
-              <div className="flex gap-5">
-                <Button
-                  type="button"
-                  disabled={form.formState.isSubmitting}
-                  onClick={handleSaveClick}
-                >
-                  Save
-                </Button>
-                <Button variant="destructive"  onClick={handleCancelClick}>Cancel</Button>
-              </div>
+
+              {!isCompleted && (
+                <div className="flex gap-5">
+                  <Button
+                    type="button"
+                    disabled={form.formState.isSubmitting}
+                    onClick={handleSaveClick}
+                  >
+                    Save
+                  </Button>
+                  <Button variant="destructive" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </div>
+              )}
             </form>
           </Form>
         </div>
@@ -206,7 +255,7 @@ const AssessmentDetailPage = () => {
           </DialogHeader>
           <p>Are you sure you want to submit the assessment?</p>
           <DialogFooter>
-          <Button
+            <Button
               onClick={() => {
                 setIsSaveDialogOpen(false);
                 form.handleSubmit(onSubmit)();
@@ -214,10 +263,12 @@ const AssessmentDetailPage = () => {
             >
               Confirm
             </Button>
-            <Button variant="outline" onClick={() => setIsSaveDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsSaveDialogOpen(false)}
+            >
               Cancel
             </Button>
-            
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -228,15 +279,20 @@ const AssessmentDetailPage = () => {
           <DialogHeader>
             <DialogTitle>Confirm Cancellation</DialogTitle>
           </DialogHeader>
-          <p>If you quit, your progress will be lost. Are you sure you want to cancel?</p>
+          <p>
+            If you quit, your progress will be lost. Are you sure you want to
+            cancel?
+          </p>
           <DialogFooter>
             <Button variant="destructive" onClick={handleConfirmCancel}>
               Yes, Cancel
             </Button>
-            <Button variant="outline" onClick={() => setIsCancelDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsCancelDialogOpen(false)}
+            >
               No
             </Button>
-            
           </DialogFooter>
         </DialogContent>
       </Dialog>
