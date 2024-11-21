@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ConfettiButton } from '@/components/ui/confetti';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
-import { DailyPatientExercise, Exercise, PatientExercise } from '@/interfaces/exercise'
+import { DailyPatientExercise, Exercise } from '@/interfaces/exercise'
 import { convertEnumToTitleCase } from '@/utils';
 import { CircleCheckBig } from 'lucide-react';
 
@@ -17,7 +17,7 @@ interface ExerciseDetailsComponentProps {
 
 const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
   return (
-    <>
+    <Card className='shadow-md p-6 flex flex-col gap-4'>
       {
         props.isLoading || !props.exercise ? <SkeletonCard /> : (
           <div className="flex flex-col gap-4 w-full">
@@ -34,7 +34,7 @@ const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
                 </div>
               )
             }
-            <Card className='shadow-md p-4 flex flex-col gap-4'>
+            <div className='flex flex-col gap-4'>
               <div className='flex items-center gap-2'>
                 <Badge variant="secondary" className='w-fit'>{props.exercise.exerciseCategory.title}</Badge>
                 <Badge variant="secondary">{convertEnumToTitleCase(props.exercise.difficulty)}</Badge>
@@ -71,11 +71,11 @@ const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
                   </div>
                 )
               }
-            </Card>
+            </div>
           </div>
         )
       }
-    </>
+    </Card>
   )
 }
 

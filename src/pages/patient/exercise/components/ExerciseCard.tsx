@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card"
-import { MOCK_EXERCISES } from "@/constants";
 import { Link } from "react-router-dom";
 
 interface ExerciseCardProps {
@@ -46,7 +45,7 @@ const ExerciseCard = ({
     <Link to={to || id} className="w-full">
       <Card className="w-full overflow-hidden flex flex-col md:flex-row gap-4 p-4 shadow-md rounded-xl">
         <img
-          src={thumbnailUrl || MOCK_EXERCISES[0].thumbnailUrl}
+          src={thumbnailUrl}
           alt="exercise thumbnail"
           className="size-full sm:size-28 object-cover rounded-xl"
         />

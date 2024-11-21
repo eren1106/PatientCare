@@ -1,10 +1,11 @@
 import { Doctor, Patient, User } from "@/interfaces/user";
-import { apiCaller } from "@/utils";
+import { apiRequest } from "@/utils/apiRequest";
+import { setUserToSession } from "./auth.service";
 
 export const getProfileById = async (id: string): Promise<Patient> => {
   try {
-    const res = await apiCaller.get(`profile/${id}`);
-    return res.data.data;
+    const res = await apiRequest.get(`profile/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -13,8 +14,8 @@ export const getProfileById = async (id: string): Promise<Patient> => {
 
 export const getDoctorProfileById = async (id: string): Promise<Doctor> => {
   try {
-    const res = await apiCaller.get(`profile/${id}`);
-    return res.data.data;
+    const res = await apiRequest.get(`profile/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -23,27 +24,17 @@ export const getDoctorProfileById = async (id: string): Promise<Doctor> => {
 
 interface ProfileDTO {
   id: string;
-  fullname: string;
-  age: number;
-  gender: string;
-  ic: string;
+  formData: FormData;
 }
 
 export const updateProfile = async ({
   id,
-  fullname,
-  age,
-  gender,
-  ic,
+  formData
 }: ProfileDTO) => {
   try {
-    const res = await apiCaller.put(`profile/${id}`, {
-      fullname,
-      age,
-      gender,
-      ic,
-    });
-    return res.data.data;
+    const res = await apiRequest.put(`profile/${id}`, formData);
+    setUserToSession(res.data);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -52,8 +43,8 @@ export const updateProfile = async ({
 
 export const deleteProfileById = async (id: string) => {
   try {
-    const res = await apiCaller.delete(`profile/${id}`);
-    return res.data.data;
+    const res = await apiRequest.delete(`profile/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;

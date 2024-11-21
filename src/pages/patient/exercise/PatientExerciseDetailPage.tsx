@@ -3,8 +3,6 @@ import useLoading from "@/hooks/useLoading.hook";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import ExerciseDetailsComponent from "@/pages/exercise/components/ExerciseDetailsComponent";
 import { completePatientExercise, getDailyPatientExerciseById } from "@/services/patientExercise.service";
-import { refreshPage } from "@/utils";
-import { set } from "date-fns";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 

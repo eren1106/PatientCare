@@ -28,6 +28,10 @@ async function requestWithCaller(
       method,
       url: endpoint,
       data,
+      headers: {
+        // Only set 'Content-Type' if the data is not FormData, as FormData sets its own headers
+        ...(data instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      },
       ...config, // Spread additional Axios config options if provided
     });
 
