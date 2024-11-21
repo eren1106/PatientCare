@@ -12,6 +12,7 @@ import DynamicDialogTrigger from "@/components/DynamicDialogTrigger";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { getAllTimeDailyPatientExercises } from "@/services/patientExercise.service";
 import Spinner from "@/components/Spinner";
+import { Card } from "@/components/ui/card";
 
 const MOCK_EVENTS: EventInput[] = [
   {
@@ -93,7 +94,7 @@ const TrackingPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8">
+    <Card className="flex flex-col gap-8">
       <h1>Exercise Completion Tracking</h1>
       {
         isLoading ? <Spinner /> : (
@@ -179,7 +180,7 @@ const TrackingPage = () => {
           </div>
         }
       />
-    </div>
+    </Card>
   )
 }
 

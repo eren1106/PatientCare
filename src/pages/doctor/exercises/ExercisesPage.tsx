@@ -8,6 +8,7 @@ import { deleteExerciseById, getExercises } from "@/services/exercise.service";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 
 const ExercisesPage = () => {
   const { toast } = useToast();
@@ -57,7 +58,7 @@ const ExercisesPage = () => {
 
   return (
     <div>
-      <div className="border border-gray-300 rounded-lg p-5 gap-2">
+      <Card className="p-5">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
           <DialogButton
@@ -76,7 +77,7 @@ const ExercisesPage = () => {
           onDelete={handleClickDelete}
           onEdit={handleClickEdit}
         />
-      </div>
+      </Card>
 
       {/* TODO: MAKE CREATE & EDIT THE SAME COMPONENT */}
       {/* EDIT EXERCISE MODAL */}

@@ -19,6 +19,7 @@ import useLoading from "@/hooks/useLoading.hook";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface AppointmentPageProps {
   isDoctor?: boolean
@@ -90,7 +91,7 @@ const AppointmentPage: React.FC<AppointmentPageProps> = ({ isDoctor = true }) =>
 
   if (isLoading) return <Spinner />
   return (
-    <div className="flex flex-col gap-6">
+    <Card className="flex flex-col gap-6">
       {
         isDoctor && (
           <Button
@@ -157,7 +158,7 @@ const AppointmentPage: React.FC<AppointmentPageProps> = ({ isDoctor = true }) =>
             selectedDate={selectedDate ?? undefined}
           />}
       />
-    </div>
+    </Card>
   );
 };
 
