@@ -41,7 +41,10 @@ const manifestForPlugIn = {
     scope: '/',
     start_url: "/",
     orientation: 'portrait' as const,
-  }
+  },
+  workbox: {
+    maximumFileSizeToCacheInBytes: 10000000, // 10MB
+  },
 }
 
 export default defineConfig({
