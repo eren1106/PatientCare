@@ -85,7 +85,7 @@ const PatientProfileForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-3'>
+      <form onSubmit={form.handleSubmit((data) => withLoading(() => onSubmit(data)))} className='flex flex-col gap-3'>
         <GenericFormField
           type="custom"
           name="image"
@@ -127,7 +127,7 @@ const PatientProfileForm = ({
         />
 
         <FormButton
-          disabled={isLoading}
+          isLoading={isLoading}
         >
           Submit
         </FormButton>

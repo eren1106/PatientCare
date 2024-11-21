@@ -37,3 +37,7 @@ export const logoutUser = () => {
   const { cleanupDevice } = useCallStore.getState();
   cleanupDevice();
 }
+
+export const setUserToSession = (user: User) => {
+  sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
+}

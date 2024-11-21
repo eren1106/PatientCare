@@ -1,5 +1,6 @@
 import { Doctor, Patient, User } from "@/interfaces/user";
 import { apiRequest } from "@/utils/apiRequest";
+import { setUserToSession } from "./auth.service";
 
 export const getProfileById = async (id: string): Promise<Patient> => {
   try {
@@ -32,6 +33,7 @@ export const updateProfile = async ({
 }: ProfileDTO) => {
   try {
     const res = await apiRequest.put(`profile/${id}`, formData);
+    setUserToSession(res.data);
     return res.data;
   } catch (e) {
     console.error(e);

@@ -1,8 +1,10 @@
+import FormButton from "@/components/FormButton";
 import GenericFormField from "@/components/GenericFormField";
+import ProfilePictureUploader from "@/components/ProfilePictureUploader";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast";
-import { GENDER_SELECT } from "@/constants";
+import { GENDER_SELECT, MAX_IMAGE_SIZE } from "@/constants";
 import useLoading from "@/hooks/useLoading.hook";
 import { Doctor } from "@/interfaces/user";
 import { updateProfile } from "@/services/profile.service";
@@ -12,8 +14,19 @@ import { useForm } from "react-hook-form";
 import * as z from "zod"
 
 const DoctorProfileSchema = z.object({
+  image: z
+    .instanceof(File)
+    .refine(
+      (file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file.type),
+      'Invalid file type'
+    )
+    .refine(
+      (file) => file.size <= MAX_IMAGE_SIZE,
+      `File size must be less than ${MAX_IMAGE_SIZE / (1024 * 1024)}MB`
+    )
+    .optional(),
   fullname: z.string().min(1),
-  age: z.number(),
+  age: z.coerce.number(),
   gender: z.string(),
   ic: z.string(),
 });
@@ -40,19 +53,16 @@ const DoctorProfileForm = ({
 
   const onSubmit = async (data: z.infer<typeof DoctorProfileSchema>) => {
     try {
-      const {
-        fullname,
-        age,
-        gender,
-        ic
-      } = data;
+      const formData = new FormData();
+
+      const { image, ...dataWithoutImage } = data;
+      formData.append("json", JSON.stringify(dataWithoutImage));
+      if (image) formData.append("imageFile", image);
+
       // update profile
       await updateProfile({
         id: profile.id,
-        fullname,
-        age,
-        gender,
-        ic
+        formData,
       });
 
       toast({
@@ -75,7 +85,19 @@ const DoctorProfileForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-3'>
+      <form onSubmit={form.handleSubmit((data) => withLoading(() => onSubmit(data)))} className='flex flex-col gap-3'>
+        <GenericFormField
+          type="custom"
+          name="image"
+          control={form.control}
+          description="Image max size: 5mb"
+          customChildren={
+            <ProfilePictureUploader
+              onChange={(file) => form.setValue("image", file)}
+              defaultImageUrl={profile.profileImageUrl ?? undefined}
+            />
+          }
+        />
         <GenericFormField
           control={form.control}
           name="fullname"
@@ -103,13 +125,9 @@ const DoctorProfileForm = ({
           label="IC"
           placeholder="IC"
         />
-
-        <Button
-          type="submit"
-          disabled={isLoading}
-        >
+        <FormButton isLoading={isLoading}>
           Submit
-        </Button>
+        </FormButton>
       </form>
     </Form>
   )
