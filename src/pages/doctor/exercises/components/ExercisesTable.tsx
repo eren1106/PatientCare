@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import { formatDate } from '@/utils';
+import SkeletonCard from '@/components/SkeletonCard';
 
 interface ExercisesTableProps {
   exercises: Exercise[];
@@ -37,46 +38,51 @@ const ExercisesTable = ({
   return (
     <>
       {
-        loading ? <Spinner /> : <Table className="mt-2 w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[16rem]">Title</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="w-[8rem]">Date Created</TableHead>
-              <TableHead className="w-[8rem]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {exercises.map((exercise) => (
-              <TableRow
-                className=""
-                key={exercise.id}
-              >
-                <TableCell className="font-medium">{exercise.title}</TableCell>
-                <TableCell>{exercise.description}</TableCell>
-                <TableCell>{formatDate(exercise.createdDatetime)}</TableCell>
-                <TableCell className="flex sm:flex-row flex-col items-center justify-start gap-2">
-                  <Link to={`${exercise.id}`}>
-                    <Eye
-                      size={36}
-                      className="hover:bg-muted p-2 rounded-full"
-                    />
-                  </Link>
-                  <PenBox
-                    size={36}
-                    className="hover:bg-muted p-2 rounded-full cursor-pointer"
-                    onClick={() => onEdit?.(exercise)}
-                  />
-                  <Trash
-                    size={36}
-                    className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                    onClick={() => handleClickDeleteIcon(exercise)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        loading ? <SkeletonCard /> :
+          (
+            <div className='rounded-lg border overflow-hidden'>
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[16rem]">Title</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead className="w-[8rem]">Date Created</TableHead>
+                    <TableHead className="w-[8rem]">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {exercises.map((exercise) => (
+                    <TableRow
+                      className=""
+                      key={exercise.id}
+                    >
+                      <TableCell className="font-medium">{exercise.title}</TableCell>
+                      <TableCell>{exercise.description}</TableCell>
+                      <TableCell>{formatDate(exercise.createdDatetime)}</TableCell>
+                      <TableCell className="flex sm:flex-row flex-col items-center justify-start gap-2">
+                        <Link to={`${exercise.id}`}>
+                          <Eye
+                            size={36}
+                            className="hover:bg-muted p-2 rounded-full"
+                          />
+                        </Link>
+                        <PenBox
+                          size={36}
+                          className="hover:bg-muted p-2 rounded-full cursor-pointer"
+                          onClick={() => onEdit?.(exercise)}
+                        />
+                        <Trash
+                          size={36}
+                          className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
+                          onClick={() => handleClickDeleteIcon(exercise)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
       }
 
       {/* CONFIRM DELETE DIALOG */}

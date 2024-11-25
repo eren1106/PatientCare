@@ -57,8 +57,8 @@ const ExercisesPage = () => {
   // }
 
   return (
-    <div>
-      <Card className="p-5">
+    <>
+      <Card className="p-5 flex flex-col gap-3">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
           <DialogButton
@@ -89,7 +89,7 @@ const ExercisesPage = () => {
           {selectedEditExercise ? <ExerciseForm exercise={selectedEditExercise}/> : "No exercise selected!"}
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }
 
