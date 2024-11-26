@@ -41,7 +41,7 @@ export const createAppointment = async (data: CreateAppointmentDTO) => {
 };
 
 export const updateAppointment = async (data: UpdateAppointmentDTO) => {
-  const {id, ...updateData} = data
+  const { id, ...updateData } = data
   try {
     const res = await apiRequest.put(`appointments/${id}`, updateData);
     return res.data;
@@ -60,3 +60,13 @@ export const deleteAppointmentById = async (id: string) => {
     throw e;
   }
 };
+
+export const confirmAppointment = async (id: string, confirm: boolean) => {
+  try {
+    const res = await apiRequest.put(`appointments/${id}/confirm`, { confirm });
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}

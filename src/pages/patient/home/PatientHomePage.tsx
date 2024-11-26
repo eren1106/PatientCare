@@ -58,9 +58,9 @@ const PatientHomePage = () => {
             window.location.replace("/#pending-exercises");
           }}
         >
-          <div className="flex items-center gap-1">
-            <div className="bg-primary size-9 rounded-lg flex items-center justify-center">
-              <Dumbbell className="text-primary-foreground size-5" />
+          <div className="flex items-center gap-2">
+            <div className="bg-primary/20 size-9 rounded-full flex items-center justify-center">
+              <Dumbbell className="text-primary size-5" />
             </div>
             <h4 className="">Pending Exercises:</h4>
           </div>
@@ -80,9 +80,9 @@ const PatientHomePage = () => {
             window.location.replace("/#pending-assessments");
           }}
         >
-          <div className="flex items-center gap-1">
-            <div className="bg-purple-500 size-9 rounded-lg flex items-center justify-center">
-              <Newspaper className="text-primary-foreground size-5" />
+          <div className="flex items-center gap-2">
+            <div className="bg-purple-500/10 size-9 rounded-full flex items-center justify-center">
+              <Newspaper className="text-purple-500 size-5" />
             </div>
             <h4 className="">Pending Assessments:</h4>
           </div>

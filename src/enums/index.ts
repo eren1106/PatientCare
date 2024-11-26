@@ -19,3 +19,9 @@ export enum DoctorRegistrationStatus {
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
+
+export enum AppointmentStatus {
+  SCHEDULED = "SCHEDULED",
+  CONFIRMED = "CONFIRMED",
+  CANCELLED = "CANCELLED",
+}

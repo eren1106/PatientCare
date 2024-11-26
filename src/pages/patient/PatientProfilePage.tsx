@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { logoutUser } from '@/services/auth.service';
 import SkeletonCard from '@/components/SkeletonCard';
+import { ModeToggle } from '@/components/mode-toggle';
 
 interface ProfileInfoProps {
   label: string;
