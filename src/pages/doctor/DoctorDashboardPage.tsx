@@ -155,7 +155,7 @@ const DoctorDashboardPage = () => {
           </CardContent>
         </Card>
       </section>
-      <div className="border border-gray-300 rounded-lg p-3 sm:p-5 mt-5 sm:mt-10 gap-2">
+      <Card className="p-3 sm:p-5 mt-5 sm:mt-10 gap-2">
         <div  className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0">
           <span className="text-lg sm:text-xl font-semibold">Patient Record</span>
           <Input
@@ -251,7 +251,7 @@ const DoctorDashboardPage = () => {
             </TableBody>
           </Table>
         )}
-      </div>
+      </Card>
 
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
         <DialogContent className="sm:max-w-[425px]">
