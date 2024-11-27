@@ -10,6 +10,7 @@ import { TimePicker } from './TimePicker';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import Combobox from './Combobox';
+import PasswordInput from './PasswordInput';
 
 interface GenericFormFieldProps {
   control: any;
@@ -56,7 +57,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
             res = <Input placeholder={placeholder} {...field} type="email" />;
             break;
           case 'password':
-            res = <Input placeholder={placeholder} {...field} type="password" />;
+            res = (
+              <PasswordInput
+                placeholder={placeholder}
+                {...field}
+              />
+            );
             break;
           case 'textarea':
             res = <AutoResizeTextarea placeholder={placeholder} minRows={minRows!} {...field} />;

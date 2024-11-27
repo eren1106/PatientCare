@@ -36,6 +36,7 @@ import TrackingPage from "./pages/patient/tracking/TrackingPage";
 import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
 import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
+import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
 
 const AppWrapper = () => {
 
@@ -252,6 +253,10 @@ const router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />
+          },
+          {
+            path: "verify-email",
+            element: <EmailVerificationPage />
           }
         ]
       }
