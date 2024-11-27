@@ -41,3 +41,8 @@ export const logoutUser = () => {
 export const setUserToSession = (user: User) => {
   sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
 }
+
+export const verifyEmail = async (token: string) => {
+  const res = await apiRequest.get(`auth/verify-email?token=${token}`);
+  return res.data;
+}
