@@ -22,6 +22,7 @@ import { useState } from "react";
 import { Questionnaire } from "@/interfaces/questionnaire";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils";
+import SkeletonCard from '@/components/SkeletonCard';
 
 interface QuestionnaireTableProps {
   questionnaires: Questionnaire[];
@@ -56,9 +57,7 @@ const QuestionnaireTable = ({
   return (
     <>
       {loading ? (
-        <div className="flex justify-center items-center h-full">
-          <Spinner />
-        </div>
+        <SkeletonCard />
       ) : (
         <Table className="mt-2 w-full">
           <TableHeader>
