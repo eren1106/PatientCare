@@ -27,8 +27,8 @@ export const MessageProvider = ({ children }: { children: React.ReactNode }) => 
     });
 
     return () => {
-      //unregisterMessageHandler();
-      //disconnectSocket();
+      unregisterMessageHandler();
+      disconnectSocket();
     };
   }, [incrementCount]);
 

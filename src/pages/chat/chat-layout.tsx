@@ -8,6 +8,7 @@ import useChatStore from "@/hooks/useChatStore.hook";
 import { ArrowLeft } from 'lucide-react'; 
 import { useMessageStore } from '@/stores/messageStore';
 import { useLocation } from "react-router-dom";
+import { Card } from "@/components/ui/card";
 
 
 
@@ -38,34 +39,25 @@ export function ChatLayout({
   }, [setChats, setSelectedUser]);
 
   useEffect(() => {
-    const userId = getCurrentUser()?.id;
-    if (!userId) return;
-
-    initializeSocket(userId);
-
-    loadChats();
-
-    registerMessageHandler((message) => {
+    const handleNewMessage = (event: CustomEvent) => {
+      const message = event.detail;
       addMessage(message);
       updateChatWithNewMessage(message);
       loadChats();
-      if (message.toUserId === userId) {
-        incrementCount();
-      }
-    });
-
-    return () => {
-      unregisterMessageHandler();
-      disconnectSocket();
     };
-  }, [loadChats, addMessage, updateChatWithNewMessage, incrementCount]);
+
+    window.addEventListener('new-message', handleNewMessage as EventListener);
+    
+    return () => {
+      window.removeEventListener('new-message', handleNewMessage as EventListener);
+    };
+  }, [addMessage, updateChatWithNewMessage, loadChats]);
 
   useEffect(() => {
     if (location.pathname.includes('/chat')) {
       resetCount();
     }
   }, [location, resetCount]);
-
 
   
 
@@ -88,7 +80,7 @@ export function ChatLayout({
 
 
   return (
-    <div className="flex justify-between w-full">
+    <Card className="flex justify-between w-full">
       {chats.length === 0 ? (
         <div className="w-full text-center py-4">
           <p className="text-lg font-semibold">No users available</p>
@@ -116,7 +108,7 @@ export function ChatLayout({
     </div>
       )}
 
-    </div>
+    </Card>
   );
 }
 
