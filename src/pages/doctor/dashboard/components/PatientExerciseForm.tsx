@@ -43,19 +43,14 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
 
   const onSubmit = async (data: PatientExerciseSchemaType) => {
     if (!patientId) return;
-    const {
-      exerciseId,
-      sets,
-    } = data;
 
     console.log("PATIENT ID: ", patientId)
     try {
       if (patientExerciseId) {
         // edit patient exercise
         await updatePatientExercise({
+          ...data,
           patientId,
-          exerciseId,
-          sets,
           patientExerciseId,
         });
 
@@ -67,9 +62,8 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
       else {
         // create patient exercise
         await createPatientExercise({
+          ...data,
           patientId,
-          exerciseId,
-          sets,
         });
 
         toast({

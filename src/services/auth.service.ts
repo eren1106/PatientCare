@@ -11,7 +11,7 @@ export const loginUser = async (email: string, password: string) => {
       password
     });
     const user = res.data;
-    sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
   } catch (e) {
     console.error(e);
     throw e;
@@ -24,7 +24,7 @@ export const registerUser = async (data: RegisterSchemaType): Promise<User> => {
 }
 
 export const getCurrentUser = (): User | null | undefined => {
-  const userString = sessionStorage.getItem(USER_SESSION_KEY);
+  const userString = localStorage.getItem(USER_SESSION_KEY);
   if(!userString) return null;
 
   const user = JSON.parse(userString);
@@ -32,14 +32,14 @@ export const getCurrentUser = (): User | null | undefined => {
 }
 
 export const logoutUser = () => {
-  sessionStorage.removeItem(USER_SESSION_KEY);
-  sessionStorage.removeItem("twilioToken");
+  localStorage.removeItem(USER_SESSION_KEY);
+  localStorage.removeItem("twilioToken");
   const { cleanupDevice } = useCallStore.getState();
   cleanupDevice();
 }
 
 export const setUserToSession = (user: User) => {
-  sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
+  localStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
 }
 
 export const verifyEmail = async (token: string) => {

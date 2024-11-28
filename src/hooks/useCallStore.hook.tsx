@@ -25,12 +25,12 @@ const useCallStore = create<CallStore>((set, get) => ({
   currentCall: null,
 
   initializeDevice: async () => {
-    let token = sessionStorage.getItem('twilioToken');
+    let token = localStorage.getItem('twilioToken');
     
     if (!token) {
       const res = await getCallToken();
       token = res.token;
-      sessionStorage.setItem('twilioToken', token);
+      localStorage.setItem('twilioToken', token);
     }
 
     const device = new Device(token, {

@@ -1,15 +1,14 @@
 import { MOCK_PATIENT_ID } from "@/constants";
 import { DailyPatientExercise, ExerciseCompetionSummary } from "@/interfaces/exercise";
-import { apiCaller } from "@/utils";
 import { apiRequest } from "@/utils/apiRequest";
 
 // TODO: remove all mock id
 
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {
-    // const res = await apiCaller.get(`patients/${patientId}/exercises`);
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises`);
-    return res.data.data;
+    // const res = await apiRequest.get(`patients/${patientId}/exercises`);
+    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -18,8 +17,8 @@ export const getPatientExercisesByPatientId = async (patientId: string) => {
 
 export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
-    return res.data.data;
+    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -29,8 +28,8 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
 
 export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
   try {
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
-    return res.data.data;
+    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -61,21 +60,17 @@ interface PatientExerciseDTO {
   patientId: string;
   exerciseId: string;
   sets: number;
+  reps: number;
+  frequency: number;
+  duration: number;
+
   patientExerciseId?: string;
 }
-export const createPatientExercise = async ({
-  patientId,
-  exerciseId,
-  sets,
-}: PatientExerciseDTO) => {
+export const createPatientExercise = async (data: PatientExerciseDTO) => {
   try {
-    // const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-    const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-      patientId,
-      exerciseId,
-      sets,
-    });
-    return res.data.data;
+    // const res = await apiRequest.post(`patients/${patientId}/exercises`, {
+    const res = await apiRequest.post(`patients/${data.patientId}/exercises`, data);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -83,19 +78,10 @@ export const createPatientExercise = async ({
 };
 
 
-export const updatePatientExercise = async ({
-  patientId,
-  exerciseId,
-  sets,
-  patientExerciseId,
-}: PatientExerciseDTO) => {
+export const updatePatientExercise = async (data: PatientExerciseDTO) => {
   try {
-    const res = await apiCaller.put(`patients/${patientId}/exercises/${patientExerciseId}`, {
-      patientId,
-      exerciseId,
-      sets,
-    });
-    return res.data.data;
+    const res = await apiRequest.put(`patients/${data.patientId}/exercises/${data.exerciseId}`, data);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -104,7 +90,7 @@ export const updatePatientExercise = async ({
 
 export const completePatientExercise = async (patientExerciseId: string) => {
   try {
-    await apiCaller.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}/complete-exercise`);
+    await apiRequest.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}/complete-exercise`);
   } catch (e) {
     console.error(e);
     throw e;
@@ -113,8 +99,8 @@ export const completePatientExercise = async (patientExerciseId: string) => {
 
 export const deletePatientExerciseById = async (id: string) => {
   try {
-    const res = await apiCaller.delete(`patients/${MOCK_PATIENT_ID}/exercises/${id}`);
-    return res.data.data;
+    const res = await apiRequest.delete(`patients/${MOCK_PATIENT_ID}/exercises/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
