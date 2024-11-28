@@ -8,6 +8,7 @@ import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
+import { Card } from "@/components/ui/card";
 
 const QuestionnairePage = () => {
   const { toast } = useToast();
@@ -54,7 +55,7 @@ const QuestionnairePage = () => {
 
   return (
     <div>
-      <div className="border border-gray-300 rounded-lg p-5 gap-2">
+      <Card className="p-5 gap-2">
         <div className="flex justify-between">
           <span className="text-xl font-semibold">Questionnaire</span>
           <Button size="sm" onClick={handleClickCreate}>Create Questionnaire</Button>
@@ -65,7 +66,7 @@ const QuestionnairePage = () => {
           loading={isLoading}
           onDelete={handleClickDelete}
         />
-      </div>
+      </Card>
     </div>
   )
 }

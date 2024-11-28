@@ -4,69 +4,69 @@ import { Notification } from "@/interfaces/notification";
 export const MOCK_PATIENT_ID = "clxr5b60g000214nuqvj27lxo";
 export const MOCK_DOCTOR_ID = "clxr5b62c000314nuxh3boir4";
 
-export const MOCK_EXERCISES: Exercise[] = [
-  {
-    id: "1",
-    exerciseCategoryId: "1",
-    thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
-    title: "Shoulder Rotator Cuff Stretch",
-    description: "Stretching exercises for the rotator cuff to improve shoulder flexibility and reduce pain.",
-    duration: 15,
-    difficulty: 'EASY',
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sagittis at nisl eu mollis. Integer eget suscipit metus, vel hendrerit neque. Etiam sodales, elit nec volutpat blandit, lectus nulla vulputate justo, ac pellentesque felis nisl quis augue. Integer sed purus egestas, condimentum mauris sed, porta justo. Duis pellentesque arcu eu.",
-    videoUrl: "https://www.youtube.com/watch?v=150O8tNdRj0",
-    createdDatetime: new Date("2023-03-15"),
-    updatedDatetime: new Date("2023-03-15")
-  },
-  {
-    id: "2",
-    exerciseCategoryId: "2",
-    thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
-    title: "Ankle Alphabet Exercise",
-    description: "Range of motion exercise for the ankle joint to improve mobility and stability.",
-    duration: 10,
-    difficulty: 'MEDIUM',
-    videoUrl: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
-    createdDatetime: new Date("2023-04-20"),
-    updatedDatetime: new Date("2023-04-20")
-  },
-  {
-    id: "3",
-    exerciseCategoryId: "3",
-    thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
-    title: "Knee Strengthening Exercises",
-    description: "Strengthening exercises for the knee muscles to support and stabilize the knee joint.",
-    duration: 20,
-    difficulty: 'HARD',
-    videoUrl: "https://www.youtube.com/watch?v=YMytSEYr2yU",
-    createdDatetime: new Date("2023-05-10"),
-    updatedDatetime: new Date("2023-05-10")
-  },
-  {
-    id: "4",
-    exerciseCategoryId: "4",
-    thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
-    title: "Lower Back Stretching Routine",
-    description: "Gentle stretching exercises to relieve tension and improve flexibility in the lower back.",
-    duration: 15,
-    difficulty: 'EASY',
-    videoUrl: "https://www.youtube.com/watch?v=gcX4qN--Zdo",
-    createdDatetime: new Date("2023-06-05"),
-    updatedDatetime: new Date("2023-06-05")
-  },
-  {
-    id: "5",
-    exerciseCategoryId: "5",
-    thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
-    title: "Hip Flexor Strengthening",
-    description: "Exercises to strengthen the hip flexor muscles for improved hip stability and function.",
-    duration: 25,
-    difficulty: 'MEDIUM',
-    videoUrl: "https://www.youtube.com/watch?v=mO8YJAxVG2M",
-    createdDatetime: new Date("2023-07-15"),
-    updatedDatetime: new Date("2023-07-15")
-  },
-];
+// export const MOCK_EXERCISES: Exercise[] = [
+//   {
+//     id: "1",
+//     exerciseCategoryId: "1",
+//     thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
+//     title: "Shoulder Rotator Cuff Stretch",
+//     description: "Stretching exercises for the rotator cuff to improve shoulder flexibility and reduce pain.",
+//     duration: 15,
+//     difficulty: 'EASY',
+//     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sagittis at nisl eu mollis. Integer eget suscipit metus, vel hendrerit neque. Etiam sodales, elit nec volutpat blandit, lectus nulla vulputate justo, ac pellentesque felis nisl quis augue. Integer sed purus egestas, condimentum mauris sed, porta justo. Duis pellentesque arcu eu.",
+//     videoUrl: "https://www.youtube.com/watch?v=150O8tNdRj0",
+//     createdDatetime: new Date("2023-03-15"),
+//     updatedDatetime: new Date("2023-03-15")
+//   },
+//   {
+//     id: "2",
+//     exerciseCategoryId: "2",
+//     thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
+//     title: "Ankle Alphabet Exercise",
+//     description: "Range of motion exercise for the ankle joint to improve mobility and stability.",
+//     duration: 10,
+//     difficulty: 'MEDIUM',
+//     videoUrl: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+//     createdDatetime: new Date("2023-04-20"),
+//     updatedDatetime: new Date("2023-04-20")
+//   },
+//   {
+//     id: "3",
+//     exerciseCategoryId: "3",
+//     thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
+//     title: "Knee Strengthening Exercises",
+//     description: "Strengthening exercises for the knee muscles to support and stabilize the knee joint.",
+//     duration: 20,
+//     difficulty: 'HARD',
+//     videoUrl: "https://www.youtube.com/watch?v=YMytSEYr2yU",
+//     createdDatetime: new Date("2023-05-10"),
+//     updatedDatetime: new Date("2023-05-10")
+//   },
+//   {
+//     id: "4",
+//     exerciseCategoryId: "4",
+//     thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
+//     title: "Lower Back Stretching Routine",
+//     description: "Gentle stretching exercises to relieve tension and improve flexibility in the lower back.",
+//     duration: 15,
+//     difficulty: 'EASY',
+//     videoUrl: "https://www.youtube.com/watch?v=gcX4qN--Zdo",
+//     createdDatetime: new Date("2023-06-05"),
+//     updatedDatetime: new Date("2023-06-05")
+//   },
+//   {
+//     id: "5",
+//     exerciseCategoryId: "5",
+//     thumbnailUrl: "https://cdn.flintrehab.com/uploads/2022/05/man-doing-home-sci-workouts.jpg",
+//     title: "Hip Flexor Strengthening",
+//     description: "Exercises to strengthen the hip flexor muscles for improved hip stability and function.",
+//     duration: 25,
+//     difficulty: 'MEDIUM',
+//     videoUrl: "https://www.youtube.com/watch?v=mO8YJAxVG2M",
+//     createdDatetime: new Date("2023-07-15"),
+//     updatedDatetime: new Date("2023-07-15")
+//   },
+// ];
 
 // export const MOCK_PATIENT_EXERCISES: PatientExercise[] = [
 //   {

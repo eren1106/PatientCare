@@ -1,16 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DEFAULT_AVATAR_URL } from '@/constants';
 import { cn } from '@/lib/utils';
 
 interface ProfileAvatarProps {
   src?: string;
+  alt?: string;
   size?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
-  // className?: string;
   fallbackText?: string;
   className?: string;
   imageClassName?: string;
 }
 
-const ProfileAvatar = ({ src, size = "md", fallbackText = 'Img', className, imageClassName }: ProfileAvatarProps) => {
+const ProfileAvatar = ({ src, alt="", size = "md", fallbackText = 'Img', className, imageClassName }: ProfileAvatarProps) => {
   const sizeToClassName = (_size: string) => {
     switch (_size) {
       case "2xs":
@@ -40,7 +41,7 @@ const ProfileAvatar = ({ src, size = "md", fallbackText = 'Img', className, imag
     <Avatar
       className={cn(sizeToClassName(size), className)}
     >
-      <AvatarImage src={src} className={cn("object-cover", imageClassName)} />
+      <AvatarImage src={src || DEFAULT_AVATAR_URL} className={cn("object-cover", imageClassName)} alt={alt} />
       <AvatarFallback>{fallbackText}</AvatarFallback>
     </Avatar>
   )

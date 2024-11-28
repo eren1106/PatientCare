@@ -1,7 +1,7 @@
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
-import { MOCK_DOCTOR_IMAGE_PATH, MOCK_PATIENT_IMAGE_PATH } from '@/constants'
+import { DEFAULT_AVATAR_URL } from '@/constants'
 import { Edit, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -49,7 +49,7 @@ const DoctorProfilePage = () => {
     }
     catch (e) {
       // NO USER FOUND
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
   }
@@ -67,7 +67,7 @@ const DoctorProfilePage = () => {
         title: "Account Deleted Successfully",
       });
       logoutUser();
-      navigate("/login");
+      navigate("/auth/login");
     }
     catch (e: any) {
       console.error(e);
@@ -111,7 +111,7 @@ const DoctorProfilePage = () => {
             </div>
             <div className='flex gap-6'>
               <ProfileAvatar
-                src={MOCK_DOCTOR_IMAGE_PATH}
+                src={doctor?.profileImageUrl || DEFAULT_AVATAR_URL}
                 className='size-48'
               />
               <div className='flex flex-col gap-3 w-full'>

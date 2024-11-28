@@ -8,14 +8,14 @@ const AuthProvider = ({ children }: {children: ReactNode}) => {
   useEffect(() => {
     const userString = sessionStorage.getItem(USER_SESSION_KEY);
     if (!userString) {
-      navigate('/login');
+      navigate('/auth/login');
       return;
     }
 
     const user = JSON.parse(userString);
 
     if (!user) {
-      navigate('/login');
+      navigate('/auth/login');
     } 
     // else {
     //   if (user.role === UserRole.DOCTOR) {

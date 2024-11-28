@@ -54,8 +54,10 @@ const RegisterForm = () => {
         setUserEmail(data.email);
         setPendingRegisterDialogOpen(true);
       } else {
+        // PATIENT
         toast({
-          title: "Register Successfully",
+          title: "Verification email sent",
+          description: "Please check your email to verify your account",
           variant: "success"
         });
         navigate("/auth/login");
@@ -75,7 +77,7 @@ const RegisterForm = () => {
   return (
     <AuthFormWrapper isSignup={true} cardClassName='sm:w-[40rem]'>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit((data) => withLoading(() => onSubmit(data)))} className="space-y-4">
           <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
             <GenericFormField
               control={form.control}

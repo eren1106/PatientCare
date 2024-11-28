@@ -36,6 +36,9 @@ import TrackingPage from "./pages/patient/tracking/TrackingPage";
 import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
 import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
+import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
+import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import { MessageProvider } from "./providers/message-provider";
 
 const AppWrapper = () => {
@@ -69,7 +72,7 @@ const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
       <div className='h-full w-56 fixed mt-16 hidden md:flex'>
         <Sidebar isDoctor={isDoctor} />
       </div>
-      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16'>
+      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16 bg-secondary/50'>
         <Outlet />
       </div >
       <Footer />
@@ -254,6 +257,18 @@ const router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />
+          },
+          {
+            path: "verify-email",
+            element: <EmailVerificationPage />
+          },
+          {
+            path: "request-reset-password",
+            element: <RequestResetPasswordPage />
+          },
+          {
+            path: "reset-password",
+            element: <ResetPasswordPage />
           }
         ]
       }

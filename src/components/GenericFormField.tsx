@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -10,17 +10,20 @@ import { TimePicker } from './TimePicker';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import Combobox from './Combobox';
+import PasswordInput from './PasswordInput';
 
 interface GenericFormFieldProps {
   control: any;
   name: string;
   label?: string;
-  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email' | 'date' | 'time' | 'option' | 'combobox';
+  type?: 'input' | 'textarea' | 'select' | 'number' | 'password' | 'email' | 'date' | 'time' | 'option' | 'combobox' | 'custom';
   placeholder?: string;
   options?: Option[];
   minRows?: number;
   imagePreview?: string;
   noLabel?: boolean;
+  customChildren?: React.ReactNode;
+  description?: string;
 }
 
 const GenericFormField: React.FC<GenericFormFieldProps> = ({
@@ -32,6 +35,8 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
   options,
   minRows,
   noLabel = false,
+  customChildren,
+  description
 }) => {
   placeholder = placeholder ?? `Enter ${convertCamelCaseToTitle(name)}`
 
@@ -52,7 +57,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
             res = <Input placeholder={placeholder} {...field} type="email" />;
             break;
           case 'password':
-            res = <Input placeholder={placeholder} {...field} type="password" />;
+            res = (
+              <PasswordInput
+                placeholder={placeholder}
+                {...field}
+              />
+            );
             break;
           case 'textarea':
             res = <AutoResizeTextarea placeholder={placeholder} minRows={minRows!} {...field} />;
@@ -117,6 +127,9 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
               />
             )
             break;
+          case 'custom':
+            res = customChildren;
+            break;
           default:
             res = <></>;
             break;
@@ -132,6 +145,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
                 </FormLabel>
               )
             }
+            {description && <FormDescription className='whitespace-pre'>{description}</FormDescription>}
             <FormControl>
               {res}
             </FormControl>

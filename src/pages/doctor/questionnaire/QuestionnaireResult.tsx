@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/accordion";
 import { getExerciseById } from "@/services/exercise.service";
 import { Exercise } from "@/interfaces/exercise";
-import { MOCK_EXERCISES } from "@/constants/mocks";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -165,7 +164,7 @@ const QuestionnaireResult = () => {
                         <div className="relative aspect-video w-full overflow-hidden rounded-md">
                           <img
                             src={
-                              s.thumbnailUrl || MOCK_EXERCISES[0].thumbnailUrl
+                              s.thumbnailUrl
                             }
                             alt="exercise thumbnail"
                             className="object-cover w-full h-full"

@@ -37,3 +37,23 @@ export const logoutUser = () => {
   const { cleanupDevice } = useCallStore.getState();
   cleanupDevice();
 }
+
+export const setUserToSession = (user: User) => {
+  sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
+}
+
+export const verifyEmail = async (token: string) => {
+  const res = await apiRequest.get(`auth/verify-email?token=${token}`);
+  return res.data;
+}
+
+export const requestResetPassword = async (email: string) => {
+  await apiRequest.post(`auth/request-reset-password`, { email });
+}
+
+export const resetPassword = async (newPassword: string, token: string) => {
+  await apiRequest.post(`auth/reset-password`, {
+    newPassword,
+    token
+  });
+}

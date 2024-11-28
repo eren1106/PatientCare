@@ -57,10 +57,9 @@ const LoginForm = () => {
       }
     }
     catch (e: any) {
-      const errorMessage = e.data?.data?.message || "Failed to login";
       toast({
         title: "Failed to login",
-        description: errorMessage,
+        description: e || "Failed to login",
         variant: "destructive"
       });
     }

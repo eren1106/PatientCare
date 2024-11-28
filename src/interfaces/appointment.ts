@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "@/enums";
 import { User } from "./user";
 
 export interface Appointment {
@@ -11,7 +12,7 @@ export interface Appointment {
   patientId: string;
   createdDatetime: Date;
   updatedDatetime?: Date;
-
   patient?: User;
   doctor?: User;
+  status: AppointmentStatus;
 }

@@ -13,22 +13,24 @@ interface AuthFormWrapperProps {
 const AuthFormWrapper = ({ isSignup = false, children, cardClassName }: AuthFormWrapperProps) => {
   return (
     <div className='flex items-center justify-center'>
-      <Card className={cn('sm:w-96 w-full p-6 shadow-xl  overflow-y-auto max-h-[90vh]', cardClassName)}>
-        <div className='flex justify-between items-center'>
-          <h1 className='mb-2 text-center w-full'>{isSignup ? 'Sign up your account' : 'Welcome to PatientCare'}</h1>
-          {/* <LinkButton href="/" variant="outline">
-         <HomeIcon size={16} />
-        </LinkButton> */}
-        </div>
+      <Card className={cn('sm:w-96 w-full p-6 shadow-xl overflow-y-auto max-h-[90vh] flex flex-col gap-3', cardClassName)}>
+        <h1 className='text-center w-full'>{isSignup ? 'Sign up your account' : 'Welcome to PatientCare'}</h1>
         {children}
         {
           isSignup
-            ? <div className='mt-5 text-center'>
+            ? <div className='text-center'>
               Already have an account? <Link to="/auth/login" className='underline'>Log In</Link> here
             </div>
-            : <div className='mt-5 text-center'>
-              Don't have an account? <Link to="/auth/register" className='underline'>Register</Link> here
-            </div>
+            : (
+              <>
+                <div className='text-center'>
+                  Don't have an account? <Link to="/auth/register" className='underline'>Register</Link> here
+                </div>
+                <div className='text-center'>
+                  Forgot your password? <Link to="/auth/request-reset-password" className='underline'>Reset Password</Link> here
+                </div>
+              </>
+            )
         }
       </Card>
     </div>

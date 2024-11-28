@@ -1,7 +1,7 @@
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
-import { MOCK_PATIENT_IMAGE_PATH } from '@/constants'
+import { DEFAULT_AVATAR_URL, MOCK_PATIENT_IMAGE_PATH } from '@/constants'
 import { Edit, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import PatientProfileForm from './components/PatientProfileForm';
@@ -14,6 +14,8 @@ import { Patient } from '@/interfaces/user';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { logoutUser } from '@/services/auth.service';
+import SkeletonCard from '@/components/SkeletonCard';
+import { ModeToggle } from '@/components/mode-toggle';
 
 interface ProfileInfoProps {
   label: string;
@@ -48,7 +50,7 @@ const PatientProfilePage = () => {
     }
     catch (e) {
       // NO USER FOUND
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
   }
@@ -66,7 +68,7 @@ const PatientProfilePage = () => {
         title: "Account Deleted Successfully",
       });
       logoutUser();
-      navigate("/login");
+      navigate("/auth/login");
     }
     catch (e: any) {
       console.error(e);
@@ -81,7 +83,7 @@ const PatientProfilePage = () => {
   return (
     <div>
       {
-        isLoading ? <Spinner /> : (
+        isLoading ? <SkeletonCard /> : (
           <Card className='p-6 max-w-[44rem]'>
             <div className='flex gap-2 justify-end'>
               <DialogButton
@@ -110,7 +112,7 @@ const PatientProfilePage = () => {
             </div>
             <div className='flex gap-6'>
               <ProfileAvatar
-                src={MOCK_PATIENT_IMAGE_PATH}
+                src={patient?.profileImageUrl || DEFAULT_AVATAR_URL}
                 className='size-48'
               />
               <div className='flex flex-col gap-3 w-full'>
