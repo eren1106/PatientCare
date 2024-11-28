@@ -2,12 +2,10 @@ import { MOCK_PATIENT_ID } from "@/constants";
 import { DailyPatientExercise, ExerciseCompetionSummary } from "@/interfaces/exercise";
 import { apiRequest } from "@/utils/apiRequest";
 
-// TODO: remove all mock id
-
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {
     // const res = await apiRequest.get(`patients/${patientId}/exercises`);
-    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises`);
+    const res = await apiRequest.get(`patients/${patientId}/exercises`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -15,9 +13,9 @@ export const getPatientExercisesByPatientId = async (patientId: string) => {
   }
 }
 
-export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
+export const getDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
+    const res = await apiRequest.get(`patients/${patientId}/exercises/today`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -28,7 +26,7 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
 
 export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
   try {
-    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
+    const res = await apiRequest.get(`patients/p/exercises/${id}/today`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -36,9 +34,9 @@ export const getDailyPatientExerciseById = async (id: string): Promise<DailyPati
   }
 };
 
-export const getAllTimeDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
+export const getAllTimeDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/all-daily`);
+    const res = await apiRequest.get(`patients/${patientId}/exercises/all-daily`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -55,6 +53,16 @@ export const getExerciseCompletionSummaryByPatientId = async (patientId: string)
     throw e;
   }
 };
+
+export const getPatientExerciseById = async (id: string) => {
+  try {
+    const res = await apiRequest.get(`patients/p/exercises/${id}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 
 interface PatientExerciseDTO {
   patientId: string;
