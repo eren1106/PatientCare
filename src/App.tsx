@@ -37,6 +37,8 @@ import AdminPage from "./pages/admin/AdminPage";
 import AuthGuard from "./pages/admin/components/AuthGuard";
 import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
 import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
+import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 const AppWrapper = () => {
 
@@ -257,6 +259,14 @@ const router = createBrowserRouter([
           {
             path: "verify-email",
             element: <EmailVerificationPage />
+          },
+          {
+            path: "request-reset-password",
+            element: <RequestResetPasswordPage />
+          },
+          {
+            path: "reset-password",
+            element: <ResetPasswordPage />
           }
         ]
       }
