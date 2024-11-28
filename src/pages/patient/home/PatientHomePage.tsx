@@ -1,9 +1,6 @@
 import ExerciseCard from "../exercise/components/ExerciseCard";
 import { Card } from "@/components/ui/card";
-import ProfileAvatar from "@/components/ProfileAvatar";
-import { Button } from "@/components/ui/button";
-import { CircleUser, Dumbbell, Newspaper, Send } from "lucide-react";
-import { Link } from "react-router-dom";
+import {  Dumbbell, Newspaper} from "lucide-react";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { DailyPatientExercise } from "@/interfaces/exercise";
@@ -27,8 +24,12 @@ const PatientHomePage = () => {
     PatientAssessment[]
   >([]);
 
+  const patientId = getCurrentUser()?.id;
+
   const getData = async () => {
-    const data = await getDailyPatientExercises();
+    if(!patientId) return;
+
+    const data = await getDailyPatientExercises(patientId);
     setDailyPatientExercises(data);
     const currentUser = getCurrentUser();
 
@@ -126,7 +127,7 @@ const PatientHomePage = () => {
                     dailyPatientExercise.patientExercise.exercise.thumbnailUrl
                   }
                   isCompleted={dailyPatientExercise.isCompleted}
-                  to={`exercises/${dailyPatientExercise.id}`}
+                  to={`exercises/${dailyPatientExercise.patientExercise.id}`}
                 />
               ))}
           </div>
