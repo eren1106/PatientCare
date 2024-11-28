@@ -4,6 +4,23 @@ import { cn } from "@/lib/utils"
 import { DASHBOARD_ROOT_PATH } from "@/constants"
 import { getCurrentUser } from "@/services/auth.service"
 import { UserRole } from "@/enums"
+import { useMessageStore } from "@/stores/messageStore"
+import { Badge } from "./ui/badge"
+
+const UnreadBadge = () => {
+  const unreadCount = useMessageStore((state) => state.unreadCount);
+  
+  if (unreadCount === 0) return null;
+  
+  return (
+    <Badge 
+      className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white rounded-full"
+    >
+      {unreadCount > 99 ? '99+' : unreadCount}
+    </Badge>
+  );
+};
+
 
 const PATIENT_NAV_ITEMS = [
   {
@@ -24,7 +41,12 @@ const PATIENT_NAV_ITEMS = [
   {
     to: "chat",
     title: "Chat",
-    icon: <MessageCircle />
+    icon: (
+      <div className="relative">
+        <MessageCircle />
+        <UnreadBadge />
+      </div>
+    ),
   },
   {
     to: "appointments",
@@ -64,7 +86,12 @@ const DASHBOARD_NAV_ITEMS = [
   {
     to: "chat",
     title: "Chat",
-    icon: <MessageCircle />
+    icon: (
+      <div className="relative">
+        <MessageCircle />
+        <UnreadBadge />
+      </div>
+    ),
   },
   {
     to: "appointments",
@@ -84,6 +111,7 @@ interface SidebarProps {
 
 
 }
+
 
 const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   const location = useLocation();

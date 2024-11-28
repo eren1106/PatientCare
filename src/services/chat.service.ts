@@ -8,6 +8,7 @@ let socket: Socket | null = null;
 let onNewMessage: ((message: Message) => void) | null = null;
 let onMessageDeleted: ((messageId: string) => void) | null = null;
 
+// NOTE : Change this to actual server URL when deploying
 const SOCKET_SERVER_URL = "http://localhost:3000";
 
 export const initializeSocket = (userId: string) => {
