@@ -1,21 +1,18 @@
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
-import { DEFAULT_AVATAR_URL, MOCK_PATIENT_IMAGE_PATH } from '@/constants'
-import { Edit, Trash2 } from 'lucide-react';
+import { DEFAULT_AVATAR_URL } from '@/constants'
 import { useEffect, useState } from 'react'
 import PatientProfileForm from './components/PatientProfileForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteProfileById, getProfileById } from '@/services/profile.service';
 import useLoading from '@/hooks/useLoading.hook';
-import Spinner from '@/components/Spinner';
 import { formatDate } from '@/utils';
 import { Patient } from '@/interfaces/user';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { logoutUser } from '@/services/auth.service';
 import SkeletonCard from '@/components/SkeletonCard';
-import { ModeToggle } from '@/components/mode-toggle';
 
 interface ProfileInfoProps {
   label: string;
@@ -27,9 +24,9 @@ const ProfileInfo = ({
   value
 }: ProfileInfoProps) => {
   return (
-    <div className='flex gap-3'>
-      <p className='w-1/3 font-semibold'>{`${label}:`}</p>
-      <p className='w-2/3'>{value}</p>
+    <div className='flex justify-between border-b last:border-none pb-3 last:pb-0'>
+      <p className='font-semibold'>{`${label}:`}</p>
+      <p className='text-end'>{value}</p>
     </div>
   )
 }
@@ -84,42 +81,18 @@ const PatientProfilePage = () => {
     <div>
       {
         isLoading ? <SkeletonCard /> : (
-          <Card className='p-6 max-w-[44rem]'>
-            <div className='flex gap-2 justify-end'>
-              <DialogButton
-                variant="outline"
-                title="Edit Profile"
-                content={
-                  <div className="flex flex-col gap-3">
-                    {
-                      patient ? (
-                        <PatientProfileForm profile={patient} />
-                      ) : <p>No User Found!</p>
-                    }
-                  </div>
-                }><Edit size={20} /></DialogButton>
-              <DialogButton
-                variant="destructive"
-                title="Delete Account"
-                content={
-                  <div className="flex flex-col gap-6">
-                    Are you sure want to delete this account?
-                    <Button variant="destructive" onClick={handleClickDelete}>
-                      Delete
-                    </Button>
-                  </div>
-                }><Trash2 size={20} /></DialogButton>
-            </div>
-            <div className='flex gap-6'>
+          <Card className='max-w-[36rem] rounded-3xl relative mx-auto p-4 sm:p-6'>
+            <div className='w-full h-[22rem] rounded-3xl absolute top-0 left-0 bg-gradient-to-b from-sky-500 to-indigo-500' />
+            <div className='mt-3 sm:mt-6 flex flex-col gap-6 items-center'>
               <ProfileAvatar
                 src={patient?.profileImageUrl || DEFAULT_AVATAR_URL}
-                className='size-48'
+                className='size-40 border-primary-foreground border-4'
               />
-              <div className='flex flex-col gap-3 w-full'>
-                <ProfileInfo
-                  label="Full Name"
-                  value={patient?.fullname}
-                />
+              <div className='z-10 text-center text-primary-foreground'>
+                <p className='text-lg font-medium'>{patient?.fullname}</p>
+                <p>{patient?.email}</p>
+              </div>
+              <Card className='flex flex-col gap-3 w-full z-10 rounded-3xl'>
                 <ProfileInfo
                   label="Age"
                   value={patient?.age}
@@ -145,6 +118,33 @@ const PatientProfilePage = () => {
                   label="Assigned Exercises"
                   value={patient?.patientExercise.length}
                 />
+              </Card>
+              <div className='flex flex-col sm:flex-row gap-2 justify-between w-full'>
+                <DialogButton
+                  title="Edit Profile"
+                  variant='default'
+                  className='w-full rounded-full'
+                  content={
+                    <div className="flex flex-col gap-3">
+                      {
+                        patient ? (
+                          <PatientProfileForm profile={patient} />
+                        ) : <p>No User Found!</p>
+                      }
+                    </div>
+                  }>Edit Profile</DialogButton>
+                <DialogButton
+                  variant="destructive"
+                  title="Delete Account"
+                  className='w-full rounded-full'
+                  content={
+                    <div className="flex flex-col gap-6">
+                      Are you sure want to delete this account?
+                      <Button variant="destructive" onClick={handleClickDelete}>
+                        Delete
+                      </Button>
+                    </div>
+                  }>Delete Account</DialogButton>
               </div>
             </div>
           </Card>

@@ -70,7 +70,7 @@ const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
       <div className='h-full w-56 fixed mt-16 hidden md:flex'>
         <Sidebar isDoctor={isDoctor} />
       </div>
-      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16 bg-secondary/50'>
+      <div className='flex-1 p-3 sm:p-8 ml-0 md:ml-56 mt-8 md:mt-16 bg-secondary/50'>
         <Outlet />
       </div >
       <Footer />
