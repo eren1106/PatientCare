@@ -71,7 +71,7 @@ const Topbar = () => {
 
   return (
     <>
-      <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
+      <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end bg-background'>
         <div className='w-full flex justify-between items-center'>
           <div className='flex gap-2 items-center'>
             <SidebarSheet />

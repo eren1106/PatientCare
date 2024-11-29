@@ -2,7 +2,7 @@ import { Doctor, Patient, User } from "@/interfaces/user";
 import { apiRequest } from "@/utils/apiRequest";
 import { setUserToSession } from "./auth.service";
 
-export const getProfileById = async (id: string): Promise<Patient> => {
+export const getProfileById = async (id: string): Promise<Patient | Doctor> => {
   try {
     const res = await apiRequest.get(`profile/${id}`);
     return res.data;
@@ -12,15 +12,15 @@ export const getProfileById = async (id: string): Promise<Patient> => {
   }
 };
 
-export const getDoctorProfileById = async (id: string): Promise<Doctor> => {
-  try {
-    const res = await apiRequest.get(`profile/${id}`);
-    return res.data;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
+// export const getDoctorProfileById = async (id: string): Promise<Doctor> => {
+//   try {
+//     const res = await apiRequest.get(`profile/${id}`);
+//     return res.data;
+//   } catch (e) {
+//     console.error(e);
+//     throw e;
+//   }
+// };
 
 interface ProfileDTO {
   id: string;

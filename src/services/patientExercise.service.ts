@@ -14,7 +14,6 @@ export const getPatientExercisesByPatientId = async (patientId: string) => {
 }
 
 export const getDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
-  console.log("PATIENT-ID", patientId);
   try {
     const res = await apiRequest.get(`patient-exercises/${patientId}/today`);
     return res.data;
