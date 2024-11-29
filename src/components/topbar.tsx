@@ -85,7 +85,9 @@ const Topbar = () => {
             <DropdownIcon
               icon={Bell}
               content={<NotificationDropdown />}
-              number={notifications.filter((notification) => !notification.isRead).length}
+              // number={notifications.filter((notification) => !notification.isRead).length}
+              number={notifications.filter((notification) => !notification.isClicked).length}
+
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

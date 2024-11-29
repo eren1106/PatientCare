@@ -47,7 +47,9 @@ const PatientHomePage = () => {
 
   return (
     <div className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto">
-      <h1>Welcome Back, {getCurrentUser()?.fullname}</h1>
+      <h2>Welcome Back, {getCurrentUser()?.fullname} <span className="text-3xl animate-wave origin-wave inline-block">
+          👋
+        </span></h2>
       <div className="flex items-center justify-normal md:justify-around flex-col md:flex-row  gap-6">
         <Card
           className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer w-full md:w-auto"
@@ -62,7 +64,7 @@ const PatientHomePage = () => {
             </div>
             <h4 className="">Pending Exercises:</h4>
           </div>
-          {dailyPatientExercises.length > 0 ? (
+          {dailyPatientExercises.filter((daily) => !daily.isCompleted).length > 0 ? (
             <NumberTicker
               value={dailyPatientExercises.length}
               className="text-6xl font-bold my-auto"
@@ -95,10 +97,10 @@ const PatientHomePage = () => {
         </Card>
       </div>
       <section className="flex flex-col gap-4" id="pending-exercises">
-        {dailyPatientExercises.length > 0 ? (
+        {dailyPatientExercises.filter((daily) => !daily.isCompleted).length > 0 ? (
           <div className="flex items-center gap-3">
             <h3>
-              Your pending exercises for today ({dailyPatientExercises.length})
+              Your pending exercises for today ({dailyPatientExercises.filter((daily) => !daily.isCompleted).length})
             </h3>
           </div>
         ) : (

@@ -26,18 +26,18 @@ const NotificationDropdown = () => {
     }
   }
 
-  const markNotificationsAsRead = async () => {
-    if(!user) return;
-    // only call markAllNotificationsAsRead api if got unread notifications
-    const unReadNotification = notifications.find((notification) => !notification.isRead);
-    if(unReadNotification) {
-      await markNotificationsAsReadByUserId(user.id);
-      markAllNotificationsAsRead();
-    }
-  }
-  useEffect(() => {
-    markNotificationsAsRead();
-  }, [])
+  // const markNotificationsAsRead = async () => {
+  //   if(!user) return;
+  //   // only call markAllNotificationsAsRead api if got unread notifications
+  //   const unReadNotification = notifications.find((notification) => !notification.isRead);
+  //   if(unReadNotification) {
+  //     await markNotificationsAsReadByUserId(user.id);
+  //     markAllNotificationsAsRead();
+  //   }
+  // }
+  // useEffect(() => {
+  //   markNotificationsAsRead();
+  // }, [])
   
 
   return (

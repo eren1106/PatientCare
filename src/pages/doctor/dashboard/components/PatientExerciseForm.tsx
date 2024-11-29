@@ -25,7 +25,7 @@ interface PatientExerciseFormProps {
 }
 
 const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: PatientExerciseFormProps) => {
-  const userData = getCurrentUser();
+  // const userData = getCurrentUser();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
@@ -44,7 +44,6 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
   const onSubmit = async (data: PatientExerciseSchemaType) => {
     if (!patientId) return;
 
-    console.log("PATIENT ID: ", patientId)
     try {
       if (patientExerciseId) {
         // edit patient exercise
@@ -79,7 +78,7 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
       toast({
         variant: "destructive",
         title: "Failed",
-        description: `${e.response.data.message}`,
+        description: `${e}`,
       });
     }
   };

@@ -5,7 +5,7 @@ import { apiRequest } from "@/utils/apiRequest";
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {
     // const res = await apiRequest.get(`patient-exercises`);
-    const res = await apiRequest.get(`patient-exercises/${patientId}`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -15,7 +15,7 @@ export const getPatientExercisesByPatientId = async (patientId: string) => {
 
 export const getDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiRequest.get(`patient-exercises/${patientId}/today`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/today`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -26,7 +26,7 @@ export const getDailyPatientExercises = async (patientId: string): Promise<Daily
 
 export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
   try {
-    const res = await apiRequest.get(`patients/p/exercises/${id}/today`);
+    const res = await apiRequest.get(`patient-exercises/${id}/today`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -36,7 +36,7 @@ export const getDailyPatientExerciseById = async (id: string): Promise<DailyPati
 
 export const getAllTimeDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiRequest.get(`patient-exercises/${patientId}/all-daily`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/all-daily`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -46,7 +46,7 @@ export const getAllTimeDailyPatientExercises = async (patientId: string): Promis
 
 export const getExerciseCompletionSummaryByPatientId = async (patientId: string): Promise<ExerciseCompetionSummary[]> => {
   try {
-    const res = await apiRequest.get(`patient-exercises/${patientId}/completion-summary`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/completion-summary`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -56,7 +56,7 @@ export const getExerciseCompletionSummaryByPatientId = async (patientId: string)
 
 export const getPatientExerciseById = async (id: string) => {
   try {
-    const res = await apiRequest.get(`patients/p/exercises/${id}`);
+    const res = await apiRequest.get(`patient-exercises/${id}`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -77,7 +77,7 @@ interface PatientExerciseDTO {
 export const createPatientExercise = async (data: PatientExerciseDTO) => {
   try {
     // const res = await apiRequest.post(`patient-exercises`, {
-    const res = await apiRequest.post(`patients/${data.patientId}/exercises`, data);
+    const res = await apiRequest.post(`patient-exercises/patient/${data.patientId}`, data);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -88,7 +88,7 @@ export const createPatientExercise = async (data: PatientExerciseDTO) => {
 
 export const updatePatientExercise = async (data: PatientExerciseDTO) => {
   try {
-    const res = await apiRequest.put(`patients/${data.patientId}/exercises/${data.exerciseId}`, data);
+    const res = await apiRequest.put(`patient-exercises/${data.patientExerciseId}`, data);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -98,7 +98,7 @@ export const updatePatientExercise = async (data: PatientExerciseDTO) => {
 
 export const completePatientExercise = async (patientExerciseId: string) => {
   try {
-    await apiRequest.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}/complete-exercise`);
+    await apiRequest.put(`patient-exercises/${patientExerciseId}/complete-exercise`);
   } catch (e) {
     console.error(e);
     throw e;
@@ -107,7 +107,7 @@ export const completePatientExercise = async (patientExerciseId: string) => {
 
 export const deletePatientExerciseById = async (id: string) => {
   try {
-    const res = await apiRequest.delete(`patients/${MOCK_PATIENT_ID}/exercises/${id}`);
+    const res = await apiRequest.delete(`patient-exercises/${id}`);
     return res.data;
   } catch (e) {
     console.error(e);

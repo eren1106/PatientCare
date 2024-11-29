@@ -23,21 +23,21 @@ const PatientExercisesPage = () => {
 
   return (
     <div className="flex flex-col gap-4 max-w-[40rem] w-full mx-auto">
-      <h1>Exercises that are assigned to you</h1>
+      <h2>Exercises that are assigned to you</h2>
       {
         isLoading ? <SkeletonCard /> : (
           <div className="flex flex-wrap gap-4">
             {
               dailyPatientExercises.length > 0 ? dailyPatientExercises
-                .map((patientExercise) => (
+                .map((dailyPatientExercise) => (
                   <ExerciseCard
-                    key={patientExercise.id}
-                    id={patientExercise.id}
-                    title={patientExercise.patientExercise.exercise.title}
-                    description={patientExercise.patientExercise.exercise.description}
-                    thumbnailUrl={patientExercise.patientExercise.exercise.thumbnailUrl}
-                    isCompleted={patientExercise.isCompleted}
-                    to={`${patientExercise.id}`}
+                    key={dailyPatientExercise.id}
+                    id={dailyPatientExercise.id}
+                    title={dailyPatientExercise.patientExercise.exercise.title}
+                    description={dailyPatientExercise.patientExercise.exercise.description}
+                    thumbnailUrl={dailyPatientExercise.patientExercise.exercise.thumbnailUrl}
+                    isCompleted={dailyPatientExercise.isCompleted}
+                    to={`/exercises/${dailyPatientExercise.patientExercise.id}`}
                   />
                 )) : <p>You have no exercises assigned to you</p>
             }
