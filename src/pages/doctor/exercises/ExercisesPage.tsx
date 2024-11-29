@@ -7,21 +7,29 @@ import { Exercise } from "@/interfaces/exercise";
 import { deleteExerciseById, getExercises } from "@/services/exercise.service";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "@radix-ui/react-dialog";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 const ExercisesPage = () => {
   const { toast } = useToast();
 
   const { isLoading, withLoading } = useLoading();
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [selectedEditExercise, setSelectedEditExercise] = useState<Exercise | null>(null);
+  const [selectedEditExercise, setSelectedEditExercise] =
+    useState<Exercise | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
+  const isUserAdmin = useIsAdmin();
 
   const getData = async () => {
     const data = await getExercises();
     setExercises(data);
-  }
+  };
 
   useEffect(() => {
     withLoading(getData);
@@ -35,8 +43,7 @@ const ExercisesPage = () => {
         variant: "success",
         title: "Exercise Deleted Successfully",
       });
-    }
-    catch (e: any) {
+    } catch (e: any) {
       console.error(e);
       toast({
         variant: "destructive",
@@ -44,12 +51,12 @@ const ExercisesPage = () => {
         description: `${e.response.data.message}`,
       });
     }
-  }
+  };
 
   const handleClickEdit = (exercise: Exercise) => {
     setSelectedEditExercise(exercise);
     setShowEditModal(true);
-  }
+  };
 
   // const handleChangeEditModal = (open: boolean) => {
   //   setShowEditModal(open);
@@ -61,14 +68,19 @@ const ExercisesPage = () => {
       <Card className="p-5 flex flex-col gap-3">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
-          <DialogButton
-            variant="default"
-            title="Create Exercise"
-            content={
-              <div className="flex flex-col gap-3">
-                <ExerciseForm />
-              </div>
-            }>Create Exercise</DialogButton>
+          {isUserAdmin && (
+            <DialogButton
+              variant="default"
+              title="Create Exercise"
+              content={
+                <div className="flex flex-col gap-3">
+                  <ExerciseForm />
+                </div>
+              }
+            >
+              Create Exercise
+            </DialogButton>
+          )}
         </div>
 
         <ExercisesTable
@@ -86,11 +98,15 @@ const ExercisesPage = () => {
           <DialogHeader>
             <DialogTitle>Edit Exercise</DialogTitle>
           </DialogHeader>
-          {selectedEditExercise ? <ExerciseForm exercise={selectedEditExercise}/> : "No exercise selected!"}
+          {selectedEditExercise ? (
+            <ExerciseForm exercise={selectedEditExercise} />
+          ) : (
+            "No exercise selected!"
+          )}
         </DialogContent>
       </Dialog>
     </>
-  )
-}
+  );
+};
 
-export default ExercisesPage
+export default ExercisesPage;
