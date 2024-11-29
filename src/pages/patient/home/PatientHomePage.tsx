@@ -1,6 +1,6 @@
 import ExerciseCard from "../exercise/components/ExerciseCard";
 import { Card } from "@/components/ui/card";
-import {  Dumbbell, Newspaper} from "lucide-react";
+import { Dumbbell, Newspaper } from "lucide-react";
 import useLoading from "@/hooks/useLoading.hook";
 import { useEffect, useState } from "react";
 import { DailyPatientExercise } from "@/interfaces/exercise";
@@ -24,24 +24,21 @@ const PatientHomePage = () => {
     PatientAssessment[]
   >([]);
 
-  const patientId = getCurrentUser()?.id;
+  const currentUser = getCurrentUser();
 
   const getData = async () => {
-    if(!patientId) return;
+    if (!currentUser) return;
 
-    const data = await getDailyPatientExercises(patientId);
+    const data = await getDailyPatientExercises(currentUser.id);
     setDailyPatientExercises(data);
-    const currentUser = getCurrentUser();
 
-    if (currentUser?.id) {
-      const assessment = await getAllAssessmentsByPatientId(currentUser.id);
+    const assessment = await getAllAssessmentsByPatientId(currentUser.id);
 
-      const filterAssessmentByStatus = assessment.filter(
-        (assessment) => assessment.status !== "Completed"
-      );
-      if (filterAssessmentByStatus.length > 0)
-        setPatientAssessment(filterAssessmentByStatus);
-    }
+    const filterAssessmentByStatus = assessment.filter(
+      (assessment) => assessment.status !== "Completed"
+    );
+    if (filterAssessmentByStatus.length > 0)
+      setPatientAssessment(filterAssessmentByStatus);
   };
 
   useEffect(() => {
@@ -53,7 +50,7 @@ const PatientHomePage = () => {
       <h1>Welcome Back, {getCurrentUser()?.fullname}</h1>
       <div className="flex items-center justify-normal md:justify-around flex-col md:flex-row  gap-6">
         <Card
-          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer"
+          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer w-full md:w-auto"
           onClick={(e) => {
             e.preventDefault();
             window.location.replace("/#pending-exercises");
@@ -75,7 +72,7 @@ const PatientHomePage = () => {
           )}
         </Card>
         <Card
-          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer"
+          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer w-full md:w-auto"
           onClick={(e) => {
             e.preventDefault();
             window.location.replace("/#pending-assessments");
@@ -154,7 +151,7 @@ const PatientHomePage = () => {
           )}
         </div>
       </section>
-  
+
     </div>
   );
 };

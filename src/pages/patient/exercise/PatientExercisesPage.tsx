@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import SkeletonCard from "@/components/SkeletonCard";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
+import { getCurrentUser } from "@/services/auth.service";
 
 const PatientExercisesPage = () => {
   const { isLoading, withLoading } = useLoading();
   const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
 
+  const patientId = getCurrentUser()?.id;
   const getData = async () => {
-    const data = await getDailyPatientExercises();
+    if (!patientId) return;
+    const data = await getDailyPatientExercises(patientId);
     setDailyPatientExercises(data);
   }
 
@@ -25,7 +28,7 @@ const PatientExercisesPage = () => {
         isLoading ? <SkeletonCard /> : (
           <div className="flex flex-wrap gap-4">
             {
-              dailyPatientExercises
+              dailyPatientExercises.length > 0 ? dailyPatientExercises
                 .map((patientExercise) => (
                   <ExerciseCard
                     key={patientExercise.id}
@@ -36,7 +39,7 @@ const PatientExercisesPage = () => {
                     isCompleted={patientExercise.isCompleted}
                     to={`${patientExercise.id}`}
                   />
-                ))
+                )) : <p>You have no exercises assigned to you</p>
             }
           </div>
         )
