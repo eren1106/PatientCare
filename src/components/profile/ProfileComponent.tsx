@@ -148,8 +148,8 @@ const ProfileComponent = ({ isDoctor = false }: ProfileComponentProps) => {
                         <>
                           <ProfileInfo
                             label="Assigned Doctor"
-                            value={`Dr. ${(user as Patient | null)?.patientRecord.doctor.fullname}`}
-                            link={`/doctors/${(user as Patient | null)?.patientRecord.doctor.id}`}
+                            value={(user as Patient | null)?.patientRecord ? `Dr. ${(user as Patient | null)?.patientRecord.doctor.fullname}` : "-"}
+                            link={(user as Patient | null)?.patientRecord ? `/doctors/${(user as Patient | null)?.patientRecord.doctor.id}` : undefined}
                           />
                           <ProfileInfo
                             label="Assigned Exercises"
