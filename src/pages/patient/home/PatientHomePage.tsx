@@ -46,13 +46,16 @@ const PatientHomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto">
-      <h2>Welcome Back, {getCurrentUser()?.fullname} <span className="text-3xl animate-wave origin-wave inline-block">
+    <Card className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto rounded-3xl relative">
+      <div className='w-full h-[12rem] rounded-3xl absolute top-0 left-0 bg-gradient-to-t from-sky-500 to-indigo-500' />
+      <h2 className="mt-3 z-10 text-primary-foreground">Welcome Back, {getCurrentUser()?.fullname}
+        {/* <span className="text-3xl animate-wave origin-wave inline-block">
           👋
-        </span></h2>
-      <div className="flex items-center justify-normal md:justify-around flex-col md:flex-row  gap-6">
+        </span> */}
+      </h2>
+      <div className="z-10 flex items-center justify-normal md:justify-around flex-col md:flex-row  gap-6">
         <Card
-          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer w-full md:w-auto"
+          className="p-4 flex flex-col items-center h-40 shadow-md cursor-pointer w-full md:w-auto rounded-3xl"
           onClick={(e) => {
             e.preventDefault();
             window.location.replace("/#pending-exercises");
@@ -74,7 +77,7 @@ const PatientHomePage = () => {
           )}
         </Card>
         <Card
-          className="p-4 flex flex-col items-center h-40 shadow-lg cursor-pointer w-full md:w-auto"
+          className="p-4 flex flex-col items-center h-40 shadow-md cursor-pointer w-full md:w-auto rounded-3xl"
           onClick={(e) => {
             e.preventDefault();
             window.location.replace("/#pending-assessments");
@@ -96,12 +99,15 @@ const PatientHomePage = () => {
           )}
         </Card>
       </div>
-      <section className="flex flex-col gap-4" id="pending-exercises">
+      <section className="z-10 flex flex-col gap-4" id="pending-exercises">
         {dailyPatientExercises.filter((daily) => !daily.isCompleted).length > 0 ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <h3>
-              Your pending exercises for today ({dailyPatientExercises.filter((daily) => !daily.isCompleted).length})
+              Your pending exercises for today
             </h3>
+            <div className="bg-primary rounded-full p-3 size-6 text-primary-foreground flex items-center justify-center">
+              {dailyPatientExercises.filter((daily) => !daily.isCompleted).length}
+            </div>
           </div>
         ) : (
           <h3>Congrats, you completed all the exercises for today!</h3>
@@ -135,7 +141,11 @@ const PatientHomePage = () => {
       <section className="flex flex-col gap-4" id="pending-assessments">
         {patientAssessment.length > 0 ? (
           <div className="flex items-center gap-3">
-            <h3>Your pending assessment ({patientAssessment.length})</h3>
+            <h3>Your pending assessment</h3>
+            <div className="bg-primary rounded-full p-3 size-6 text-primary-foreground flex items-center justify-center">
+              {/* TODO: filter by incomplete assessments */}
+              {patientAssessment.length}
+            </div>
           </div>
         ) : (
           <h3>Congrats, you completed all the assessments assigned to you!</h3>
@@ -154,7 +164,7 @@ const PatientHomePage = () => {
         </div>
       </section>
 
-    </div>
+    </Card>
   );
 };
 

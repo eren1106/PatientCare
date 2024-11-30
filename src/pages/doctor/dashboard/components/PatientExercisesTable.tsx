@@ -36,53 +36,56 @@ const PatientExercisesTable = ({
   return (
     <>
       {
-        loading ? <Spinner /> : <Table className="mt-2 w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[14rem]">Title</TableHead>
-              <TableHead className='hidden sm:table-cell'>Description</TableHead>
-              <TableHead className="w-[6rem]">Sets</TableHead>
-              <TableHead className="w-[8rem] ">Date Created</TableHead>
-              <TableHead className="w-[8rem]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {patientExercises.map((patientExercise) => {
-              const exercise = patientExercise.exercise;
-              return (
-                (
-                  <TableRow
-                    className=""
-                    key={patientExercise.id}
-                  >
-                    <TableCell className="font-medium">{exercise.title}</TableCell>
-                    <TableCell className='hidden sm:table-cell'>{exercise.description}</TableCell>
-                    <TableCell>{patientExercise.sets}</TableCell>
-                    <TableCell>{new Date(exercise.createdDatetime).toLocaleDateString()}</TableCell>
-                    <TableCell className="flex items-center justify-start gap-2 ">
-                      <Link to={`/dashboard/exercises/${exercise.id}`}>
-                        <Eye
-                          size={36}
-                          className="hover:bg-muted p-2 rounded-full"
-                        />
-                      </Link>
-                      <PenBox
-                        size={36}
-                        className="hover:bg-muted p-2 rounded-full cursor-pointer"
-                        onClick={() => onEdit?.(patientExercise)}
-                      />
-                      <Trash
-                        size={36}
-                        className="hover:bg-muted p-2 rounded-full cursor-pointer"
-                        onClick={() => handleClickDeleteIcon(patientExercise)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                )
-              )
-            })}
-          </TableBody>
-        </Table>
+        loading ? <Spinner /> :
+          <div className='mt-2 rounded-lg border overflow-hidden'>
+            <Table className="w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[14rem]">Title</TableHead>
+                  <TableHead className='hidden sm:table-cell'>Description</TableHead>
+                  <TableHead className="w-[6rem]">Sets</TableHead>
+                  <TableHead className="w-[8rem] ">Date Created</TableHead>
+                  <TableHead className="w-[8rem]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {patientExercises.map((patientExercise) => {
+                  const exercise = patientExercise.exercise;
+                  return (
+                    (
+                      <TableRow
+                        className=""
+                        key={patientExercise.id}
+                      >
+                        <TableCell className="font-medium">{exercise.title}</TableCell>
+                        <TableCell className='hidden sm:table-cell'>{exercise.description}</TableCell>
+                        <TableCell>{patientExercise.sets}</TableCell>
+                        <TableCell>{new Date(exercise.createdDatetime).toLocaleDateString()}</TableCell>
+                        <TableCell className="flex items-center justify-start gap-2 ">
+                          <Link to={`/dashboard/exercises/${exercise.id}`}>
+                            <Eye
+                              size={36}
+                              className="hover:bg-muted p-2 rounded-full"
+                            />
+                          </Link>
+                          <PenBox
+                            size={36}
+                            className="hover:bg-muted p-2 rounded-full cursor-pointer"
+                            onClick={() => onEdit?.(patientExercise)}
+                          />
+                          <Trash
+                            size={36}
+                            className="hover:bg-muted p-2 rounded-full cursor-pointer"
+                            onClick={() => handleClickDeleteIcon(patientExercise)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </div>
       }
 
       {/* CONFIRM DELETE DIALOG */}
