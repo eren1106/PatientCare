@@ -29,14 +29,11 @@ const Combobox = ({ items, onSelect, placeholder = "Select item...", initialValu
   const [value, setValue] = useState(initialValue)
 
   const handleSelect = (currentValue: string) => {
-    const newValue = items.find(
-      (item) => item.label.toLowerCase() === currentValue,
-    )?.value;
-    // const newValue = currentValue === value ? "" : currentValue
-    setValue(newValue ?? "")
+    const newValue = currentValue === value ? "" : currentValue
+    setValue(newValue)
     setOpen(false)
     if (onSelect) {
-      onSelect(newValue ?? "")
+      onSelect(newValue)
     }
   }
 
