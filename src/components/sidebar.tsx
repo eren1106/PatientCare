@@ -5,7 +5,13 @@ import { DASHBOARD_ROOT_PATH } from "@/constants"
 import { getCurrentUser } from "@/services/auth.service"
 import { UserRole } from "@/enums"
 
-const PATIENT_NAV_ITEMS = [
+interface NavItem {
+  to: string;
+  title: string;
+  icon: JSX.Element;
+}
+
+const PATIENT_NAV_ITEMS: NavItem[] = [
   {
     to: "",
     title: "Home",
@@ -38,23 +44,11 @@ const PATIENT_NAV_ITEMS = [
   },
 ]
 
-const ADMIN_NAV_ITEM = {
-  to: "admin",
-  title: "Admin",
-  icon: <Shield />
-};
-
-
-const DASHBOARD_NAV_ITEMS = [
+const DASHBOARD_NAV_ITEMS: NavItem[] = [
   {
     to: "",
     title: "Dashboard",
     icon: <BarChart2 />
-  },
-  {
-    to: "exercises",
-    title: "Exercises",
-    icon: <Dumbbell />
   },
   {
     to: "questionnaire",
@@ -76,13 +70,24 @@ const DASHBOARD_NAV_ITEMS = [
     title: "Tracking",
     icon: <Activity />
   },
+];
+
+const ADMIN_NAV_ITEM: NavItem[] = [
+  {
+    to: "admin",
+    title: "Admin",
+    icon: <Shield />
+  },
+  {
+    to: "exercises",
+    title: "Exercises",
+    icon: <Dumbbell />,
+  },
 ]
 
 interface SidebarProps {
   isDoctor?: boolean;
   onNavItemClicked?: () => void;
-
-
 }
 
 const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
@@ -92,7 +97,7 @@ const Sidebar = ({ isDoctor = false, onNavItemClicked }: SidebarProps) => {
   const isAdmin = currentUser?.role === UserRole.ADMIN;
 
   if (isAdmin) {
-    navItems = [...navItems, ADMIN_NAV_ITEM];
+    navItems = [...navItems, ...ADMIN_NAV_ITEM];
   }
 
 
