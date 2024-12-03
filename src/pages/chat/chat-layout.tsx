@@ -6,6 +6,9 @@ import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregi
 import { getCurrentUser } from "@/services/auth.service";
 import useChatStore from "@/hooks/useChatStore.hook";
 import { ArrowLeft } from 'lucide-react'; 
+import { useMessageStore } from '@/stores/messageStore';
+import { useLocation } from "react-router-dom";
+import { Card } from "@/components/ui/card";
 
 
 
@@ -18,6 +21,10 @@ interface ChatLayoutProps {
 export function ChatLayout({
 
 }: ChatLayoutProps) {
+  const incrementCount = useMessageStore((state) => state.incrementCount);
+  const resetCount = useMessageStore((state) => state.resetCount);
+  const location = useLocation();
+
   const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
  
   const loadChats = useCallback(async () => {
@@ -32,24 +39,27 @@ export function ChatLayout({
   }, [setChats, setSelectedUser]);
 
   useEffect(() => {
-    const userId = getCurrentUser()?.id;
-    if (!userId) return;
-
-    initializeSocket(userId);
-
-    loadChats();
-
-    registerMessageHandler((message) => {
+    const handleNewMessage = (event: CustomEvent) => {
+      const message = event.detail;
       addMessage(message);
       updateChatWithNewMessage(message);
       loadChats();
-    });
-
-    return () => {
-      unregisterMessageHandler();
-      disconnectSocket();
     };
-  }, [loadChats, addMessage, updateChatWithNewMessage]);
+
+    window.addEventListener('new-message', handleNewMessage as EventListener);
+    
+    return () => {
+      window.removeEventListener('new-message', handleNewMessage as EventListener);
+    };
+  }, [addMessage, updateChatWithNewMessage, loadChats]);
+
+  useEffect(() => {
+    if (location.pathname.includes('/chat')) {
+      resetCount();
+    }
+  }, [location, resetCount]);
+
+  
 
   const handleSelectChat = (chat: Chats) => {
 
@@ -70,7 +80,7 @@ export function ChatLayout({
 
 
   return (
-    <div className="flex justify-between w-full">
+    <Card className="flex justify-between w-full">
       {chats.length === 0 ? (
         <div className="w-full text-center py-4">
           <p className="text-lg font-semibold">No users available</p>
@@ -98,7 +108,7 @@ export function ChatLayout({
     </div>
       )}
 
-    </div>
+    </Card>
   );
 }
 

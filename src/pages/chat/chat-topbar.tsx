@@ -1,5 +1,11 @@
 import { Avatar, AvatarImage } from "../../components/ui/avatar";
-import { ArrowLeft, Info, Phone, PhoneIncoming, PhoneOutgoing } from "lucide-react";
+import {
+  ArrowLeft,
+  Info,
+  Phone,
+  PhoneIncoming,
+  PhoneOutgoing,
+} from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { ExpandableChatHeader } from "../../components/ui/chat/expandable-chat";
 import useChatStore from "@/hooks/useChatStore.hook";
@@ -11,6 +17,7 @@ import { formatDate } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import OutgoingCall from "./call/outgoing-call";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const TopbarIcons = [{ icon: Phone }, { icon: Info }];
 
@@ -71,8 +78,6 @@ export default function ChatTopbar({ setShowMobileChat }: ChatProps) {
     setIsCallDialogOpen(true);
   };
 
-  
-
   useEffect(() => {
     if (sheetOpen && selectedUsers) {
       const fetchHistory = async () => {
@@ -96,19 +101,12 @@ export default function ChatTopbar({ setShowMobileChat }: ChatProps) {
         >
           <ArrowLeft size={24} />
         </button>
-        <Avatar className="flex justify-center items-center">
-          <AvatarImage
-            src={selectedUsers?.profileImageUrl}
-            alt={selectedUsers?.name}
-            width={6}
-            height={6}
-            className="w-10 h-10 "
-          />
-        </Avatar>
-        <div className="flex flex-col">
+        <ProfileAvatar
+          size="md"
+          src={selectedUsers?.profileImageUrl}
+          alt={selectedUsers?.name}
+        />
           <span className="font-medium">{selectedUsers?.name}</span>
-          <span className="text-xs">Active 2 mins ago</span>
-        </div>
       </div>
 
       <div className="flex gap-1">
@@ -137,19 +135,23 @@ export default function ChatTopbar({ setShowMobileChat }: ChatProps) {
                 </p>
               </div>
             </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-4">Call History</h3>
-              <div className="space-y-4">
-                {callHistory.length > 0 ? (
-                  callHistory.map((call) => (
-                    <CallHistoryItem key={call.id} call={call} />
-                  ))
-                ) : (
-                  <p className="text-center text-muted-foreground">
-                    No call history found
-                  </p>
-                )}
-              </div>
+            <div className="mt-4 flex flex-col h-[calc(100vh-250px)]">
+              <h3 className="text-lg font-semibold px-2 mb-2">Call History</h3>
+              <ScrollArea className="flex-1 w-full pr-4">
+                <div className="space-y-3 px-2">
+                  {callHistory.length > 0 ? (
+                    callHistory.map((call) => (
+                      <CallHistoryItem key={call.id} call={call} />
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-24">
+                      <p className="text-muted-foreground">
+                        No call history found
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
             </div>
           </SheetHeader>
         </SheetContent>

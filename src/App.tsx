@@ -40,11 +40,13 @@ import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
 import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import ExerciseCategoriesPage from "./pages/doctor/exercises/ExerciseCategoriesPage";
+import { MessageProvider } from "./providers/message-provider";
 
 const AppWrapper = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      
       <Outlet />
       <Toaster />
       <IncomingCall />
@@ -298,9 +300,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      <MessageProvider>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
       </ThemeProvider>
+      </MessageProvider>
     </>
   )
 }
