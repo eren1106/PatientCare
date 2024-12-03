@@ -39,6 +39,7 @@ import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
 import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
 import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import ExerciseCategoriesPage from "./pages/doctor/exercises/ExerciseCategoriesPage";
 import { MessageProvider } from "./providers/message-provider";
 
 const AppWrapper = () => {
@@ -72,7 +73,7 @@ const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
       <div className='h-full w-56 fixed mt-16 hidden md:flex'>
         <Sidebar isDoctor={isDoctor} />
       </div>
-      <div className='flex-1 p-8 ml-0 md:ml-56 mt-8 md:mt-16 bg-secondary/50'>
+      <div className='flex-1 p-0 sm:p-8 ml-0 md:ml-56 mt-8 md:mt-16 bg-secondary/50'>
         <Outlet />
       </div >
       <Footer />
@@ -148,6 +149,10 @@ const router = createBrowserRouter([
           {
             path: "profile/:id",
             element: <PatientProfilePage />
+          },
+          {
+            path: "doctors/:id",
+            element: <DoctorProfilePage />
           }
         ]
       },
@@ -240,7 +245,23 @@ const router = createBrowserRouter([
                 <AdminPage />
               </AuthGuard>
             ),
-          }
+          },
+          {
+            path: "exercises",
+            element: (
+              <AuthGuard requiredRole={UserRole.ADMIN}>
+                <ExercisesPage />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "exercise-categories",
+            element: (
+              <AuthGuard requiredRole={UserRole.ADMIN}>
+                <ExerciseCategoriesPage />
+              </AuthGuard>
+            ),
+          },
         ]
       },
 

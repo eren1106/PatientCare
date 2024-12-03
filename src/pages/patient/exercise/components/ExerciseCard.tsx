@@ -51,7 +51,7 @@ const ExerciseCard = ({
         />
         <div className="flex flex-col gap-2 w-full">
           <div className="flex justify-between items-center flex-wrap">
-            <h2>{title}</h2>
+            <h3>{title}</h3>
             <Badge
               variant={isCompleted ? "default" : "destructive"}
               className="h-fit"

@@ -1,25 +1,22 @@
 import { MOCK_PATIENT_ID } from "@/constants";
 import { DailyPatientExercise, ExerciseCompetionSummary } from "@/interfaces/exercise";
-import { apiCaller } from "@/utils";
 import { apiRequest } from "@/utils/apiRequest";
-
-// TODO: remove all mock id
 
 export const getPatientExercisesByPatientId = async (patientId: string) => {
   try {
-    // const res = await apiCaller.get(`patients/${patientId}/exercises`);
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises`);
-    return res.data.data;
+    // const res = await apiRequest.get(`patient-exercises`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
   }
 }
 
-export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
+export const getDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today`);
-    return res.data.data;
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/today`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -29,17 +26,17 @@ export const getDailyPatientExercises = async (): Promise<DailyPatientExercise[]
 
 export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
   try {
-    const res = await apiCaller.get(`patients/${MOCK_PATIENT_ID}/exercises/today/${id}`);
-    return res.data.data;
+    const res = await apiRequest.get(`patient-exercises/${id}/today`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
 
-export const getAllTimeDailyPatientExercises = async (): Promise<DailyPatientExercise[]> => {
+export const getAllTimeDailyPatientExercises = async (patientId: string): Promise<DailyPatientExercise[]> => {
   try {
-    const res = await apiRequest.get(`patients/${MOCK_PATIENT_ID}/exercises/all-daily`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/all-daily`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -49,7 +46,7 @@ export const getAllTimeDailyPatientExercises = async (): Promise<DailyPatientExe
 
 export const getExerciseCompletionSummaryByPatientId = async (patientId: string): Promise<ExerciseCompetionSummary[]> => {
   try {
-    const res = await apiRequest.get(`patients/${patientId}/exercises/completion-summary`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/completion-summary`);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -57,25 +54,31 @@ export const getExerciseCompletionSummaryByPatientId = async (patientId: string)
   }
 };
 
+export const getPatientExerciseById = async (id: string) => {
+  try {
+    const res = await apiRequest.get(`patient-exercises/${id}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 interface PatientExerciseDTO {
   patientId: string;
   exerciseId: string;
   sets: number;
+  reps: number;
+  frequency: number;
+  duration: number;
+
   patientExerciseId?: string;
 }
-export const createPatientExercise = async ({
-  patientId,
-  exerciseId,
-  sets,
-}: PatientExerciseDTO) => {
+export const createPatientExercise = async (data: PatientExerciseDTO) => {
   try {
-    // const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-    const res = await apiCaller.post(`patients/${patientId}/exercises`, {
-      patientId,
-      exerciseId,
-      sets,
-    });
-    return res.data.data;
+    // const res = await apiRequest.post(`patient-exercises`, {
+    const res = await apiRequest.post(`patient-exercises/patient/${data.patientId}`, data);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -83,19 +86,10 @@ export const createPatientExercise = async ({
 };
 
 
-export const updatePatientExercise = async ({
-  patientId,
-  exerciseId,
-  sets,
-  patientExerciseId,
-}: PatientExerciseDTO) => {
+export const updatePatientExercise = async (data: PatientExerciseDTO) => {
   try {
-    const res = await apiCaller.put(`patients/${patientId}/exercises/${patientExerciseId}`, {
-      patientId,
-      exerciseId,
-      sets,
-    });
-    return res.data.data;
+    const res = await apiRequest.put(`patient-exercises/${data.patientExerciseId}`, data);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;
@@ -104,7 +98,7 @@ export const updatePatientExercise = async ({
 
 export const completePatientExercise = async (patientExerciseId: string) => {
   try {
-    await apiCaller.put(`patients/${MOCK_PATIENT_ID}/exercises/${patientExerciseId}/complete-exercise`);
+    await apiRequest.put(`patient-exercises/${patientExerciseId}/complete-exercise`);
   } catch (e) {
     console.error(e);
     throw e;
@@ -113,8 +107,8 @@ export const completePatientExercise = async (patientExerciseId: string) => {
 
 export const deletePatientExerciseById = async (id: string) => {
   try {
-    const res = await apiCaller.delete(`patients/${MOCK_PATIENT_ID}/exercises/${id}`);
-    return res.data.data;
+    const res = await apiRequest.delete(`patient-exercises/${id}`);
+    return res.data;
   } catch (e) {
     console.error(e);
     throw e;

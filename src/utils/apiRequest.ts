@@ -7,13 +7,13 @@ export const apiRequest = {
     return requestWithCaller('post', endpoint, data, config);
   },
   get: async (endpoint: string, config?: AxiosRequestConfig) => {
-    return requestWithCaller('get', endpoint, null, config);
+    return requestWithCaller('get', endpoint, undefined, config);
   },
   put: async (endpoint: string, data?: any, config?: AxiosRequestConfig) => {
     return requestWithCaller('put', endpoint, data, config);
   },
   delete: async (endpoint: string, config?: AxiosRequestConfig) => {
-    return requestWithCaller('delete', endpoint, null, config);
+    return requestWithCaller('delete', endpoint, undefined, config);
   },
 };
 

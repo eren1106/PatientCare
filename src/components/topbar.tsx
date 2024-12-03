@@ -71,7 +71,7 @@ const Topbar = () => {
 
   return (
     <>
-      <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end backdrop-blur-xl bg-background md:bg-transparent bg-opacity-20'>
+      <nav className='w-full fixed top-0 z-50 md:h-16 h-10 border-b px-3 flex items-center justify-end bg-background'>
         <div className='w-full flex justify-between items-center'>
           <div className='flex gap-2 items-center'>
             <SidebarSheet />
@@ -85,12 +85,14 @@ const Topbar = () => {
             <DropdownIcon
               icon={Bell}
               content={<NotificationDropdown />}
-              number={notifications.filter((notification) => !notification.isRead).length}
+              // number={notifications.filter((notification) => !notification.isRead).length}
+              number={notifications.filter((notification) => !notification.isClicked).length}
+
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className='cursor-pointer'>
-                  <ProfileAvatar className='md:size-10 size-8' src={getCurrentUser()?.profileImageUrl || MOCK_DOCTOR_IMAGE_PATH} />
+                  <ProfileAvatar className='md:size-10 size-8' src={currentUser?.profileImageUrl ?? undefined} />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

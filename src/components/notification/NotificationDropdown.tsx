@@ -8,6 +8,7 @@ import { timeAgo } from "@/utils"
 import { Dot } from "lucide-react"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
+import { Button } from "../ui/button"
 
 const NotificationDropdown = () => {
   const user = getCurrentUser();
@@ -26,27 +27,36 @@ const NotificationDropdown = () => {
     }
   }
 
-  const markNotificationsAsRead = async () => {
+  // const markNotificationsAsRead = async () => {
+  //   if(!user) return;
+  //   // only call markAllNotificationsAsRead api if got unread notifications
+  //   const unReadNotification = notifications.find((notification) => !notification.isRead);
+  //   if(unReadNotification) {
+  //     await markNotificationsAsReadByUserId(user.id);
+  //     markAllNotificationsAsRead();
+  //   }
+  // }
+  // useEffect(() => {
+  //   markNotificationsAsRead();
+  // }, [])
+
+  const markAllAsRead = async () => {
     if(!user) return;
-    // only call markAllNotificationsAsRead api if got unread notifications
-    const unReadNotification = notifications.find((notification) => !notification.isRead);
+    // only call api if got unread notifications
+    const unReadNotification = notifications.find((notification) => !notification.isClicked);
     if(unReadNotification) {
       await markNotificationsAsReadByUserId(user.id);
       markAllNotificationsAsRead();
     }
   }
-  useEffect(() => {
-    markNotificationsAsRead();
-  }, [])
-  
 
   return (
     <div className="flex flex-col max-h-[30rem] w-screen sm:w-[24rem]">
       <div className="px-3 py-1 flex items-center justify-between h-12">
         <p className="font-medium">Notifications</p>
-        {/* <Button variant="textPrimary">
+        <Button variant="textPrimary" onClick={markAllAsRead}>
           Mark all as read
-        </Button> */}
+        </Button>
       </div>
       <Separator className="" />
       <div className="overflow-y-auto">
