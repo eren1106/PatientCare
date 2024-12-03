@@ -1,22 +1,16 @@
 'use client'
 
-import DynamicDialogTrigger from "@/components/DynamicDialogTrigger";
 import FormButton from "@/components/FormButton";
 import GenericFormField from "@/components/GenericFormField";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import ZodForm from "@/components/ZodForm";
 import { useZodForm } from "@/hooks/useZodForm.hook";
-import { User } from "@/interfaces/user";
-import { createPatientExercise, deletePatientExerciseById, updatePatientExercise } from "@/services/patientExercise.service";
-import { getCurrentUser } from "@/services/auth.service";
-import { getAllPatientsByDoctorId } from "@/services/user.service";
+import { createPatientExercise, updatePatientExercise } from "@/services/patientExercise.service";
 import { refreshPage } from "@/utils";
-import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PatientExerciseSchema, PatientExerciseSchemaType } from "@/schemas/patientExercise.schema";
 import { Exercise } from "@/interfaces/exercise";
-import { getExercises } from "@/services/exercise.service";
+import { getUnassignedExercise } from "@/services/exercise.service";
 
 interface PatientExerciseFormProps {
   patientId: string;
@@ -30,7 +24,7 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   const getData = async () => {
-    const exercisesData = await getExercises();
+    const exercisesData = await getUnassignedExercise(patientId);
     setExercises(exercisesData);
   }
   useEffect(() => {

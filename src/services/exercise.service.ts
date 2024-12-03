@@ -11,6 +11,16 @@ export const getExercises = async (): Promise<Exercise[]> => {
   }
 };
 
+export const getUnassignedExercise = async (patientId: string): Promise<Exercise[]> => {
+  try {
+    const res = await apiRequest.get(`exercises?patientId=${patientId}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 export const getExerciseById = async (id: string): Promise<Exercise> => {
   try {
     const res = await apiRequest.get(`exercises/${id}`);
