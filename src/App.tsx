@@ -39,6 +39,7 @@ import DoctorTrackingPage from "./pages/doctor/tracking/DoctorTrackingPage";
 import EmailVerificationPage from "./pages/auth/EmailVerificationPage";
 import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import ExerciseCategoriesPage from "./pages/doctor/exercises/ExerciseCategoriesPage";
 
 const AppWrapper = () => {
 
@@ -242,7 +243,23 @@ const router = createBrowserRouter([
                 <AdminPage />
               </AuthGuard>
             ),
-          }
+          },
+          {
+            path: "exercises",
+            element: (
+              <AuthGuard requiredRole={UserRole.ADMIN}>
+                <ExercisesPage />
+              </AuthGuard>
+            ),
+          },
+          {
+            path: "exercise-categories",
+            element: (
+              <AuthGuard requiredRole={UserRole.ADMIN}>
+                <ExerciseCategoriesPage />
+              </AuthGuard>
+            ),
+          },
         ]
       },
 

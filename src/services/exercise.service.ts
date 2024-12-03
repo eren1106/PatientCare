@@ -94,3 +94,39 @@ export const getAllExerciseCategories = async () => {
     throw e;
   }
 }
+
+interface ExerciseCategoryDTO {
+  id?: string;
+  title: string;
+  description: string;
+}
+
+export const createExerciseCategory = async (data: ExerciseCategoryDTO) => {
+  try {
+    const res = await apiRequest.post(`exercises/exercise-categories`, data);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export const updateExerciseCategory = async (data: ExerciseCategoryDTO) => {
+  try {
+    const res = await apiRequest.put(`exercises/exercise-categories/${data.id}`, data);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export const deleteExerciseCategory = async (id: string) => {
+  try {
+    const res = await apiRequest.delete(`exercises/exercise-categories/${id}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
