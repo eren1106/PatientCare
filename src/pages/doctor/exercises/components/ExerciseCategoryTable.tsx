@@ -56,12 +56,12 @@ const ExerciseCategoriesTable = ({
                       <TableCell className="font-medium">{exerciseCategory.title}</TableCell>
                       <TableCell>{exerciseCategory.description}</TableCell>
                       <TableCell className="flex sm:flex-row flex-col items-center justify-start gap-2">
-                        <Link to={`${exerciseCategory.id}`}>
+                        {/* <Link to={`${exerciseCategory.id}`}>
                           <Eye
                             size={36}
                             className="hover:bg-muted p-2 rounded-full"
                           />
-                        </Link>
+                        </Link> */}
                         <PenBox
                           size={36}
                           className="hover:bg-muted p-2 rounded-full cursor-pointer"
