@@ -19,15 +19,15 @@ const AuthFormWrapper = ({ isSignup = false, children, cardClassName }: AuthForm
         {
           isSignup
             ? <div className='text-center'>
-              Already have an account? <Link to="/auth/login" className='underline'>Log In</Link> here
+              Already have an account? <Link to="/auth/login" className='underline text-primary'>Log In</Link> here
             </div>
             : (
               <>
                 <div className='text-center'>
-                  Don't have an account? <Link to="/auth/register" className='underline'>Register</Link> here
+                  Don't have an account? <Link to="/auth/register" className='underline text-primary'>Register</Link> here
                 </div>
                 <div className='text-center'>
-                  Forgot your password? <Link to="/auth/request-reset-password" className='underline'>Reset Password</Link> here
+                  Forgot your password? <Link to="/auth/request-reset-password" className='underline text-primary'>Reset Password</Link> here
                 </div>
               </>
             )

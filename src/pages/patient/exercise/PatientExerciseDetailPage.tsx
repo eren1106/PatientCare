@@ -65,6 +65,7 @@ const PatientExerciseDetailPage = () => {
       <ExerciseDetailsComponent
         isLoading={isLoading}
         exercise={patientExercise?.exercise!}
+        patientExercise={patientExercise!}
         dailyPatientExercise={dailyPatientExercise!}
         handleMarkComplete={handleMarkComplete}
         isCompleted={isCompleted}

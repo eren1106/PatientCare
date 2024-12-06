@@ -1,3 +1,4 @@
+import LinkButton from '@/components/LinkButton';
 import SkeletonCard from '@/components/SkeletonCard';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -5,7 +6,7 @@ import { ConfettiButton } from '@/components/ui/confetti';
 import YouTubeEmbed from '@/components/YouTubeEmbed';
 import { DailyPatientExercise, Exercise, PatientExercise } from '@/interfaces/exercise'
 import { convertEnumToTitleCase } from '@/utils';
-import { CircleCheckBig } from 'lucide-react';
+import { ArrowLeft, CircleCheckBig } from 'lucide-react';
 
 interface ExerciseDetailsComponentProps {
   isLoading: boolean;
@@ -14,6 +15,7 @@ interface ExerciseDetailsComponentProps {
   dailyPatientExercise?: DailyPatientExercise;
   handleMarkComplete?: () => Promise<void>;
   isCompleted?: boolean;
+  backUrl?: string;
 }
 
 const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
@@ -21,7 +23,10 @@ const ExerciseDetailsComponent = (props: ExerciseDetailsComponentProps) => {
     <Card className='shadow-md p-6 flex flex-col gap-4'>
       {
         props.isLoading ? <SkeletonCard /> : props.exercise ? (
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-3 w-full">
+            <LinkButton to={props.backUrl || ".."} size="icon" variant="outline">
+              <ArrowLeft size={20} />
+            </LinkButton>
             <h1>{props.exercise.title}</h1>
             <p>{props.exercise.description}</p>
             {
