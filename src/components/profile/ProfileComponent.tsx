@@ -98,7 +98,7 @@ const ProfileComponent = ({ isDoctor = false }: ProfileComponentProps) => {
   return (
     <div>
       {
-        <Card className='max-w-[36rem] rounded-3xl relative mx-auto p-4 sm:p-6'>
+        <Card className='max-w-[50rem] rounded-3xl relative mx-auto p-4 sm:p-6'>
           {
             isLoading ? <SkeletonCard /> : (
               <>

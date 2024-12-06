@@ -46,7 +46,7 @@ const PatientHomePage = () => {
   }, []);
 
   return (
-    <Card className="flex flex-col gap-6 max-w-[40rem] w-full mx-auto rounded-3xl relative">
+    <Card className="flex flex-col gap-6 max-w-[54rem] w-full mx-auto rounded-3xl relative">
       <div className='w-full h-[12rem] rounded-3xl absolute top-0 left-0 bg-gradient-to-t from-sky-500 to-indigo-500' />
       <h2 className="mt-3 z-10 text-primary-foreground">Welcome Back, {getCurrentUser()?.fullname}
         {/* <span className="text-3xl animate-wave origin-wave inline-block">
@@ -110,7 +110,7 @@ const PatientHomePage = () => {
             </div>
           </div>
         ) : (
-          <h3>Congrats, you completed all the exercises for today!</h3>
+          <h3 className="text-green-500">Congrats, you don't have any pending exercises for today!</h3>
         )}
         {isLoading ? (
           <SkeletonCard />
@@ -148,7 +148,7 @@ const PatientHomePage = () => {
             </div>
           </div>
         ) : (
-          <h3>Congrats, you completed all the assessments assigned to you!</h3>
+          <h3 className="text-green-500">Congrats, you don't have any pending assessments!</h3>
         )}
         <div className="flex gap-4">
           {isLoading ? (
