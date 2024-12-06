@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { PatientExerciseSchema, PatientExerciseSchemaType } from "@/schemas/patientExercise.schema";
 import { Exercise } from "@/interfaces/exercise";
 import { getExercises } from "@/services/exercise.service";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 interface PatientExerciseFormProps {
   patientId: string;
@@ -85,7 +86,7 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
       toast({
         variant: "destructive",
         title: "Failed",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   };

@@ -35,6 +35,7 @@ import EditPatientDetailsModal from "./EditPatientDetailsModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import InjuryForm from "./dashboard/components/InjuryForm";
 import { Separator } from "@/components/ui/separator";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 const SkeletonProfile = () => {
   return (
     <div className="flex flex-col gap-6 m-auto">
@@ -111,7 +112,7 @@ const PatientDetailPage = () => {
       toast({
         variant: "destructive",
         title: "Delete Record Failed",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   };
@@ -196,11 +197,11 @@ const PatientDetailPage = () => {
           title: "Patient Injury Deleted Successfully",
           description: "The patient injury has been deleted.",
         });
-      } catch (error) {
+      } catch (error : any) {
         toast({
           variant: "destructive",
           title: "Patient Injury Deleted Successfully",
-          description: "The patient injury has been deleted.",
+          description: `${error.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         });
       }
     }

@@ -34,3 +34,4 @@ export const APP_LOGO_URL = "/healthcare.png";
 export const SOCKET_IO_PATH = "/api/socket.io";
 export const DEFAULT_AVATAR_URL = "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1722816000&semt=ais_hybrid";
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB limit
+export const DEFAULT_ERROR_MESSAGE = "Error Occured. Please try again later.";

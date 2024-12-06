@@ -48,7 +48,7 @@ const ExercisesPage = () => {
       toast({
         variant: "destructive",
         title: "Failed",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? "Error Occurred. Please try again later."}`,
       });
     }
   };

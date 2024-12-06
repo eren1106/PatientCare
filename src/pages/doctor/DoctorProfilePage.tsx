@@ -1,7 +1,7 @@
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
-import { DEFAULT_AVATAR_URL } from '@/constants'
+import { DEFAULT_AVATAR_URL, DEFAULT_ERROR_MESSAGE } from '@/constants'
 import { Edit, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -73,8 +73,8 @@ const DoctorProfilePage = () => {
       console.error(e);
       toast({
         variant: "destructive",
-        title: "Failed",
-        description: `${e.response.data.message}`,
+        title: "Failed To Delete",
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   }

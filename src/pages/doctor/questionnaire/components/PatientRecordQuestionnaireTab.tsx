@@ -27,6 +27,7 @@ import PatientQuestionnaireTable from "./PatientQuestionnaireTable";
 import { Assessment } from "@/interfaces/questionnaire";
 import { getCurrentUser } from "@/services/auth.service";
 import { get } from "http";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const QuestionnaireSchema = z.object({
   id: z.string().min(1, "Select at least one questionnaire"),
@@ -88,7 +89,7 @@ const PatientRecordQuestionnaireTab = ({
         toast({
           variant: "destructive",
           title: "Assessment Assigned Failed",
-          description: `${e.response.data.message}`,
+          description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         });
       }
     }
@@ -105,14 +106,14 @@ const PatientRecordQuestionnaireTab = ({
       toast({
         variant: "success",
         title: "Unassigned Questionnaire Successfully",
+        description: "The questionnaire has been unassigned from the patient",
       });
       setIsDeleted((prev) => prev + 1);
-    } catch (e) {
-      console.error(e);
+    } catch (e : any) {
       toast({
         variant: "destructive",
         title: "Failed",
-        description: `${e}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   };

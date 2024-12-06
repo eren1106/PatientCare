@@ -25,6 +25,7 @@ import { Pencil } from "lucide-react";
 import { updatePatientRecord } from "@/services/dashboard.service";
 import { useToast } from "@/components/ui/use-toast";
 import GenericFormField from "@/components/GenericFormField";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 
 
@@ -81,7 +82,7 @@ const EditPatientDetailsModal: React.FC<ChildComponentProps> = ({
       toast({
         variant: "destructive",
         title: "Update Failed",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   };

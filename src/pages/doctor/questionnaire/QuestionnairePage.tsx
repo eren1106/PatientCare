@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
 import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const QuestionnairePage = () => {
   const { toast } = useToast();
@@ -42,8 +43,8 @@ const QuestionnairePage = () => {
       console.error(e);
       toast({
         variant: "destructive",
-        title: "Failed",
-        description: `${e.response.data.message}`,
+        title: "Questionnaire Delete Failed",
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   }

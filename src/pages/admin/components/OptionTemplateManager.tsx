@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash } from "lucide-react";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
 import { Card } from "@/components/ui/card";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const OptionTemplateSchema = z.object({
   scaleType: z.string().min(1, "Scale type is required"),
@@ -83,6 +84,7 @@ const OptionTemplateManager = () => {
       await createOptionTemplate(data);
       toast({
         title: "Option Template Created",
+        description: "Option template has been created successfully",
         variant: "success",
       });
       // Refresh the list of option templates
@@ -93,7 +95,7 @@ const OptionTemplateManager = () => {
     } catch (e : any) {
       toast({
         title: "Failed to create option template",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         variant: "destructive",
       });
     }
@@ -105,6 +107,7 @@ const OptionTemplateManager = () => {
       await deleteOptionTemplate(deletingTemplateId);
       toast({
         title: "Option Template Deleted",
+        description: "Option template has been deleted successfully",
         variant: "success",
       });
 
@@ -116,7 +119,7 @@ const OptionTemplateManager = () => {
     } catch (e : any) {
       toast({
         title: "Failed to delete option template",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         variant: "destructive",
       });
     }

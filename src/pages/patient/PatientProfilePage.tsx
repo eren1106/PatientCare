@@ -74,8 +74,8 @@ const PatientProfilePage = () => {
       console.error(e);
       toast({
         variant: "destructive",
-        title: "Failed",
-        description: `${e.response.data.message}`,
+        title: "Account Delete Failed",
+        description: `${e.response?.data?.message ?? "Error Occurred. Please try again later."}`,
       });
     }
   }
