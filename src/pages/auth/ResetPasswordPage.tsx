@@ -44,8 +44,8 @@ const ResetPasswordPage = () => {
 
   return (
     <Card className='shadow-lg flex flex-col gap-6'>
-      <h1 className='text-center'>Enter New Password</h1>
-      <p className='text-center text-muted-foreground'>Please enter your new password below. Make sure it is strong and secure.</p>
+      <h2 className='text-center'>Enter New Password</h2>
+      <p className='text-center text-muted-foreground text-sm'>Please enter your new password below. Make sure it is strong and secure.</p>
       <ZodForm form={form} onSubmit={onSubmit}>
         <GenericFormField
           name="newPassword"
