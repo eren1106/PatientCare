@@ -59,6 +59,10 @@ export function ChatLayout({
     }
   }, [location, resetCount]);
 
+  useEffect(() => {
+    loadChats();
+  }, []);
+
   
 
   const handleSelectChat = (chat: Chats) => {
@@ -81,12 +85,7 @@ export function ChatLayout({
 
   return (
     <Card className="flex justify-between w-full">
-      {chats.length === 0 ? (
-        <div className="w-full text-center py-4">
-          <p className="text-lg font-semibold">No users available</p>
-          <p className="text-sm text-gray-500 mt-2">There are currently no users to chat with.</p>
-        </div>
-      ) : (
+
         <div className="flex w-full">
       <div className={`${showMobileChat ? 'hidden sm:block' : 'w-full'} sm:w-2/5`}>
         <Sidebar
@@ -106,7 +105,7 @@ export function ChatLayout({
       )}
     </div>
     </div>
-      )}
+      
 
     </Card>
   );

@@ -61,7 +61,8 @@ const QuestionnaireDetailsPage = () => {
         </div>
       ) : (
         <>
-          <div className="flex items-center">
+          <div className={isUserAdmin ? "flex justify-between" : "flex items-center"}>
+            
             <Button variant="ghost" onClick={handleNavigation}>
               <ArrowLeft size={18} />
             </Button>

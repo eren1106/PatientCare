@@ -256,7 +256,7 @@ const DoctorDashboardPage = () => {
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Remove Patient</DialogTitle>
+            <DialogTitle>Unassign Patient</DialogTitle>
             <p className="text-center p-2">
               Are you sure to remove this patient?
             </p>

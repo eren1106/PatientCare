@@ -85,7 +85,7 @@ const AdminPage = () => {
               <TableCell>{doctor.fullname}</TableCell>
               <TableCell>{doctor.email}</TableCell>
               <TableCell>{doctor.age}</TableCell>
-              <TableCell>{doctor.doctorValidation.registrationNumber}</TableCell>
+              <TableCell>{doctor.doctorValidation?.registrationNumber}</TableCell>
               <TableCell>
                 <Badge variant={
                   doctor.doctorRegistrationStatus === 'REJECTED' ? 'destructive' :

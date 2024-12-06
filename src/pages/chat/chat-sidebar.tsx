@@ -30,6 +30,7 @@ interface SidebarProps {
   onSelectChat: (chat: Chats) => void;
   selectedChat: Chats | null;
   onChatsUpdate: () => void;
+  
 }
 
 export function Sidebar({
