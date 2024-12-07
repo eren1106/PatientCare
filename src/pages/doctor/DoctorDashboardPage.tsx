@@ -255,29 +255,22 @@ const DoctorDashboardPage = () => {
       </Card>
 
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Unassign Patient</DialogTitle>
-            <p className="text-center p-2">
-              Are you sure to remove this patient?
-            </p>
           </DialogHeader>
-          <DialogFooter className="w-full">
-            <Button
-              className="w-1/2"
-              variant="destructive"
-              onClick={() => remove()}
-            >
-              Remove
+          <DialogDescription>
+            {`Are you sure to remove this patient?`}
+          </DialogDescription>
+          <div></div>
+          <DialogFooter>
+            <Button variant="destructive" onClick={() => remove()}>
+              Delete
             </Button>
-            <DialogClose asChild>
-              <Button className="w-1/2" type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };

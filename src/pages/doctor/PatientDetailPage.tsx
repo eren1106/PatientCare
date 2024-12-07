@@ -36,6 +36,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import InjuryForm from "./dashboard/components/InjuryForm";
 import { Separator } from "@/components/ui/separator";
 import { DEFAULT_ERROR_MESSAGE } from "@/constants";
+import { DialogDescription } from "@radix-ui/react-dialog";
 const SkeletonProfile = () => {
   return (
     <div className="flex flex-col gap-6 m-auto">
@@ -441,9 +442,9 @@ const PatientDetailPage = () => {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Remove Patient</DialogTitle>
-            <p className="text-center p-2">
+            <DialogDescription>
               Are you sure to remove this patient?
-            </p>
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter className="w-full">
             <Button
@@ -476,9 +477,9 @@ const PatientDetailPage = () => {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Remove Injury</DialogTitle>
-            <p className="text-center p-2">
+            <DialogDescription>
               Are you sure to remove this injury?
-            </p>
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter className="w-full">
             <Button

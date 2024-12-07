@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
+import { DialogDescription } from "@radix-ui/react-dialog";
 const AssessmentSchema = z.object({
   sections: z.array(
     z.object({
@@ -253,7 +254,9 @@ const AssessmentDetailPage = () => {
           <DialogHeader>
             <DialogTitle>Confirm Submission</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to submit the assessment?</p>
+          <DialogDescription>
+            Are you sure you want to submit the assessment?
+          </DialogDescription>
           <DialogFooter>
             <Button
               onClick={() => {
@@ -279,10 +282,10 @@ const AssessmentDetailPage = () => {
           <DialogHeader>
             <DialogTitle>Confirm Cancellation</DialogTitle>
           </DialogHeader>
-          <p>
+          <DialogDescription>
             If you quit, your progress will be lost. Are you sure you want to
             cancel?
-          </p>
+          </DialogDescription>
           <DialogFooter>
             <Button variant="destructive" onClick={handleConfirmCancel}>
               Yes, Cancel
