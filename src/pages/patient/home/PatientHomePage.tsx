@@ -45,6 +45,9 @@ const PatientHomePage = () => {
     withLoading(getData);
   }, []);
 
+  const pendingExercises = dailyPatientExercises.filter((daily) => !daily.isCompleted);
+  const pendingAssessments = patientAssessment.filter((assessment) => assessment.status !== "Completed");
+
   return (
     <Card className="flex flex-col gap-6 max-w-[54rem] w-full mx-auto rounded-3xl relative">
       <div className='w-full h-[12rem] rounded-3xl absolute top-0 left-0 bg-gradient-to-t from-sky-500 to-indigo-500' />
@@ -67,9 +70,9 @@ const PatientHomePage = () => {
             </div>
             <h4 className="">Pending Exercises:</h4>
           </div>
-          {dailyPatientExercises.filter((daily) => !daily.isCompleted).length > 0 ? (
+          {pendingExercises.length > 0 ? (
             <NumberTicker
-              value={dailyPatientExercises.length}
+              value={pendingExercises.length}
               className="text-6xl font-bold my-auto"
             />
           ) : (
@@ -89,9 +92,9 @@ const PatientHomePage = () => {
             </div>
             <h4 className="">Pending Assessments:</h4>
           </div>
-          {patientAssessment.length > 0 ? (
+          {pendingAssessments.length > 0 ? (
             <NumberTicker
-              value={patientAssessment.length}
+              value={pendingAssessments.length}
               className="text-6xl font-bold my-auto"
             />
           ) : (
@@ -100,13 +103,13 @@ const PatientHomePage = () => {
         </Card>
       </div>
       <section className="z-10 flex flex-col gap-4" id="pending-exercises">
-        {dailyPatientExercises.filter((daily) => !daily.isCompleted).length > 0 ? (
+        {pendingExercises.length > 0 ? (
           <div className="flex items-center gap-2">
             <h3>
               Your pending exercises for today
             </h3>
             <div className="bg-primary rounded-full p-3 size-6 text-primary-foreground flex items-center justify-center">
-              {dailyPatientExercises.filter((daily) => !daily.isCompleted).length}
+              {pendingExercises.length}
             </div>
           </div>
         ) : (
@@ -116,35 +119,30 @@ const PatientHomePage = () => {
           <SkeletonCard />
         ) : (
           <div className="flex flex-wrap gap-4">
-            {dailyPatientExercises
-              .filter(
-                (dailyPatientExercise) => !dailyPatientExercise.isCompleted
-              ) // Filter out completed exercises
-              .map((dailyPatientExercise) => (
-                <ExerciseCard
-                  key={dailyPatientExercise.id}
-                  id={dailyPatientExercise.id}
-                  title={dailyPatientExercise.patientExercise.exercise.title}
-                  description={
-                    dailyPatientExercise.patientExercise.exercise.description
-                  }
-                  thumbnailUrl={
-                    dailyPatientExercise.patientExercise.exercise.thumbnailUrl
-                  }
-                  isCompleted={dailyPatientExercise.isCompleted}
-                  to={`exercises/${dailyPatientExercise.patientExercise.id}`}
-                />
-              ))}
+            {pendingExercises.map((dailyPatientExercise) => (
+              <ExerciseCard
+                key={dailyPatientExercise.id}
+                id={dailyPatientExercise.id}
+                title={dailyPatientExercise.patientExercise.exercise.title}
+                description={
+                  dailyPatientExercise.patientExercise.exercise.description
+                }
+                thumbnailUrl={
+                  dailyPatientExercise.patientExercise.exercise.thumbnailUrl
+                }
+                isCompleted={dailyPatientExercise.isCompleted}
+                to={`exercises/${dailyPatientExercise.patientExercise.id}`}
+              />
+            ))}
           </div>
         )}
       </section>
       <section className="flex flex-col gap-4" id="pending-assessments">
-        {patientAssessment.length > 0 ? (
+        {pendingAssessments.length > 0 ? (
           <div className="flex items-center gap-3">
             <h3>Your pending assessment</h3>
             <div className="bg-primary rounded-full p-3 size-6 text-primary-foreground flex items-center justify-center">
-              {/* TODO: filter by incomplete assessments */}
-              {patientAssessment.length}
+              {pendingAssessments.length}
             </div>
           </div>
         ) : (
@@ -155,15 +153,13 @@ const PatientHomePage = () => {
             <SkeletonCard />
           ) : (
             <div className="flex flex-wrap gap-4">
-              {patientAssessment
-                .map((assessment, index) => (
-                  <AssessmentCard key={index} assessment={assessment} />
-                ))}
+              {pendingAssessments.map((assessment, index) => (
+                <AssessmentCard key={index} assessment={assessment} />
+              ))}
             </div>
           )}
         </div>
       </section>
-
     </Card>
   );
 };
