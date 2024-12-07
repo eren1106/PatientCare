@@ -24,8 +24,6 @@ const ExercisesPage = () => {
     useState<Exercise | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
-  const isUserAdmin = useIsAdmin();
-
   const getData = async () => {
     const data = await getExercises();
     setExercises(data);
@@ -68,19 +66,17 @@ const ExercisesPage = () => {
       <Card className="p-5 flex flex-col gap-3">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
-          {isUserAdmin && (
-            <DialogButton
-              variant="default"
-              title="Create Exercise"
-              content={
-                <div className="flex flex-col gap-3">
-                  <ExerciseForm />
-                </div>
-              }
-            >
-              Create Exercise
-            </DialogButton>
-          )}
+          <DialogButton
+            variant="default"
+            title="Create Exercise"
+            content={
+              <div className="flex flex-col gap-3">
+                <ExerciseForm />
+              </div>
+            }
+          >
+            Create Exercise
+          </DialogButton>
         </div>
 
         <ExercisesTable

@@ -26,7 +26,9 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   const getData = async () => {
-    const exercisesData = await getUnassignedExercise(patientId);
+    // TODO: only show unassigned exercises + current exercise (if in edit mode)
+    // const unAssignedExercisesData = await getUnassignedExercise(patientId);
+    const exercisesData = await getExercises();
     setExercises(exercisesData);
   }
   useEffect(() => {
@@ -118,7 +120,7 @@ const PatientExerciseForm = ({ patientId, patientExerciseId, defaultValues }: Pa
       <GenericFormField
         control={form.control}
         name="duration"
-        label="Duration"
+        label="Duration (s)"
         type="number"
         placeholder="Set duration"
       />

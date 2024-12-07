@@ -1,4 +1,5 @@
 import { Exercise } from "@/interfaces/exercise";
+import { ExerciseSchemaType } from "@/schemas/exercise.schema";
 import { apiRequest } from "@/utils/apiRequest";
 
 export const getExercises = async (): Promise<Exercise[]> => {
@@ -31,29 +32,13 @@ export const getExerciseById = async (id: string): Promise<Exercise> => {
   }
 };
 
-interface ExerciseDTO {
+interface ExerciseDTO extends ExerciseSchemaType {
   id?: string;
-  title: string,
-  description: string,
-  difficulty: string,
-  content: string,
-  videoUrl: string,
 }
-export const createExercise = async ({
-  title,
-  description,
-  difficulty,
-  content,
-  videoUrl,
-}: ExerciseDTO) => {
+
+export const createExercise = async (data: ExerciseDTO) => {
   try {
-    const res = await apiRequest.post(`exercises`, {
-      title,
-      description,
-      difficulty,
-      content,
-      videoUrl,
-    });
+    const res = await apiRequest.post(`exercises`, data);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -61,23 +46,9 @@ export const createExercise = async ({
   }
 };
 
-export const updateExercise = async ({
-  id,
-  title,
-  description,
-  difficulty,
-  content,
-  videoUrl,
-}: ExerciseDTO) => {
+export const updateExercise = async (data: ExerciseDTO) => {
   try {
-    const res = await apiRequest.put(`exercises/${id}`, {
-      id,
-      title,
-      description,
-      difficulty,
-      content,
-      videoUrl,
-    });
+    const res = await apiRequest.put(`exercises/${data.id}`, data);
     return res.data;
   } catch (e) {
     console.error(e);
