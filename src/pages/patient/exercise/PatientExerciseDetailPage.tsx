@@ -2,6 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import useLoading from "@/hooks/useLoading.hook";
 import { DailyPatientExercise, PatientExercise } from "@/interfaces/exercise";
 import ExerciseDetailsComponent from "@/pages/exercise/components/ExerciseDetailsComponent";
+import { getCurrentUser } from "@/services/auth.service";
 import { completePatientExercise, getDailyPatientExerciseById, getPatientExerciseById } from "@/services/patientExercise.service";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,15 +14,16 @@ const PatientExerciseDetailPage = () => {
   const [dailyPatientExercise, setDailyPatientExercise] = useState<DailyPatientExercise | null>(null);
   const [patientExercise, setPatientExercise] = useState<PatientExercise | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const currentUser = getCurrentUser();
 
   const getData = async () => {
     try {
-      if (id) {
+      if (id && currentUser) {
         // const data = await getDailyPatientExerciseById(id);
         // setDailyPatientExercise(data);
         // setIsCompleted(data.isCompleted);
         const fetchedPatientExercise = await getPatientExerciseById(id);
-        const fetchedDailyPatientExercise = await getDailyPatientExerciseById(fetchedPatientExercise.id);
+        const fetchedDailyPatientExercise = await getDailyPatientExerciseById(currentUser?.id, id);
         setPatientExercise(fetchedPatientExercise);
         setDailyPatientExercise(fetchedDailyPatientExercise);
         setIsCompleted(fetchedDailyPatientExercise.isCompleted);

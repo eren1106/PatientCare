@@ -24,9 +24,9 @@ export const getDailyPatientExercises = async (patientId: string): Promise<Daily
 };
 
 
-export const getDailyPatientExerciseById = async (id: string): Promise<DailyPatientExercise> => {
+export const getDailyPatientExerciseById = async (patientId: string, id: string): Promise<DailyPatientExercise> => {
   try {
-    const res = await apiRequest.get(`patient-exercises/${id}/today`);
+    const res = await apiRequest.get(`patient-exercises/patient/${patientId}/${id}/today`);
     return res.data;
   } catch (e) {
     console.error(e);
