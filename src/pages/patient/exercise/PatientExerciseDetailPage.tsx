@@ -1,8 +1,8 @@
 import { toast } from "@/components/ui/use-toast";
 import useLoading from "@/hooks/useLoading.hook";
-import { DailyPatientExercise } from "@/interfaces/exercise";
+import { DailyPatientExercise, PatientExercise } from "@/interfaces/exercise";
 import ExerciseDetailsComponent from "@/pages/exercise/components/ExerciseDetailsComponent";
-import { completePatientExercise, getDailyPatientExerciseById } from "@/services/patientExercise.service";
+import { completePatientExercise, getDailyPatientExerciseById, getPatientExerciseById } from "@/services/patientExercise.service";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -11,14 +11,20 @@ const PatientExerciseDetailPage = () => {
 
   const { isLoading, withLoading } = useLoading();
   const [dailyPatientExercise, setDailyPatientExercise] = useState<DailyPatientExercise | null>(null);
+  const [patientExercise, setPatientExercise] = useState<PatientExercise | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
 
   const getData = async () => {
     try {
       if (id) {
-        const data = await getDailyPatientExerciseById(id);
-        setDailyPatientExercise(data);
-        setIsCompleted(data.isCompleted);
+        // const data = await getDailyPatientExerciseById(id);
+        // setDailyPatientExercise(data);
+        // setIsCompleted(data.isCompleted);
+        const fetchedPatientExercise = await getPatientExerciseById(id);
+        const fetchedDailyPatientExercise = await getDailyPatientExerciseById(fetchedPatientExercise.id);
+        setPatientExercise(fetchedPatientExercise);
+        setDailyPatientExercise(fetchedDailyPatientExercise);
+        setIsCompleted(fetchedDailyPatientExercise.isCompleted);
       }
     }
     catch (e) {
@@ -31,9 +37,9 @@ const PatientExerciseDetailPage = () => {
   }, []);
 
   const handleMarkComplete = async () => {
-    if (!id) return;
+    if (!dailyPatientExercise) return;
     try {
-      await completePatientExercise(id);
+      await completePatientExercise(dailyPatientExercise.id);
       setIsCompleted(true);
 
       toast({
@@ -58,7 +64,8 @@ const PatientExerciseDetailPage = () => {
     <div className="max-w-[50rem] w-full mx-auto">
       <ExerciseDetailsComponent
         isLoading={isLoading}
-        exercise={dailyPatientExercise?.patientExercise.exercise!}
+        exercise={patientExercise?.exercise!}
+        patientExercise={patientExercise!}
         dailyPatientExercise={dailyPatientExercise!}
         handleMarkComplete={handleMarkComplete}
         isCompleted={isCompleted}

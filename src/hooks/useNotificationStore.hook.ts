@@ -15,7 +15,8 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   markAllNotificationsAsRead: () => set((state) => {
     const updatedNotifications = state.notifications.map((notification) => ({
       ...notification,
-      isRead: true,
+      // isRead: true,
+      isClicked: true,
     }));
 
     return ({

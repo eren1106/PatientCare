@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import SkeletonCard from "@/components/SkeletonCard";
 import { DailyPatientExercise } from "@/interfaces/exercise";
 import { getDailyPatientExercises } from "@/services/patientExercise.service";
+import { getCurrentUser } from "@/services/auth.service";
 
 const PatientExercisesPage = () => {
   const { isLoading, withLoading } = useLoading();
   const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
 
+  const patientId = getCurrentUser()?.id;
   const getData = async () => {
-    const data = await getDailyPatientExercises();
+    if (!patientId) return;
+    const data = await getDailyPatientExercises(patientId);
     setDailyPatientExercises(data);
   }
 
@@ -19,24 +22,24 @@ const PatientExercisesPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 max-w-[40rem] w-full mx-auto">
-      <h1>Exercises that are assigned to you</h1>
+    <div className="flex flex-col gap-4 max-w-[50rem] w-full mx-auto">
+      <h2>Exercises that are assigned to you</h2>
       {
         isLoading ? <SkeletonCard /> : (
           <div className="flex flex-wrap gap-4">
             {
-              dailyPatientExercises
-                .map((patientExercise) => (
+              dailyPatientExercises.length > 0 ? dailyPatientExercises
+                .map((dailyPatientExercise) => (
                   <ExerciseCard
-                    key={patientExercise.id}
-                    id={patientExercise.id}
-                    title={patientExercise.patientExercise.exercise.title}
-                    description={patientExercise.patientExercise.exercise.description}
-                    thumbnailUrl={patientExercise.patientExercise.exercise.thumbnailUrl}
-                    isCompleted={patientExercise.isCompleted}
-                    to={`${patientExercise.id}`}
+                    key={dailyPatientExercise.id}
+                    id={dailyPatientExercise.id}
+                    title={dailyPatientExercise.patientExercise.exercise.title}
+                    description={dailyPatientExercise.patientExercise.exercise.description}
+                    thumbnailUrl={dailyPatientExercise.patientExercise.exercise.thumbnailUrl}
+                    isCompleted={dailyPatientExercise.isCompleted}
+                    to={`/exercises/${dailyPatientExercise.patientExercise.id}`}
                   />
-                ))
+                )) : <p>You have no exercises assigned to you</p>
             }
           </div>
         )

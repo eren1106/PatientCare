@@ -11,6 +11,16 @@ export const getExercises = async (): Promise<Exercise[]> => {
   }
 };
 
+export const getUnassignedExercise = async (patientId: string): Promise<Exercise[]> => {
+  try {
+    const res = await apiRequest.get(`exercises?patientId=${patientId}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 export const getExerciseById = async (id: string): Promise<Exercise> => {
   try {
     const res = await apiRequest.get(`exercises/${id}`);
@@ -88,6 +98,42 @@ export const deleteExerciseById = async (id: string) => {
 export const getAllExerciseCategories = async () => {
   try {
     const res = await apiRequest.get(`exercises/exercise-categories`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+interface ExerciseCategoryDTO {
+  id?: string;
+  title: string;
+  description: string;
+}
+
+export const createExerciseCategory = async (data: ExerciseCategoryDTO) => {
+  try {
+    const res = await apiRequest.post(`exercises/exercise-categories`, data);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export const updateExerciseCategory = async (data: ExerciseCategoryDTO) => {
+  try {
+    const res = await apiRequest.put(`exercises/exercise-categories/${data.id}`, data);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export const deleteExerciseCategory = async (id: string) => {
+  try {
+    const res = await apiRequest.delete(`exercises/exercise-categories/${id}`);
     return res.data;
   } catch (e) {
     console.error(e);

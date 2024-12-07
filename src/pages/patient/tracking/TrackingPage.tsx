@@ -13,6 +13,7 @@ import { DailyPatientExercise } from "@/interfaces/exercise";
 import { getAllTimeDailyPatientExercises } from "@/services/patientExercise.service";
 import Spinner from "@/components/Spinner";
 import { Card } from "@/components/ui/card";
+import { getCurrentUser } from "@/services/auth.service";
 
 const MOCK_EVENTS: EventInput[] = [
   {
@@ -52,11 +53,14 @@ const TrackingPage = () => {
   // const [dailyPatientExercises, setDailyPatientExercises] = useState<DailyPatientExercise[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
+  const currentUser = getCurrentUser();
 
   const fetchData = async () => {
+    if(!currentUser) return;
+    
     setIsLoading(true);
     try {
-      const data = await getAllTimeDailyPatientExercises();
+      const data = await getAllTimeDailyPatientExercises(currentUser?.id);
       // group daily patient exercises by date and convert into event input
       const groupedExercises = data.reduce((acc: { [key: string]: DailyPatientExercise[] }, exercise) => {
         const date = new Date(exercise.createdDatetime).toISOString().split('T')[0];

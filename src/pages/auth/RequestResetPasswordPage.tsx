@@ -29,7 +29,8 @@ const RequestResetPasswordPage = () => {
 
   return (
     <Card className='shadow-lg flex flex-col gap-4'>
-      <h1 className='text-center'>Request Reset Password</h1>
+      <h2 className='text-center'>Request Reset Password</h2>
+      <p className='text-center text-muted-foreground text-sm'>Enter your email address below and we will send you a link to reset your password.</p>
       <ZodForm form={form} onSubmit={onSubmit}>
         <GenericFormField
           name="email"

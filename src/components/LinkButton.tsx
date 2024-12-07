@@ -1,7 +1,5 @@
-import { ReactNode } from 'react'
-import { Button } from './ui/button';
+import { Button, ButtonProps } from './ui/button';
 import { Link } from 'react-router-dom';
-import { ButtonProps } from 'react-day-picker';
 
 interface LinkButtonProps extends ButtonProps {
   to: string;

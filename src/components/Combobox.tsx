@@ -53,7 +53,15 @@ const Combobox = ({ items, onSelect, placeholder = "Select item...", initialValu
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
+        <Command
+          filter={(value, search, keywords = []) => {
+            const extendValue = value + " " + keywords.join(" ");
+            if (extendValue.toLowerCase().includes(search.toLowerCase())) {
+              return 1;
+            }
+            return 0;
+          }}
+        >
           <CommandList>
             <CommandInput placeholder="Search item..." />
             <CommandEmpty>No item found.</CommandEmpty>
@@ -63,6 +71,7 @@ const Combobox = ({ items, onSelect, placeholder = "Select item...", initialValu
                   key={item.value}
                   value={item.value}
                   onSelect={handleSelect}
+                  keywords={[item.label]}
                 >
                   <Check
                     className={cn(

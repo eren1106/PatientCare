@@ -35,12 +35,19 @@ const AppointmentForm = ({ appointmentId, defaultValues, selectedDate }: Appoint
   }
   useEffect(() => {
     getData();
-  }, [])
+  }, []);
+
+  const getNextHour = () => {
+    const now = new Date();
+    now.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to 0
+    now.setHours(now.getHours() + 1); // Set to the next hour
+    return now;
+  }
 
   const form = useZodForm(AppointmentSchema, defaultValues ?? {
     date: selectedDate ?? new Date(),
-    startTime: new Date(),
-    endTime: new Date(new Date().getTime() + (60 * 60 * 1000)), // default endTime is 1 hour after the startTime
+    startTime: getNextHour(),
+    endTime: new Date(getNextHour().getTime() + (60 * 60 * 1000)), // default endTime is 1 hour after the startTime
   });
 
   const onSubmit = async (data: AppointmentSchemaType) => {

@@ -6,7 +6,7 @@ const AuthProvider = ({ children }: {children: ReactNode}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userString = sessionStorage.getItem(USER_SESSION_KEY);
+    const userString = localStorage.getItem(USER_SESSION_KEY);
     if (!userString) {
       navigate('/auth/login');
       return;

@@ -1,3 +1,5 @@
+import ProfileComponent from '@/components/profile/ProfileComponent';
+
 import DialogButton from '@/components/DialogButton';
 import ProfileAvatar from '@/components/ProfileAvatar'
 import { Card } from '@/components/ui/card'
@@ -73,83 +75,14 @@ const DoctorProfilePage = () => {
       console.error(e);
       toast({
         variant: "destructive",
-        title: "Failed To Delete",
-        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
+        title: "Failed",
+        description: `${e.response.data.message}`,
       });
     }
   }
 
   return (
-    <div>
-      {
-        isLoading ? <Spinner /> : (
-          <Card className='p-6 max-w-[44rem]'>
-            <div className='flex gap-2 justify-end'>
-              <DialogButton
-                variant="outline"
-                title="Edit Profile"
-                content={
-                  <div className="flex flex-col gap-3">
-                    {
-                      doctor ? (
-                        <DoctorProfileForm profile={doctor} />
-                      ) : <p>No User Found!</p>
-                    }
-                  </div>
-                }><Edit size={20} /></DialogButton>
-              <DialogButton
-                variant="destructive"
-                title="Delete Account"
-                content={
-                  <div className="flex flex-col gap-6">
-                    Are you sure want to delete this account?
-                    <Button variant="destructive" onClick={handleClickDelete}>
-                      Delete
-                    </Button>
-                  </div>
-                }><Trash2 size={20} /></DialogButton>
-            </div>
-            <div className='flex gap-6'>
-              <ProfileAvatar
-                src={doctor?.profileImageUrl || DEFAULT_AVATAR_URL}
-                className='size-48'
-              />
-              <div className='flex flex-col gap-3 w-full'>
-                <ProfileInfo
-                  label="Full Name"
-                  value={doctor?.fullname}
-                />
-                <ProfileInfo
-                  label="Age"
-                  value={doctor?.age}
-                />
-                <ProfileInfo
-                  label="Gender"
-                  value={doctor?.gender}
-                />
-                <ProfileInfo
-                  label="IC"
-                  value={doctor?.ic}
-                />
-                <ProfileInfo
-                  label="Registration Number"
-                  value={doctor?.doctorValidation?.registrationNumber}
-                />
-                <ProfileInfo
-                  label="Register Date"
-                  value={formatDate(doctor?.createdDatetime)}
-                />
-                <ProfileInfo
-                  label="Number of Assigned Patient"
-                  // TODO: change to doctor fullname
-                  value={doctor?.patientRecord.length}
-                />
-              </div>
-            </div>
-          </Card>
-        )
-      }
-    </div>
+    <ProfileComponent isDoctor />
   )
 }
 
