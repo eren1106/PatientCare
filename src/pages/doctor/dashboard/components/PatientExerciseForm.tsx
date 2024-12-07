@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { PatientExerciseSchema, PatientExerciseSchemaType } from "@/schemas/patientExercise.schema";
 import { Exercise } from "@/interfaces/exercise";
 import { getUnassignedExercise } from "@/services/exercise.service";
+import { getExercises } from "@/services/exercise.service";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 interface PatientExerciseFormProps {
   patientId: string;

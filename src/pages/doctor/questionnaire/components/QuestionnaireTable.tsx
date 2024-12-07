@@ -23,6 +23,7 @@ import { Questionnaire } from "@/interfaces/questionnaire";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils";
 import SkeletonCard from '@/components/SkeletonCard';
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 interface QuestionnaireTableProps {
   questionnaires: Questionnaire[];
@@ -48,6 +49,7 @@ const QuestionnaireTable = ({
     setSelectedQuestionnaire(questionnaire);
     setShowConfirmDialog(true);
   };
+  const isUserAdmin = useIsAdmin();
 
   const handleClickConfirmDelete = async () => {
     await onDelete?.(selectedQuestionnaire!.id);
@@ -99,11 +101,15 @@ const QuestionnaireTable = ({
                         className="hover:bg-muted p-2 rounded-full"
                       />
                     </Link>
-                    <Trash
-                      size={36}
-                      className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                      onClick={() => handleClickDeleteIcon(questionnaire)}
-                    />
+
+                    {isUserAdmin && (
+                      <Trash
+                        size={36}
+                        className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
+                        onClick={() => handleClickDeleteIcon(questionnaire)}
+                      />
+                    )}
+                    
                   </div>
                 </TableCell>
               </TableRow>

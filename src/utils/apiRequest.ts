@@ -46,6 +46,6 @@ async function requestWithCaller(
         : 'An error occurred';
       throw errorMessage;
     }
-    throw 'An unexpected error occurred';
+    throw 'An unexpected error occurred. Please try again later.';
   }
 }

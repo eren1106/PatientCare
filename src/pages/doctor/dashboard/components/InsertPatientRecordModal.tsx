@@ -18,6 +18,7 @@ import GenericFormField from "@/components/GenericFormField";
 import { Plus, Trash2 } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const formSchema = z.object({
   patient: z.string(),
@@ -95,7 +96,7 @@ const InsertPatientRecordModal: React.FC<InsertPatientRecordModalProps> = ({
         toast({
           variant: "destructive",
           title: "Add Patient Failed",
-          description: `${e.response.data.message}`,
+          description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         });
       }
     }

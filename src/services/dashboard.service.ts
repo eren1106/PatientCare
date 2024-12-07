@@ -117,6 +117,7 @@ export interface Injury {
 }
 
 export interface CreateInjury {
+  patientRecordId?: string;
   painRegion: string;
   duration: string;
   painScore: number;

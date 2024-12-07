@@ -34,3 +34,4 @@ export const APP_LOGO_URL = "/healthcare.png";
 export const SOCKET_IO_PATH = "/api/socket.io";
 export const DEFAULT_AVATAR_URL = "/images/default_avatar.png";
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB limit
+export const DEFAULT_ERROR_MESSAGE = "Error Occurred. Please try again later.";

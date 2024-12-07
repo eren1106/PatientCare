@@ -25,6 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const questionnaireSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -127,7 +128,7 @@ const CreateQuestionnaireForm = () => {
       toast({
         title: "Creation Failed",
         variant: "destructive",
-        description: `Failed to create the questionnaire`,
+        description: `${error.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
       navigate("/dashboard/questionnaire");
     }

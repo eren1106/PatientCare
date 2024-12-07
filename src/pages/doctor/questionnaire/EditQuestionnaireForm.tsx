@@ -15,6 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Loader2 } from "lucide-react";
 import useLoading from '@/hooks/useLoading.hook';
 import { useNavigate } from "react-router-dom";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 interface EditQuestionnaireFormProp {
   questionnaire?: Questionnaire;
@@ -162,7 +163,7 @@ const EditQuestionnaireForm = ({
       toast({
         title: "Update Failed",
         variant: "destructive",
-        description: `Failed to update the questionnaire`
+        description: `${error.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       })
       onHandleEdit();
     }

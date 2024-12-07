@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EditQuestionnaireForm from "./EditQuestionnaireForm";
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 const QuestionnaireDetailsPage = () => {
   const navigate = useNavigate();
@@ -46,6 +47,8 @@ const QuestionnaireDetailsPage = () => {
     withLoading(getData);
   }
 
+  const isUserAdmin = useIsAdmin();
+  
   const handleNavigation = () => {
     navigate("/dashboard/questionnaire");
   }
@@ -58,14 +61,18 @@ const QuestionnaireDetailsPage = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-between items-center">
+          <div className={isUserAdmin ? "flex justify-between" : "flex items-center"}>
+            
             <Button variant="ghost" onClick={handleNavigation}>
               <ArrowLeft size={18} />
             </Button>
-            <h1 className="text-2xl">{questionnaire?.title}</h1>
-            <Button variant="secondary" onClick={handleEditClick}>
+            <h1 className="text-2xl text-center">{questionnaire?.title}</h1>
+            {isUserAdmin && (
+              <Button variant="secondary" onClick={handleEditClick}>
               {isEditing ? "Cancel" : <Edit size={16} />}
             </Button>
+            )}
+            
           </div>
 
           {isEditing ? (

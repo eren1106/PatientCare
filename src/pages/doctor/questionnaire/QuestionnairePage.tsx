@@ -9,6 +9,8 @@ import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { Card } from "@/components/ui/card";
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const QuestionnairePage = () => {
   const { toast } = useToast();
@@ -41,8 +43,8 @@ const QuestionnairePage = () => {
       console.error(e);
       toast({
         variant: "destructive",
-        title: "Failed",
-        description: `${e.response.data.message}`,
+        title: "Questionnaire Delete Failed",
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   }
@@ -52,13 +54,16 @@ const QuestionnairePage = () => {
     navigate('/dashboard/questionnaire/create');
   }
 
-
+  const isUserAdmin = useIsAdmin();
   return (
     <div>
       <Card className="p-5 gap-2">
         <div className="flex justify-between">
           <span className="text-xl font-semibold">Questionnaire</span>
-          <Button size="sm" onClick={handleClickCreate}>Create Questionnaire</Button>
+          {isUserAdmin && (
+             <Button size="sm" onClick={handleClickCreate}>Create Questionnaire</Button>
+          )}
+         
         </div>
 
         <QuestionnaireTable

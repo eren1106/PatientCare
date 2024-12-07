@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { getCurrentUser } from "@/services/auth.service";
 import ProfileAvatar from "@/components/ProfileAvatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 
 const DoctorDashboardPage = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -63,7 +64,7 @@ const DoctorDashboardPage = () => {
       toast({
         variant: "destructive",
         title: "Delete Record Failed",
-        description: `${e.response.data.message}`,
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
       });
     }
   };
@@ -254,29 +255,22 @@ const DoctorDashboardPage = () => {
       </Card>
 
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove Patient</DialogTitle>
-            <p className="text-center p-2">
-              Are you sure to remove this patient?
-            </p>
+            <DialogTitle>Unassign Patient</DialogTitle>
           </DialogHeader>
-          <DialogFooter className="w-full">
-            <Button
-              className="w-1/2"
-              variant="destructive"
-              onClick={() => remove()}
-            >
-              Remove
+          <DialogDescription>
+            {`Are you sure to remove this patient?`}
+          </DialogDescription>
+          <div></div>
+          <DialogFooter>
+            <Button variant="destructive" onClick={() => remove()}>
+              Delete
             </Button>
-            <DialogClose asChild>
-              <Button className="w-1/2" type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };

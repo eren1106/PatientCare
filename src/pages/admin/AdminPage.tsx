@@ -13,6 +13,7 @@ import { Doctor} from '@/interfaces/user';
 import { DoctorRegistrationStatus } from '@/enums';
 import { Button } from '@/components/ui/button';
 import OptionTemplateManager from './components/OptionTemplateManager';
+import { DEFAULT_ERROR_MESSAGE } from '@/constants';
 
 const DoctorStatusSchema = z.object({
   doctorId: z.string(),
@@ -45,15 +46,16 @@ const AdminPage = () => {
       await updateDoctorsStatus(data);
       toast({
         title: "Status Updated",
+        description : "Doctor status has been updated successfully",
         variant: "success"
       });
       // Refresh the list of doctors
       const updatedDoctors = await getAllDoctorsStatus();
       setDoctors(updatedDoctors);
-    } catch (e) {
-      console.error(e);
+    } catch (e : any) {
       toast({
-        title: "Failed to update status",
+        title: "Failed to Update Status",
+        description: `${e.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
         variant: "destructive"
       });
     }
@@ -85,7 +87,7 @@ const AdminPage = () => {
               <TableCell>{doctor.fullname}</TableCell>
               <TableCell>{doctor.email}</TableCell>
               <TableCell>{doctor.age}</TableCell>
-              <TableCell>{doctor.doctorValidation.registrationNumber}</TableCell>
+              <TableCell>{doctor.doctorValidation?.registrationNumber}</TableCell>
               <TableCell>
                 <Badge variant={
                   doctor.doctorRegistrationStatus === 'REJECTED' ? 'destructive' :
