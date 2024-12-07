@@ -60,8 +60,8 @@ const ExerciseCompletionGraph = () => {
       const getSummaries = await getExerciseCompletionSummaryByPatientId(getPatients[0].id);
       setPatients(getPatients);
       setSelectedPatientId(getPatients[0].id);
-      // setSummaries(getSummaries);
-      setSummaries(MOCK_EXERCISE_COMPLETION_SUMMARY); // TODO: dont use mock, this just for demo purpose, use seed to populate dailyPatientExercise data
+      setSummaries(getSummaries);
+      // setSummaries(MOCK_EXERCISE_COMPLETION_SUMMARY); // TODO: dont use mock, this just for demo purpose, use seed to populate dailyPatientExercise data
     }
     catch (e) {
       console.error(e);
@@ -107,7 +107,7 @@ const ExerciseCompletionGraph = () => {
         <CardHeader>
           <CardTitle>Exercise Completion Graph</CardTitle>
           <CardDescription>
-            Showing percentage of exercise completion of selected user
+            Showing percentage of exercise completion of selected user for current month
           </CardDescription>
         </CardHeader>
         <CardContent>

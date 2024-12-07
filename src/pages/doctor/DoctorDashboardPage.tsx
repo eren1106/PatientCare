@@ -178,7 +178,7 @@ const DoctorDashboardPage = () => {
                 <TableHead>Name</TableHead>
                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead className="hidden sm:table-cell">Age</TableHead>
-                <TableHead>Appointments</TableHead>
+                {/* <TableHead>Appointments</TableHead> */}
                 <TableHead className="hidden sm:table-cell">Date Created</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
@@ -198,7 +198,7 @@ const DoctorDashboardPage = () => {
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">{record.patient.email}</TableCell>
                     <TableCell className="hidden sm:table-cell">{record.patient.age}</TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       {record.appointment.length > 0 ? (
                         <ul>
                           {record.appointment.map((appt) => (
@@ -214,7 +214,7 @@ const DoctorDashboardPage = () => {
                       ) : (
                         <Badge variant="secondary">-</Badge>
                       )}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="hidden sm:table-cell">
                       {/* <Badge variant="secondary">
                         {convertDateFormat(

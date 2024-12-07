@@ -382,18 +382,18 @@ export const MOCK_EXERCISE_COMPLETION_SUMMARY: ExerciseCompetionSummary[] = [
     day: 7,
     percentage: 100,
   },
-  {
-    day: 8,
-    percentage: 25,
-  },
-  {
-    day: 9,
-    percentage: 33,
-  },
-  {
-    day: 10,
-    percentage: 75,
-  },
+  // {
+  //   day: 8,
+  //   percentage: 25,
+  // },
+  // {
+  //   day: 9,
+  //   percentage: 33,
+  // },
+  // {
+  //   day: 10,
+  //   percentage: 75,
+  // },
 ]
 
 
