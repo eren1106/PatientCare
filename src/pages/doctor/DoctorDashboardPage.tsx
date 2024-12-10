@@ -118,7 +118,7 @@ const DoctorDashboardPage = () => {
   };
 
   const filteredRecords = patientRecord.filter((record) =>
-    record.patient.username.toLowerCase().includes(searchQuery.toLowerCase())
+    record.patient.fullname.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
