@@ -141,7 +141,7 @@ const PatientQuestionnaireTable = ({
                   <Badge>{assessment.questionnaire.type}</Badge>
                 </TableCell>
                 <TableCell>
-                  {formatDate(assessment.questionnaire.createdDatetime)}
+                  {formatDate(assessment.createdDatetime)}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center justify-center gap-2 ">
