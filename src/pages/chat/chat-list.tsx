@@ -9,7 +9,7 @@ import {
 import { ChatMessageList } from "../../components/ui/chat/chat-message-list";
 import { ScrollArea } from "../../components/ui/scroll-area";
 import ChatBottombar from "./chat-bottombar";
-import { Chats } from "@/services/chat.service";
+import { Chats, registerMessageHandler, unregisterMessageHandler } from "@/services/chat.service";
 import useChatStore from "@/hooks/useChatStore.hook";
 import { getCurrentUser } from "@/services/auth.service";
 import {
@@ -37,6 +37,7 @@ const getMessageVariant = (fromUserId: string, selectedUserId: string) =>
 export function ChatList({ selectedUser }: ChatListProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  const { addMessage } = useChatStore();
   const messages = useChatStore((state) => state.messages);
   const deleteMessageFromStore = useChatStore((state) => state.deleteMessage);
 
@@ -51,14 +52,21 @@ export function ChatList({ selectedUser }: ChatListProps) {
   };
 
   useEffect(() => {
+    // Register handler for new messages with IDs
+    registerMessageHandler((message) => {
+      addMessage(message);
+    });
+
+    // Register handler for deleted messages
     registerMessageDeletedHandler((messageId) => {
       deleteMessageFromStore(messageId);
     });
 
     return () => {
+      unregisterMessageHandler();
       unregisterMessageDeletedHandler();
     };
-  }, [deleteMessageFromStore]);
+  }, [addMessage, deleteMessageFromStore]);
 
   const currentUser = getCurrentUser();
 

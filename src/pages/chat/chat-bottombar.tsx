@@ -9,8 +9,9 @@ import {
   import { AnimatePresence, motion } from "framer-motion";
   import { EmojiPicker } from "../../components/emoji-picker";
   import { ChatInput } from "../../components/ui/chat/chat-input";
-import { emitSocketMessage, sendMessage } from "@/services/chat.service";
+import { emitSocketMessage, fetchChatMessages, sendMessage } from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
+import useChatStore from "@/hooks/useChatStore.hook";
   
   interface ChatBottombarProps {
 
@@ -30,8 +31,18 @@ import { getCurrentUser } from "@/services/auth.service";
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(event.target.value);
     }
-    
-    
+    const setMessages = useChatStore((state) => state.setMessages);
+
+  
+    const loadMessages = async () => {
+      try {
+        const fetchedMessages = await fetchChatMessages(selectedUserId);
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
+    };
+
       
   
   
@@ -53,7 +64,8 @@ import { getCurrentUser } from "@/services/auth.service";
             message: message.trim(),
             createdDatetime: new Date(),
           });
-          setMessage("");
+
+          await loadMessages();
         } catch (error) {
           console.error("Failed to send message:", error);
          
@@ -84,6 +96,8 @@ import { getCurrentUser } from "@/services/auth.service";
           message: "👍",
           createdDatetime: new Date(),
         });
+
+        await loadMessages();
       } catch (error) {
         console.error("Failed to send thumbs up:", error);
         // Optionally show an error message to the user

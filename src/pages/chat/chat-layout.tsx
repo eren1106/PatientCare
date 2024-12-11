@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState} from "react";
 import { Sidebar } from "./chat-sidebar";
 import { Chat } from "./chat";
-import { Chats, initializeSocket, disconnectSocket, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler} from "@/services/chat.service";
+import { Chats, fetchAllChatsForUser, unregisterMessageHandler, registerMessageHandler} from "@/services/chat.service";
 import { getCurrentUser } from "@/services/auth.service";
 import useChatStore from "@/hooks/useChatStore.hook";
 import { ArrowLeft } from 'lucide-react'; 
