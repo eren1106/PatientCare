@@ -1,38 +1,18 @@
-// components/AssessmentDetailGraph.tsx
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { Score } from '@/services/assessment.service';
 
-const mockData = {
-  physical: [
-    { date: '2024-01-01', score: 80 },
-    { date: '2024-02-01', score: 85 },
-    { date: '2024-03-01', score: 75 },
-    { date: '2024-04-01', score: 90 },
-  ],
-  mental: [
-    { date: '2024-01-01', score: 70 },
-    { date: '2024-02-01', score: 75 },
-    { date: '2024-03-01', score: 85 },
-    { date: '2024-04-01', score: 80 },
-  ],
-  pain: [
-    { date: '2024-01-01', score: 65 },
-    { date: '2024-02-01', score: 70 },
-    { date: '2024-03-01', score: 80 },
-    { date: '2024-04-01', score: 75 },
-  ],
-  mobility: [
-    { date: '2024-01-01', score: 85 },
-    { date: '2024-02-01', score: 90 },
-    { date: '2024-03-01', score: 85 },
-    { date: '2024-04-01', score: 95 },
-  ],
-};
 
-const SectionGraph = ({ title, data, color }: { title: string; data: any[]; color: string }) => (
+interface SectionGraphProps {
+  title: string;
+  data: Array<{ date: string; score: number }>;
+  color: string;
+}
+
+const SectionGraph = ({ title, data, color }: SectionGraphProps) => (
   <Card className="w-full">
     <CardHeader>
       <CardTitle className="text-lg">{title}</CardTitle>
@@ -40,12 +20,26 @@ const SectionGraph = ({ title, data, color }: { title: string; data: any[]; colo
     <CardContent>
       <div className="h-[200px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+          <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 25 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tickFormatter={(date) => new Date(date).toLocaleDateString()} />
+            <XAxis 
+              dataKey="date" 
+              tickFormatter={(date) => new Date(date).toLocaleDateString()}
+              angle={-45}
+              textAnchor="end"
+              height={60}
+            />
             <YAxis domain={[0, 100]} />
-            <Tooltip labelFormatter={(date) => new Date(date).toLocaleDateString()} />
-            <Line type="monotone" dataKey="score" stroke={color} strokeWidth={2} />
+            <Tooltip 
+              labelFormatter={(date) => new Date(date).toLocaleDateString()}
+              formatter={(value) => [`${value}%`, 'Score']}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="score" 
+              stroke={color} 
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -55,11 +49,34 @@ const SectionGraph = ({ title, data, color }: { title: string; data: any[]; colo
 
 const AssessmentDetailGraph = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const scores: Score[] = state?.scores || [];
+  const questionnaireName = state?.questionnaireName;
+
+  // Transform and sort section scores
+  const sectionData = scores.reduce((acc, score) => {
+    score.sectionScores.forEach((section) => {
+      if (!acc[section.sectionName]) {
+        acc[section.sectionName] = [];
+      }
+      acc[section.sectionName].push({
+        date: score.assignedDate,
+        score: (section.sectionScore / section.sectionTotalScore) * 100
+      });
+    });
+    return acc;
+  }, {} as Record<string, Array<{ date: string; score: number }>>);
+
+  // Sort data by date
+  Object.values(sectionData).forEach(data => {
+    data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  });
+
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Section Score Progress</h2>
+        <h2 className="text-2xl font-bold">{questionnaireName} - Section Scores</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -70,10 +87,14 @@ const AssessmentDetailGraph = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SectionGraph title="Physical Section" data={mockData.physical} color="#82ca9d" />
-        <SectionGraph title="Mental Section" data={mockData.mental} color="#8884d8" />
-        <SectionGraph title="Pain Section" data={mockData.pain} color="#ff7300" />
-        <SectionGraph title="Mobility Section" data={mockData.mobility} color="#0088fe" />
+        {Object.entries(sectionData).map(([sectionName, data]) => (
+          <SectionGraph 
+            key={sectionName}
+            title={`${sectionName} Section`}
+            data={data}
+            color={'#8884d8'}
+          />
+        ))}
       </div>
     </div>
   );

@@ -3,58 +3,80 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getAssessmentAnalytics, Score } from '@/services/assessment.service';
+import Spinner from '@/components/Spinner';
+import QuestionnaireGraph from './QuestionnaireGraph';
 
-const mockData = [
-  { date: '2024-01-01', totalScore: 85 },
-  { date: '2024-02-01', totalScore: 78 },
-  { date: '2024-03-01', totalScore: 92 },
-  { date: '2024-04-01', totalScore: 88 },
-];
+interface AssessmentScoreGraphProps {
+  selectedPatientId: string | null;
+}
 
-const AssessmentScoreGraph = () => {
+const AssessmentScoreGraph = ({ selectedPatientId }: AssessmentScoreGraphProps) => {
+  const [loading, setLoading] = useState(false);
+  const [scores, setScores] = useState<Score[]>([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchScores = async () => {
+      if (!selectedPatientId) return;
+      setLoading(true);
+      try {
+        const data = await getAssessmentAnalytics(selectedPatientId);
+        setScores(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScores();
+  }, [selectedPatientId]);
+
+  const sortByDate = (a: any, b: any) => {
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  };
+
+   // Group data by questionnaire name
+   // Update groupedData with sorting
+  const groupedData = scores.reduce((acc, score) => {
+    const name = score.questionnaireName;
+    if (!acc[name]) {
+      acc[name] = [];
+    }
+    acc[name].push({
+      date: score.assignedDate,
+      totalScore: parseInt(score.totalScore)
+    });
+    // Sort after adding new data
+    acc[name].sort(sortByDate);
+    return acc;
+  }, {} as Record<string, any[]>);
+
+  // Colors for different questionnaires
+  const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
+
+
+  if (loading) return <Card className="w-full"><CardContent><Spinner /></CardContent></Card>;
+
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Assessment Score Trend</CardTitle>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/dashboard/tracking/assessment-details')}
-        >
-          <BarChart2 className="h-5 w-5" />
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={mockData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
-                tickFormatter={(date) => new Date(date).toLocaleDateString()}
-              />
-              <YAxis domain={[0, 100]} />
-              <Tooltip 
-                labelFormatter={(date) => new Date(date).toLocaleDateString()}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="totalScore"
-                stroke="#8884d8"
-                strokeWidth={2}
-                name="Total Score"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+    <div className="flex items-center">
+      <h2 className="text-2xl font-bold">Assessment Scores</h2>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {Object.entries(groupedData).map(([name, data], index) => (
+        <QuestionnaireGraph 
+          key={name}
+          title={name}
+          data={data}
+          color={colors[index % colors.length]}
+          scores={scores.filter(score => score.questionnaireName === name)}
+        />
+      ))}
+    </div>
+  </div>
   );
 };
 

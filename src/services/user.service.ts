@@ -1,4 +1,4 @@
-import { User } from "@/interfaces/user";
+import { Patient, User } from "@/interfaces/user";
 import { apiRequest } from "@/utils/apiRequest";
 
 export const getAllPatients = async (): Promise<User[]> => {
@@ -11,7 +11,7 @@ export const getAllPatients = async (): Promise<User[]> => {
   }
 };
 
-export const getAllPatientsByDoctorId = async (id: string): Promise<User[]> => {
+export const getAllPatientsByDoctorId = async (id: string): Promise<Patient[]> => {
   try {
     const res = await apiRequest.get(`users/patients/${id}`);
     return res.data;

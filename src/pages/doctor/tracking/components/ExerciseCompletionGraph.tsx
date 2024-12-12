@@ -42,67 +42,35 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-// TODO: add left and right button to allow user to change month
-const ExerciseCompletionGraph = () => {
-  const userData = getCurrentUser();
+interface ExerciseCompletionGraphProps {
+  selectedPatientId: string | null;
+}
 
+const ExerciseCompletionGraph = ({ selectedPatientId }: ExerciseCompletionGraphProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [patients, setPatients] = useState<User[]>([]);
   const [summaries, setSummaries] = useState<ExerciseCompetionSummary[]>([]);
-  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
-
-  const fetchData = async () => {
-    if(!userData) return;
-
-    setLoading(true);
-    try {
-      const getPatients = await getAllPatientsByDoctorId(userData.id);
-      const getSummaries = await getExerciseCompletionSummaryByPatientId(getPatients[0].id);
-      setPatients(getPatients);
-      setSelectedPatientId(getPatients[0].id);
-      // setSummaries(getSummaries);
-      setSummaries(MOCK_EXERCISE_COMPLETION_SUMMARY); // TODO: dont use mock, this just for demo purpose, use seed to populate dailyPatientExercise data
-    }
-    catch (e) {
-      console.error(e);
-    }
-    finally {
-      setLoading(false);
-    }
-  }
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (!selectedPatientId) return;
+      
+      setLoading(true);
+      try {
+        const getSummaries = await getExerciseCompletionSummaryByPatientId(selectedPatientId);
+        setSummaries(getSummaries);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [selectedPatientId]);
 
-  const handleSelectPatient = async (value: string) => {
-    setLoading(true);
-    try {
-      const getSummaries = await getExerciseCompletionSummaryByPatientId(value);
-      setSummaries(getSummaries);
-      setSelectedPatientId(value);
-    }
-    catch (e) {
-      console.error(e);
-    }
-    finally {
-      setLoading(false);
-    }
-  }
+  if (loading) return <Spinner />;
 
-  if(loading) return <Spinner />
   return (
-    <div className="flex flex-col gap-6">
-      <DynamicSelectField
-        options={patients.map((patient) => ({
-          label: patient.fullname,
-          value: patient.id
-        }))}
-        className="w-64"
-        label="Select Patient"
-        onChange={handleSelectPatient}
-        value={selectedPatientId ?? undefined}
-      />
       <Card>
         <CardHeader>
           <CardTitle>Exercise Completion Graph</CardTitle>
@@ -152,7 +120,6 @@ const ExerciseCompletionGraph = () => {
           </ChartContainer>
         </CardContent>
       </Card>
-    </div>
   )
 }
 
