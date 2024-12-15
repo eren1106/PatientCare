@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, PenBox, Trash } from "lucide-react";
+import { Eye, Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Dialog,
@@ -18,10 +18,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Assessment, Questionnaire } from "@/interfaces/questionnaire";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils";
+import { ArrowUpDown } from "lucide-react";
+import { DropdownMenu,  DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { PatientAssessment } from "@/services/assessment.service";
 
 interface QuestionnaireTableProps {
   recordId: string;
@@ -30,6 +33,8 @@ interface QuestionnaireTableProps {
   onDelete?: (id: string) => Promise<void>;
   onEdit?: (questionnaire: Questionnaire) => void;
 }
+
+type SortCriteria = "type" | "dateAsc" | "dateDesc";
 
 const PatientQuestionnaireTable = ({
   loading = false,
@@ -51,6 +56,33 @@ const PatientQuestionnaireTable = ({
     setShowConfirmDialog(false);
   };
 
+  const [sortCriteria, setSortCriteria] = useState<SortCriteria>("dateDesc");
+
+  const sortedAssessments = useMemo(() => {
+    const sorted = [...assessment];
+
+    switch (sortCriteria) {
+      case "type":
+        return sorted.sort((a, b) =>
+          a.questionnaire.type.localeCompare(b.questionnaire.type)
+        );
+      case "dateAsc":
+        return sorted.sort(
+          (a, b) =>
+            new Date(a.createdDatetime).getTime() -
+            new Date(b.createdDatetime).getTime()
+        );
+      case "dateDesc":
+        return sorted.sort(
+          (a, b) =>
+            new Date(b.createdDatetime).getTime() -
+            new Date(a.createdDatetime).getTime()
+        );
+      default:
+        return sorted;
+    }
+  }, [assessment, sortCriteria]);
+
   return (
     <>
       {loading ? (
@@ -63,7 +95,33 @@ const PatientQuestionnaireTable = ({
               <TableHead className="w=[8rem] hidden sm:table-cell">
                 Description
               </TableHead>
-              <TableHead className="w=[8rem]">General</TableHead>
+              <TableHead className="w=[8rem]">
+                <div className="flex items-center gap-2">
+                  General
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <ArrowUpDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setSortCriteria("type")}>
+                        Sort by Type
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSortCriteria("dateAsc")}
+                      >
+                        Oldest First
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSortCriteria("dateDesc")}
+                      >
+                        Newest First
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </TableHead>
               <TableHead className="w-[8rem]">
                 {assessment ? "Date Assigned" : "Date Created"}
               </TableHead>
@@ -71,7 +129,7 @@ const PatientQuestionnaireTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {assessment.map((assessment: Assessment) => (
+            {sortedAssessments.map((assessment: Assessment) => (
               <TableRow className="" key={assessment.id}>
                 <TableCell className="font-medium">
                   {assessment.questionnaire.title}
@@ -83,15 +141,21 @@ const PatientQuestionnaireTable = ({
                   <Badge>{assessment.questionnaire.type}</Badge>
                 </TableCell>
                 <TableCell>
-                  {formatDate(assessment.questionnaire.createdDatetime)}
+                  {formatDate(assessment.createdDatetime)}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center justify-center gap-2 ">
                     <Link
                       to={
-                        assessment ? `/dashboard/patients/${recordId}/questionnaire/${(assessment as Assessment).id}/result` : `/dashboard/questionnaire/${(assessment as Assessment).questionnaire.id}`
+                        assessment
+                          ? `/dashboard/patients/${recordId}/questionnaire/${
+                              (assessment as Assessment).id
+                            }/result`
+                          : `/dashboard/questionnaire/${
+                              (assessment as Assessment).questionnaire.id
+                            }`
                       }
-                      state={{ recordId : recordId } }
+                      state={{ recordId: recordId }}
                     >
                       <Eye
                         size={36}

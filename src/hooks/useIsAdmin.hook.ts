@@ -7,8 +7,9 @@ export const useIsAdmin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const userString = sessionStorage.getItem(USER_SESSION_KEY);
+    const userString = localStorage.getItem(USER_SESSION_KEY);
     if (userString) {
+      console.log(userString);
       const user = JSON.parse(userString);
       setIsAdmin(user.role === UserRole.ADMIN);
     }

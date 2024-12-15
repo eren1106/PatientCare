@@ -227,7 +227,9 @@ const QuestionnaireResult = () => {
                         <p className="text-sm">
                           <strong>Response:</strong>{" "}
                           {question.response
-                            ? question.response.scaleValue
+                            ? (question.response.content 
+                               ? `${question.response.scaleValue} - ${question.response.content}`
+                               : question.response.scaleValue)
                             : "No response"}
                         </p>
                       </div>

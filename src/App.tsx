@@ -41,6 +41,7 @@ import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import ExerciseCategoriesPage from "./pages/doctor/exercises/ExerciseCategoriesPage";
 import { MessageProvider } from "./providers/message-provider";
+import AssessmentDetailGraph from "./pages/doctor/tracking/components/AssessmentDetailGraph";
 
 const AppWrapper = () => {
 
@@ -230,7 +231,10 @@ const router = createBrowserRouter([
           },
           {
             path: "tracking",
-            element: <DoctorTrackingPage />
+            children: [
+              { path: "", element: <DoctorTrackingPage /> },
+              { path: "assessment-details", element: <AssessmentDetailGraph /> }
+            ]
           },
           {
             path: "profile/:id",

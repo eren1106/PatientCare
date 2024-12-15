@@ -2,6 +2,7 @@ import { Assessment, CreateAssessment, OptionTemplate, Questionnaire, Section, U
 import { apiCaller } from "@/utils";
 import { getCurrentUser } from "./auth.service";
 import { Exercise } from "@/interfaces/exercise";
+import { PatientAssessment } from "./assessment.service";
 
 export const getAllQuestionnaire = async (): Promise<Questionnaire[]> => {
     try {
