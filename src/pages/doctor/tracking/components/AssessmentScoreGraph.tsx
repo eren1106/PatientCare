@@ -25,7 +25,7 @@ const AssessmentScoreGraph = ({ selectedPatientId }: AssessmentScoreGraphProps) 
         const data = await getAssessmentAnalytics(selectedPatientId);
         setScores(data);
       } catch (error) {
-        console.error(error);
+        setScores([]); 
       } finally {
         setLoading(false);
       }
@@ -60,6 +60,18 @@ const AssessmentScoreGraph = ({ selectedPatientId }: AssessmentScoreGraphProps) 
 
   if (loading) return <Card className="w-full"><CardContent><Spinner /></CardContent></Card>;
 
+
+  if (scores.length === 0) {
+    return (
+      <Card className="w-full">
+        <CardContent className="flex flex-col items-center justify-center py-8">
+          <p className="text-lg font-semibold text-gray-700">No Assessment Found</p>
+          <p className="text-sm text-gray-500">This patient has not completed any assessments yet.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+  
   return (
     <div className="space-y-4">
     <div className="flex items-center">

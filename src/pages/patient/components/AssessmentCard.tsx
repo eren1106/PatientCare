@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ProfileAvatar from '@/components/ProfileAvatar';
+import { formatDate } from '@/utils';
 
 interface AssessmentCardProps {
   assessment: {
@@ -14,6 +15,7 @@ interface AssessmentCardProps {
     doctorName: string;
     doctorEmail: string;
     assessmentId: string;
+    assignedDate: Date;
   };
 }
 
@@ -26,7 +28,7 @@ const AssessmentCard: React.FC<AssessmentCardProps> = ({ assessment }) => {
           <Badge variant="secondary">{assessment.questionnaireType}</Badge>
           <Badge variant="default">{assessment.status}</Badge>
         </div>
-        <p className="text-sm text-muted-foreground">Assigned By:</p>
+        <p className="text-sm text-muted-foreground font-semibold">Assigned By:</p>
         <div className="flex mt-2">
           <ProfileAvatar
             src={assessment.profileImageUrl}
@@ -55,6 +57,7 @@ const AssessmentCard: React.FC<AssessmentCardProps> = ({ assessment }) => {
             <Button variant="outline">Start Assessment</Button>
           </Link>
         )}
+        <p className="text-sm text-muted-foreground font-semibold mt-2">Assigned Date : {formatDate(assessment.assignedDate)}</p>
       </div>
     </Card>
   );
