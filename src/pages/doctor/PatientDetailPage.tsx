@@ -150,6 +150,17 @@ const PatientDetailPage = () => {
     setTimeout(() => setCopyStatus(false), 1000);
   };
 
+  const { toast } = useToast();
+  const displayToastMessage = () => {
+    if (copyStatus) {
+      toast({
+        variant: "success",
+        title: "Copied",
+        description: "Copied text to your clipboard",
+      });
+    }
+  };
+  
   // Handle edit injury
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedInjury, setSelectedInjury] = useState<Injury | null>(null);
@@ -167,16 +178,7 @@ const PatientDetailPage = () => {
     setOpenDialog(true);
   };
 
-  const { toast } = useToast();
-  const displayToastMessage = () => {
-    if (copyStatus) {
-      toast({
-        variant: "success",
-        title: "Copied",
-        description: "Copied text to your clipboard",
-      });
-    }
-  };
+
 
   const [deleteInjuryModal, setDeleteInjuryModal] = useState(false);
   const [injuryIdToDelete, setInjuryIdToDelete] = useState<string | null>(null);
