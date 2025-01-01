@@ -7,23 +7,22 @@ import {
 } from "@/services/assessment.service";
 import useLoading from "@/hooks/useLoading.hook";
 import Spinner from "@/components/Spinner";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GenericFormField from "@/components/GenericFormField";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import AssessmentNavigationBar from "./AssessmentNavigationBar";
+import { AssessmentHeader } from "./AssessmentHeader";
+import DynamicDialogTrigger from "@/components/DynamicDialogTrigger";
+import { useAssessmentNavigation } from "@/hooks/useAssessmentNavigation";
+import { ClipboardList } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 const AssessmentSchema = z.object({
   sections: z.array(
     z.object({
@@ -41,13 +40,6 @@ const AssessmentSchema = z.object({
 
 type AssessmentSchemaType = z.infer<typeof AssessmentSchema>;
 const AssessmentDetailPage = () => {
-  const form = useForm<AssessmentSchemaType>({
-    resolver: zodResolver(AssessmentSchema),
-    defaultValues: {
-      sections: [],
-    },
-  });
-
   const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
@@ -58,6 +50,22 @@ const AssessmentDetailPage = () => {
   const location = useLocation();
   const assessmentDetail = location.state?.assessmentDetails;
   const isCompleted = assessmentDetail?.status === "Completed";
+
+  const form = useForm<AssessmentSchemaType>({
+    resolver: zodResolver(AssessmentSchema),
+    defaultValues: {
+      sections:
+        assessmentDetails?.sections?.map((section) => ({
+          sectionId: section.sectionId,
+          questions:
+            section.questions?.map((question) => ({
+              questionId: question.id,
+              optionId: null,
+              responseId: "",
+            })) || [],
+        })) || [],
+    },
+  });
 
   const fetchAssessmentDetails = async (id: string) => {
     try {
@@ -77,12 +85,6 @@ const AssessmentDetailPage = () => {
       console.error("Failed to fetch assessment details", e);
     }
   };
-
-  // useEffect(() => {
-  //   if (id) {
-  //     withLoading(() => fetchAssessmentDetails(id));
-  //   }
-  // }, [id]);
 
   useEffect(() => {
     if (!assessmentDetails && id) {
@@ -142,121 +144,248 @@ const AssessmentDetailPage = () => {
     navigate("/assessment");
   };
 
+  // Pagination
+  const navigation = useAssessmentNavigation(assessmentDetails);
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(
+    new Set()
+  );
+
+  const formValues = form.watch();
+
+  useEffect(() => {
+    if (!assessmentDetails?.sections) return;
+
+    const newAnsweredQuestions = new Set<number>();
+
+    const currentValues = form.getValues();
+
+    if (!currentValues?.sections) return;
+
+    currentValues.sections.forEach((section, sectionIndex) => {
+      if (section?.questions) {
+        section.questions.forEach((question, questionIndex) => {
+          if (question?.optionId && question.optionId !== "") {
+            const absoluteIndex = navigation.getAbsoluteIndex(
+              sectionIndex,
+              questionIndex
+            );
+            if (typeof absoluteIndex === "number") {
+              newAnsweredQuestions.add(absoluteIndex);
+            }
+          }
+        });
+      }
+    });
+
+    setAnsweredQuestions(newAnsweredQuestions);
+  }, [
+    formValues,
+    navigation.getAbsoluteIndex,
+    assessmentDetails?.sections,
+    form,
+  ]);
+  if (isLoading) return <Spinner />;
+  if (!assessmentDetails) return <p>No assessment details available.</p>;
+
   return (
     <Card className="p-6">
-      {isLoading ? (
-        <div className="flex justify-center items-center h-full">
-          <Spinner />
-        </div>
-      ) : (
-        <div>
-          <div className="bg-red-100 rounded-md p-5 mb-2">
-            <h1 className="text-2xl font-bold ">{assessmentDetails?.title}</h1>
-            <p className="text-sm text-gray-600">
-              {assessmentDetails?.description}
-            </p>
-          </div>
+      <div>
+        <AssessmentHeader
+          title={assessmentDetails.title}
+          description={assessmentDetails.description}
+        />
 
+        <div
+          className={`grid ${
+            isCompleted ? "grid-cols-1" : "grid-cols-[1fr,300px]"
+          } gap-6 max-w-7xl mx-auto`}
+        >
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {assessmentDetails ? (
                 <div className="flex flex-col gap-5">
-                  {assessmentDetails.sections.map((section, sectionIndex) => (
+                  {!isCompleted && navigation.getCurrentSection() && (
+                    <Card className="p-1 bg-gradient-to-r from-blue-50 to-blue-100 border-none shadow-sm">
+                      <CardHeader className="flex flex-row items-center justify-center space-y-0 pb-2">
+                        <CardTitle className="text-lg font-bold text-blue-700 flex items-center gap-2">
+                          <ClipboardList className="h-6 w-6" />
+                          {navigation.getCurrentSection()?.sectionName} Section
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-600 mt-2">
+                          {navigation.getCurrentSection()?.sectionDescription}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  <Card className="border-2 border-blue-500 p-6">
                     <div
-                      key={section.sectionId}
-                      className="bg-slate-100 rounded-md p-5"
+                      key={navigation.getCurrentQuestion()?.title}
+                      className="space-y-4"
                     >
-                      <h2 className="text-xl font-semibold">
-                        Section {sectionIndex + 1} : {section.sectionName}
-                      </h2>
-                      
-                      <p className="text-sm text-gray-600">
-                        {section.sectionDescription}
-                      </p>
-                      {section.questions.map((question, questionIndex) => (
-                        <div key={question.title} className="mt-4">
-                          {isCompleted ? (
-                            // Read-only view for completed assessments
-                            <div className="space-y-2">
-                              <p className="font-medium">{question.title}</p>
-                              <div className="pl-4 flex flex-col sm:flex-row gap-2">
-                                {question.options.map((option) => {
-                                  const isSelected =
-                                    option.optionId === question.answer;
-                                  return (
-                                    <div
-                                      key={option.optionId}
-                                      className={`p-2 rounded ${
-                                        isSelected ? "bg-blue-100" : ""
-                                      }`}
+                      {isCompleted ? (
+                        // Read-only view logic
+                        <div className="space-y-6">
+                          {assessmentDetails?.sections?.map(
+                            (section, sectionIndex) => (
+                              <div
+                                key={section.sectionId}
+                                className="space-y-4"
+                              >
+                                <div className="bg-slate-100 rounded-md p-5">
+                                  <h2 className="text-xl font-semibold">
+                                    Section {sectionIndex + 1}:{" "}
+                                    {section.sectionName}
+                                  </h2>
+                                  <p className="text-sm text-gray-600">
+                                    {section.sectionDescription}
+                                  </p>
+                                </div>
+
+                                {section.questions.map(
+                                  (question, questionIndex) => (
+                                    <Card
+                                      key={question.title}
+                                      className="border-2 border-blue-500 p-6"
                                     >
-                                      <span
-                                        className={
-                                          isSelected ? "font-bold" : ""
-                                        }
-                                      >
-                                        {option.content} ({option.scaleValue})
-                                        {isSelected && " ✓"}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
+                                      <div className="space-y-2">
+                                        <p className="font-medium">
+                                          Question {questionIndex + 1}:{" "}
+                                          {question.title}
+                                        </p>
+                                        <div className="pl-4 flex flex-col sm:flex-row gap-2">
+                                          {question.options.map((option) => {
+                                            const isSelected =
+                                              option.optionId ===
+                                              question.answer;
+                                            return (
+                                              <div
+                                                key={option.optionId}
+                                                className={`p-2 rounded ${
+                                                  isSelected
+                                                    ? "bg-blue-100"
+                                                    : ""
+                                                }`}
+                                              >
+                                                <span
+                                                  className={
+                                                    isSelected
+                                                      ? "font-bold"
+                                                      : ""
+                                                  }
+                                                >
+                                                  {option.content} (
+                                                  {option.scaleValue})
+                                                  {isSelected && " ✓"}
+                                                </span>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    </Card>
+                                  )
+                                )}
                               </div>
-                            </div>
-                          ) : (
-                            // Interactive form for non-completed assessments
-                            <GenericFormField
-                              control={form.control}
-                              name={`sections.${sectionIndex}.questions.${questionIndex}.optionId`}
-                              label={`${question.title}`}
-                              type="option"
-                              options={question.options.map((option) => ({
-                                value: option.optionId,
-                                label:
-                                  (option?.content ?? "") + option.scaleValue ||
-                                  "",
-                              }))}
-                              placeholder="Select an option"
-                              noLabel={false}
-                            />
+                            )
                           )}
                         </div>
-                      ))}
+                      ) : (
+                        <div className="flex flex-col gap-4">
+                          <div className="space-y-2">
+                            <p className="font-bold">
+                              Question {navigation.currentQuestionIndex + 1}
+                            </p>
+                            <p>{navigation.getCurrentQuestion()?.title}</p>
+                          </div>
+                          <GenericFormField
+                            control={form.control}
+                            name={`sections.${navigation.currentSectionIndex}.questions.${navigation.currentQuestionIndex}.optionId`}
+                            noLabel={true}
+                            type="option"
+                            options={navigation
+                              .getCurrentQuestion()
+                              ?.options.map((option) => ({
+                                value: option.optionId,
+                                label:
+                                  (option?.content ?? "") +
+                                    " " +
+                                    option.scaleValue || "",
+                              }))}
+                            placeholder="Select an option"
+                          />
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </Card>
+
+                  {!isCompleted && (
+                    <div className="flex justify-between mt-6">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={navigation.handlePrevious}
+                        disabled={
+                          navigation.currentSectionIndex === 0 &&
+                          navigation.currentQuestionIndex === 0
+                        }
+                      >
+                        Previous
+                      </Button>
+                      {navigation.isLastQuestion() ? (
+                        <Button
+                          type="button"
+                          onClick={handleSaveClick}
+                          disabled={form.formState.isSubmitting}
+                        >
+                          Submit
+                        </Button>
+                      ) : (
+                        <Button type="button" onClick={navigation.handleNext}>
+                          Next
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p>No assessment details available.</p>
               )}
-
-              {!isCompleted && (
-                <div className="flex gap-5">
-                  <Button
-                    type="button"
-                    disabled={form.formState.isSubmitting}
-                    onClick={handleSaveClick}
-                  >
-                    Save
-                  </Button>
-                  <Button variant="destructive" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                </div>
-              )}
             </form>
           </Form>
+
+          {!isCompleted && (
+            <div className="sticky">
+              <AssessmentNavigationBar
+                currentQuestionIndex={navigation.getAbsoluteIndex(
+                  navigation.currentSectionIndex,
+                  navigation.currentQuestionIndex
+                )}
+                totalQuestions={navigation.getTotalQuestions()}
+                answeredQuestions={answeredQuestions}
+                onNavigate={navigation.handleNavigate}
+              />
+              <Button
+                variant="destructive"
+                onClick={() => setIsCancelDialogOpen(true)}
+                className="w-full mt-4"
+              >
+                Discard Progress
+              </Button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Save Confirmation Dialog */}
-      <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Submission</DialogTitle>
-          </DialogHeader>
-          <DialogDescription>
-            Are you sure you want to submit the assessment?
-          </DialogDescription>
+      <DynamicDialogTrigger
+        open={isSaveDialogOpen}
+        onOpenChange={setIsSaveDialogOpen}
+        title="Confirm Submission"
+        description="Are you sure you want to submit the assessment?"
+        content={
           <DialogFooter>
             <Button
               onClick={() => {
@@ -273,19 +402,15 @@ const AssessmentDetailPage = () => {
               Cancel
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        }
+      />
 
-      {/* Cancel Confirmation Dialog */}
-      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Cancellation</DialogTitle>
-          </DialogHeader>
-          <DialogDescription>
-            If you quit, your progress will be lost. Are you sure you want to
-            cancel?
-          </DialogDescription>
+      <DynamicDialogTrigger
+        open={isCancelDialogOpen}
+        onOpenChange={setIsCancelDialogOpen}
+        title="Confirm Cancellation"
+        description="If you quit, your progress will be lost. Are you sure you want to cancel?"
+        content={
           <DialogFooter>
             <Button variant="destructive" onClick={handleConfirmCancel}>
               Yes, Cancel
@@ -297,8 +422,8 @@ const AssessmentDetailPage = () => {
               No
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        }
+      />
     </Card>
   );
 };

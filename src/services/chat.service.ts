@@ -4,46 +4,78 @@ import { getCurrentUser } from "./auth.service";
 import { User  } from "@/interfaces/dashboard";
 import { SOCKET_IO_PATH } from "@/constants";
 let socket: Socket | null = null;
-
+let isConnecting = false;
 let onNewMessage: ((message: Message) => void) | null = null;
 let onMessageDeleted: ((messageId: string) => void) | null = null;
 
 // NOTE : Change this to actual server URL when deploying
 const SOCKET_SERVER_URL = "http://localhost:3000";
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
 
-export const initializeSocket = (userId: string) => {
-  if (!socket) {
-    socket = io(SOCKET_SERVER_URL   , {
-      path: SOCKET_IO_PATH,
-      withCredentials: true,
-      transports: ['websocket'] 
-    });
+export const initializeSocket = (userId: string): Promise<void> => {
+  if (socket?.connected) return Promise.resolve();
+  if (isConnecting) return Promise.resolve();
 
-    socket.on('connect', () => {
-      console.log('Connected:', socket?.id);
-      socket?.emit('join', userId);
-    });
+  isConnecting = true;
+  let retryCount = 0;
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected');
-    });
+  return new Promise((resolve, reject) => {
+    try {
+      socket = io(SOCKET_SERVER_URL, {
+        path: SOCKET_IO_PATH,
+        withCredentials: true,
+        transports: ['websocket'],
+        reconnection: true,
+        reconnectionAttempts: MAX_RETRIES,
+        reconnectionDelay: RETRY_DELAY
+      });
 
-    socket.on('newMessage', (message: Message) => {
-      if (onNewMessage) onNewMessage(message);
-      console.log("new message", message);
-    });
+      socket.on('connect', () => {
+        console.log('Connected:', socket?.id);
+        isConnecting = false;
+        retryCount = 0;
+        socket?.emit('join', userId);
+        resolve();
+      });
 
-    socket.on('messageDeleted', (messageId: string) => {
-      onMessageDeleted?.(messageId);
-      console.log("Message deleted", messageId);
-    });
-    
-  }
+      socket.on('connect_error', (error) => {
+        console.error('Connection error:', error);
+        if (retryCount < MAX_RETRIES) {
+          retryCount++;
+          console.log(`Retrying connection... Attempt ${retryCount}`);
+        } else {
+          isConnecting = false;
+          reject(new Error('Max retries reached'));
+        }
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected');
+        isConnecting = false;
+      });
+
+      socket.on('newMessage', (message: Message) => {
+        if (onNewMessage) onNewMessage(message);
+      });
+
+      socket.on('messageDeleted', (messageId: string) => {
+        if (onMessageDeleted) onMessageDeleted(messageId);
+      });
+
+    } catch (error) {
+      isConnecting = false;
+      reject(error);
+    }
+  });
 };
 
 export const disconnectSocket = () => {
-  socket?.disconnect();
-  socket = null;
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+  isConnecting = false;
 };
 
 export const emitSocketMessage = (message: SendMessage) => {

@@ -40,6 +40,16 @@ export const createAssessmentAnalysis = async (assessmentId: string) => {
   }
 }
 
+export const getAssessmentAnalytics = async (patientRecordId : string): Promise<Score[]> => {
+  try {
+    const res = await apiCaller.get(`assessment/patientRecord/${patientRecordId}/scores`);
+    return res.data.data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 export interface PatientAssessment {
     assessmentId : string;
     questionnaireName : string;
@@ -83,4 +93,19 @@ export interface CreateResponse {
   assessmentId: string;
   questionId: string;
   optionId: string;
+}
+
+
+export interface SectionScore {
+  sectionName: string;
+  sectionScore: number;
+  sectionTotalScore: number;
+}
+
+export interface Score {
+  assessmentId: string;
+  questionnaireName: string;
+  assignedDate: string;
+  totalScore: string;
+  sectionScores: SectionScore[];
 }

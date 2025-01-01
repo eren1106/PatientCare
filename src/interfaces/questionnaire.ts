@@ -54,6 +54,7 @@ export interface Assessment {
   id : string,
   userId : string,
   questionnaireId : string,
+  // Created date time for assessment
   createdDatetime : Date;
   patientRecordId : string,
   questionnaire : Questionnaire;
