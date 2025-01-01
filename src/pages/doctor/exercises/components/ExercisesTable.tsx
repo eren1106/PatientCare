@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { formatDate } from "@/utils";
+import { formatDate, refreshPage } from "@/utils";
 import SkeletonCard from "@/components/SkeletonCard";
 
 interface ExercisesTableProps {
@@ -49,6 +49,7 @@ const ExercisesTable = ({
   const handleClickConfirmDelete = async () => {
     await onDelete?.(selectedExercise!.id);
     setShowConfirmDialog(false);
+    refreshPage();
   };
 
   return (

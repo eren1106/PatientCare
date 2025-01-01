@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import SkeletonCard from '@/components/SkeletonCard';
+import { refreshPage } from '@/utils';
 
 interface ExerciseCategoriesTableProps {
   exerciseCategories: ExerciseCategory[];
@@ -31,6 +32,7 @@ const ExerciseCategoriesTable = ({
   const handleClickConfirmDelete = async () => {
     await onDelete?.(selectedExerciseCategory!.id);
     setShowConfirmDialog(false);
+    refreshPage();
   }
 
   return (
