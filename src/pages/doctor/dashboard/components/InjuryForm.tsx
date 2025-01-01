@@ -14,7 +14,7 @@ const formSchema = z.object({
   painRegion: z.string().min(1, "Pain Region is required"),
   painScore: z.coerce
     .number()
-    .min(1, "Pain Score is required")
+    .min(1, "Pain Score must be between 1 and 10")
     .max(10, "Pain Score must be between 1 and 10"),
   duration: z.string().min(1, "Duration is required"),
   is_recurrent: z.enum(["YES", "NO"]),
@@ -85,6 +85,14 @@ const InjuryForm: React.FC<UpdateInjuryFormProps> = ({
           title: "Injury Created Successfully",
           description: `A new injury record has been created for ${values.painRegion}.`,
         });
+
+        form.reset({
+          painRegion: "",
+          painScore: 0,
+          duration: "",
+          is_recurrent: "NO",
+          description: "",
+        });
       } else {
         // Call the update API
         await updateInjury(injury?.id!, values);
@@ -109,7 +117,7 @@ const InjuryForm: React.FC<UpdateInjuryFormProps> = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
-        <DialogTitle>Update Injury</DialogTitle>
+        <DialogTitle>{isCreateMode ? "Create Injury" : "Update Injury"}</DialogTitle>
         <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <GenericFormField
@@ -123,7 +131,7 @@ const InjuryForm: React.FC<UpdateInjuryFormProps> = ({
           <GenericFormField
             control={form.control}
             name="painScore"
-            label="Pain Score"
+            label="NRS Pain Score"
             type="number"
             placeholder="Enter pain score"
           />

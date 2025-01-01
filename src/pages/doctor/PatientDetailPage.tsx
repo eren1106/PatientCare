@@ -2,7 +2,21 @@ import ProfileAvatar from "@/components/ProfileAvatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Copy, Edit, MessageCircle, Ruler, Trash, Weight } from "lucide-react";
+import {
+  ArrowLeft,
+  Copy,
+  Edit,
+  MessageCircle,
+  Ruler,
+  Trash,
+  Weight,
+  Activity,
+  Clock,
+  FileText,
+  MapPin,
+  Repeat,
+  Calendar
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +51,19 @@ import InjuryForm from "./dashboard/components/InjuryForm";
 import { Separator } from "@/components/ui/separator";
 import { DEFAULT_ERROR_MESSAGE } from "@/constants";
 import { DialogDescription } from "@radix-ui/react-dialog";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { formatDate } from "@/utils";
+
 const SkeletonProfile = () => {
   return (
     <div className="flex flex-col gap-6 m-auto">
@@ -145,22 +172,28 @@ const PatientDetailPage = () => {
   // Text Copy Logic
   const [textToCopy, setTextToCopy] = useState("");
   const [copyStatus, setCopyStatus] = useState(false);
-  const onCopyText = () => {
-    setCopyStatus(true);
-    setTimeout(() => setCopyStatus(false), 1000);
-  };
-
-  const { toast } = useToast();
-  const displayToastMessage = () => {
-    if (copyStatus) {
+  const onCopyText = async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopyStatus(true);
       toast({
         variant: "success",
         title: "Copied",
         description: "Copied text to your clipboard",
       });
+      setTimeout(() => setCopyStatus(false), 1000);
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Failed to copy",
+        description: "Could not copy text to clipboard",
+      });
     }
   };
-  
+
+  const { toast } = useToast();
+
+
   // Handle edit injury
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedInjury, setSelectedInjury] = useState<Injury | null>(null);
@@ -177,8 +210,6 @@ const PatientDetailPage = () => {
     setSelectedInjury(injury);
     setOpenDialog(true);
   };
-
-
 
   const [deleteInjuryModal, setDeleteInjuryModal] = useState(false);
   const [injuryIdToDelete, setInjuryIdToDelete] = useState<string | null>(null);
@@ -200,11 +231,13 @@ const PatientDetailPage = () => {
           title: "Patient Injury Deleted Successfully",
           description: "The patient injury has been deleted.",
         });
-      } catch (error : any) {
+      } catch (error: any) {
         toast({
           variant: "destructive",
           title: "Patient Injury Deleted Successfully",
-          description: `${error.response?.data?.message ?? DEFAULT_ERROR_MESSAGE}`,
+          description: `${
+            error.response?.data?.message ?? DEFAULT_ERROR_MESSAGE
+          }`,
         });
       }
     }
@@ -212,7 +245,13 @@ const PatientDetailPage = () => {
 
   return (
     <Card className="relative p-4 sm:p-6">
-      <Button variant="ghost" className="absolute" onClick={()=> { navigate("/dashboard");}}>
+      <Button
+        variant="ghost"
+        className="absolute"
+        onClick={() => {
+          navigate("/dashboard");
+        }}
+      >
         <ArrowLeft />
       </Button>
       {/*Patient Profile Section*/}
@@ -295,7 +334,6 @@ const PatientDetailPage = () => {
                           size={14}
                           onClick={() => {
                             setTextToCopy(record.patient.email); // Set the text to copy when clicked
-                            displayToastMessage();
                           }}
                         />
                       </CopyToClipboard>
@@ -310,18 +348,20 @@ const PatientDetailPage = () => {
 
       <Tabs defaultValue="Overview" className="w-full mt-4 ">
         <div className="flex justify-center  sm:justify-start ">
-        <TabsList className="w-fit ">
-          <TabsTrigger value="Overview">Overview</TabsTrigger>
-          <TabsTrigger value="Assessment">Assessment</TabsTrigger>
-          <TabsTrigger value="Rehabilitation">Rehabilitation</TabsTrigger>
-        </TabsList>
+          <TabsList className="w-fit ">
+            <TabsTrigger value="Overview">Overview</TabsTrigger>
+            <TabsTrigger value="Assessment">Assessment</TabsTrigger>
+            <TabsTrigger value="Rehabilitation">Rehabilitation</TabsTrigger>
+          </TabsList>
         </div>
-        
+
         <TabsContent value="Overview">
           <section>
             {/* Vital Signs Section */}
             <div className="flex flex-col gap-5 mt-5 px-2">
-              <span className="text-md sm:text-lg font-semibold ">Vital Signs</span>
+              <span className="text-md sm:text-lg font-semibold ">
+                Vital Signs
+              </span>
               {isLoading ? (
                 <SkeletonContent />
               ) : (
@@ -355,70 +395,148 @@ const PatientDetailPage = () => {
             {/* Injury Report Section */}
             <div className="flex flex-col gap-5 px-2">
               <div className="flex justify-between items-center justify-center">
-                <span className="text-md sm:text-lg font-semibold ">Injury Report</span>
+                <span className="text-md sm:text-lg font-semibold ">
+                  Injury Report
+                </span>
                 <Button variant="secondary" onClick={handleCreateClick}>
                   Create Injury
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {record.injuries.map((injury) => (
                   <Card
                     key={injury.id}
-                    className="relative p-4 sm:p-6 shadow-md rounded-lg hover:shadow-lg transition-shadow"
+                    className="relative overflow-hidden border-l-4 border-blue-500 hover:border-blue-600 transition-all"
                   >
+                    {/* Header with gradient */}
+                    <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
+
                     {/* Edit and Delete Icons */}
-                    <div className="absolute top-3 right-3 flex gap-1">
+                    <div className="absolute top-4 right-4 flex gap-2 z-10">
                       <Edit
-                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
-                        size={28}
+                        className="cursor-pointer hover:bg-blue-100 rounded-full p-1.5 text-blue-600 transition-colors"
+                        size={32}
                         onClick={() => handleEditClick(injury)}
                       />
                       <Trash
-                        className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
-                        size={28}
+                        className="cursor-pointer hover:bg-red-100 rounded-full p-1.5 text-red-600 transition-colors"
+                        size={32}
                         onClick={() => handleDeleteClick(injury.id)}
                       />
                     </div>
 
-                    <ul className="flex flex-col gap-3">
-                      <li className="flex flex-col">
-                        <span className="text-light-foreground">
-                          Pain Region:
-                        </span>
-                        <span className="font-semibold">
-                          {injury.painRegion || "N/A"}
-                        </span>
-                      </li>
-                      <li className="flex flex-col">
-                        <span className="text-light-foreground">
-                          NRS Pain Score:
-                        </span>
-                        <span className="font-semibold">
-                          {injury.painScore || "N/A"}
-                        </span>
-                      </li>
-                      <li className="flex flex-col">
-                        <span className="text-light-foreground">Duration:</span>
-                        <span className="font-semibold">
-                          {injury.duration || "N/A"}
-                        </span>
-                      </li>
-                      <li className="flex flex-col">
-                        <span className="text-light-foreground">
-                          Recurrent:
-                        </span>
-                        <Badge className="font-semibold w-fit">
-                          {injury.is_recurrent}
-                        </Badge>
-                      </li>
-                      <li className="flex flex-col">
-                        <span className="text-light-foreground">
-                          Additional Information:
-                        </span>
-                        <p className="text-sm">{injury.description || "N/A"}</p>
-                      </li>
-                    </ul>
+                    <div className="p-6 space-y-4">
+                      {/* Pain Region with Icon */}
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            Pain Region
+                          </p>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {injury.painRegion || "N/A"}
+                          </h3>
+                        </div>
+                      </div>
+
+                      {/* Pain Score with colored indicator */}
+                      <div className="flex items-start gap-3">
+                        <Activity className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            NRS Pain Score
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`text-lg font-bold ${
+                                Number(injury.painScore) >= 7
+                                  ? "text-red-500"
+                                  : Number(injury.painScore) >= 4
+                                  ? "text-orange-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {injury.painScore || "N/A"}
+                            </span>
+                            <div className="h-2 w-24 bg-gray-200 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full ${
+                                  Number(injury.painScore) >= 7
+                                    ? "bg-red-500"
+                                    : Number(injury.painScore) >= 4
+                                    ? "bg-orange-500"
+                                    : "bg-green-500"
+                                }`}
+                                style={{
+                                  width: `${
+                                    (Number(injury.painScore) / 10) * 100
+                                  }%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Duration with Icon */}
+                      <div className="flex items-start gap-3">
+                        <Clock className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            Duration
+                          </p>
+                          <p className="text-lg font-semibold text-gray-900">
+                            {injury.duration || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Recurrent Status with Icon */}
+                      <div className="flex items-start gap-3">
+                        <Repeat className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            Recurrent
+                          </p>
+                          <Badge
+                            variant={
+                              injury.is_recurrent === "YES"
+                                ? "default"
+                                : "secondary"
+                            }
+                            className="mt-1"
+                          >
+                            {injury.is_recurrent}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* Additional Information with Icon */}
+                      <div className="flex items-start gap-3">
+                        <FileText className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            Additional Information
+                          </p>
+                          <p className="text-gray-700 mt-1">
+                            {injury.description || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <Calendar className="w-5 h-5 text-blue-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-500">
+                            Date Recorded
+                          </p>
+                          <p className="text-gray-700 mt-1">
+                            {injury.createdDatetime ? formatDate(injury.createdDatetime) : "N/A"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </Card>
                 ))}
               </div>
@@ -440,31 +558,27 @@ const PatientDetailPage = () => {
         </TabsContent>
       </Tabs>
 
-      <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Remove Patient</DialogTitle>
-            <DialogDescription>
-              Are you sure to remove this patient?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="w-full">
-            <Button
-              className="w-1/2"
-              variant="destructive"
-              type="submit"
+ 
+
+      <AlertDialog open={deleteModal} onOpenChange={setDeleteModal}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Patient Record</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure to remove this patient record ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
               onClick={() => remove()}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Remove
-            </Button>
-            <DialogClose asChild>
-              <Button className="w-1/2" type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>{" "}
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {/* Render the UpdateInjuryForm dialog */}
       <InjuryForm
         open={openDialog}
@@ -475,30 +589,25 @@ const PatientDetailPage = () => {
         patientRecordId={record.id}
       />
 
-      <Dialog open={deleteInjuryModal} onOpenChange={setDeleteInjuryModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Remove Injury</DialogTitle>
-            <DialogDescription>
-              Are you sure to remove this injury?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="w-full">
-            <Button
-              className="w-1/2"
-              variant="destructive"
+      <AlertDialog open={deleteInjuryModal} onOpenChange={setDeleteInjuryModal}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Injury</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure to remove this injury? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
               onClick={removeInjury}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Remove
-            </Button>
-            <DialogClose asChild>
-              <Button className="w-1/2" type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };
