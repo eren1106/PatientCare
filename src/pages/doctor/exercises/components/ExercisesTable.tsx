@@ -22,6 +22,9 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { formatDate, refreshPage } from "@/utils";
 import SkeletonCard from "@/components/SkeletonCard";
+import AuthGuard from "@/pages/admin/components/AuthGuard";
+import { UserRole } from "@/enums";
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 interface ExercisesTableProps {
   exercises: Exercise[];
@@ -40,6 +43,7 @@ const ExercisesTable = ({
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null
   );
+  const isUserAdmin = useIsAdmin();
 
   const handleClickDeleteIcon = (exercise: Exercise) => {
     setSelectedExercise(exercise);
@@ -83,16 +87,22 @@ const ExercisesTable = ({
                       />
                     </Link>
 
-                    <PenBox
-                      size={36}
-                      className="hover:bg-muted p-2 rounded-full cursor-pointer"
-                      onClick={() => onEdit?.(exercise)}
-                    />
-                    <Trash
-                      size={36}
-                      className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                      onClick={() => handleClickDeleteIcon(exercise)}
-                    />
+                    {
+                      isUserAdmin && (
+                        <>
+                          <PenBox
+                            size={36}
+                            className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
+                            onClick={() => onEdit?.(exercise)}
+                          />
+                          <Trash
+                            size={36}
+                            className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
+                            onClick={() => handleClickDeleteIcon(exercise)}
+                          />
+                        </>
+                      )
+                    }
 
                   </TableCell>
                 </TableRow>

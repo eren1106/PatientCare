@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from 'react';
 import SkeletonCard from '@/components/SkeletonCard';
 import { refreshPage } from '@/utils';
+import { useIsAdmin } from '@/hooks/useIsAdmin.hook';
 
 interface ExerciseCategoriesTableProps {
   exerciseCategories: ExerciseCategory[];
@@ -23,6 +24,7 @@ const ExerciseCategoriesTable = ({
 }: ExerciseCategoriesTableProps) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState<ExerciseCategory | null>(null);
+  const isUserAdmin = useIsAdmin();
 
   const handleClickDeleteIcon = (exerciseCategory: ExerciseCategory) => {
     setSelectedExerciseCategory(exerciseCategory);
@@ -64,16 +66,22 @@ const ExerciseCategoriesTable = ({
                             className="hover:bg-muted p-2 rounded-full"
                           />
                         </Link> */}
-                        <PenBox
-                          size={36}
-                          className="hover:bg-muted p-2 rounded-full cursor-pointer"
-                          onClick={() => onEdit?.(exerciseCategory)}
-                        />
-                        <Trash
-                          size={36}
-                          className="hover:bg-table-100 p-2 rounded-full cursor-pointer"
-                          onClick={() => handleClickDeleteIcon(exerciseCategory)}
-                        />
+                        {
+                          isUserAdmin && (
+                            <>
+                              <PenBox
+                                size={24}
+                                className="hover:bg-muted p-2 rounded-full cursor-pointer"
+                                onClick={() => onEdit?.(exerciseCategory)}
+                              />
+                              <Trash
+                                size={24}
+                                className="hover:bg-muted p-2 rounded-full cursor-pointer"
+                                onClick={() => handleClickDeleteIcon(exerciseCategory)}
+                              />
+                            </>
+                          )
+                        }
                       </TableCell>
                     </TableRow>
                   ))}

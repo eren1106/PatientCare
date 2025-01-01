@@ -47,7 +47,7 @@ const AppWrapper = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      
+
       <Outlet />
       <Toaster />
       <IncomingCall />
@@ -55,7 +55,7 @@ const AppWrapper = () => {
   )
 }
 
-const MainWrapper = ({ isDoctor = false  }: { isDoctor?: boolean }) => {
+const MainWrapper = ({ isDoctor = false }: { isDoctor?: boolean }) => {
   const currentUser = getCurrentUser();
   if (isDoctor) {
     if (!currentUser) return <Navigate to="/auth/login" />;
@@ -132,14 +132,14 @@ const router = createBrowserRouter([
           },
           {
             path: "assessment",
-            children : [
+            children: [
               {
-                path : "",
-                element : <PatientAssessmentPage />
+                path: "",
+                element: <PatientAssessmentPage />
               },
               {
-                path : ":id",
-                element : <AssessmentDetailPage />
+                path: ":id",
+                element: <AssessmentDetailPage />
               }
             ],
           },
@@ -158,12 +158,12 @@ const router = createBrowserRouter([
         ]
       },
 
-      
+
 
       // DOCTOR DASHBOARD ROUTES
       {
         path: DASHBOARD_ROOT_PATH,
-        element: <MainWrapper isDoctor/>,
+        element: <MainWrapper isDoctor />,
         children: [
           {
             path: "",
@@ -193,14 +193,14 @@ const router = createBrowserRouter([
                 path: "create",
                 element: <CreateQuestionnaireForm />
               },
-             
+
             ]
 
 
           },
           {
             path: "patients/:recordId",
-            children:[
+            children: [
               {
                 path: "",
                 element: <PatientDetailPage />
@@ -210,7 +210,7 @@ const router = createBrowserRouter([
                 element: <QuestionnaireResult />
               }
             ],
-            
+
           },
           {
             path: "exercises",
@@ -224,6 +224,12 @@ const router = createBrowserRouter([
                 element: <ExerciseDetailPage />
               }
             ]
+          },
+          {
+            path: "exercise-categories",
+            element: (
+              <ExerciseCategoriesPage />
+            ),
           },
           {
             path: "appointments",
@@ -247,22 +253,6 @@ const router = createBrowserRouter([
             element: (
               <AuthGuard requiredRole={UserRole.ADMIN}>
                 <AdminPage />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "exercises",
-            element: (
-              <AuthGuard requiredRole={UserRole.ADMIN}>
-                <ExercisesPage />
-              </AuthGuard>
-            ),
-          },
-          {
-            path: "exercise-categories",
-            element: (
-              <AuthGuard requiredRole={UserRole.ADMIN}>
-                <ExerciseCategoriesPage />
               </AuthGuard>
             ),
           },
@@ -305,9 +295,9 @@ function App() {
   return (
     <>
       <MessageProvider>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <RouterProvider router={router} />
-      </ThemeProvider>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </MessageProvider>
     </>
   )

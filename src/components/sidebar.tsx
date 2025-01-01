@@ -78,6 +78,16 @@ const DASHBOARD_NAV_ITEMS: NavItem[] = [
     icon: <Newspaper />
   },
   {
+    to: "exercises",
+    title: "Exercises",
+    icon: <Dumbbell />,
+  },
+  {
+    to: "exercise-categories",
+    title: "Exercises Categories",
+    icon: <Tags />,
+  },
+  {
     to: "chat",
     title: "Chat",
     icon: (
@@ -104,16 +114,6 @@ const ADMIN_NAV_ITEM: NavItem[] = [
     to: "admin",
     title: "Admin",
     icon: <Shield />
-  },
-  {
-    to: "exercises",
-    title: "Exercises",
-    icon: <Dumbbell />,
-  },
-  {
-    to: "exercise-categories",
-    title: "Exercises Categories",
-    icon: <Tags />,
   },
 ]
 
