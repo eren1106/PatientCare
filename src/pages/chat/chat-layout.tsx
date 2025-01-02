@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useMessageStore } from '@/stores/messageStore';
 import { useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { refreshPage } from "@/utils";
 
 
 
@@ -60,6 +61,7 @@ export function ChatLayout({
   }, [location, resetCount]);
 
   useEffect(() => {
+   
     loadChats();
   }, []);
 
