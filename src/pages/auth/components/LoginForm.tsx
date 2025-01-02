@@ -86,7 +86,7 @@ const LoginForm = () => {
           />
 
           <Button type="submit" className='w-full' disabled={isLoading}>
-            Log In
+            Login
           </Button>
         </form>
       </Form>
