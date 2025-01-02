@@ -9,9 +9,11 @@ import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import ExerciseCategoriesTable from "./components/ExerciseCategoryTable";
+import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 const ExerciseCategoriesPage = () => {
   const { toast } = useToast();
+  const isUserAdmin = useIsAdmin();
 
   const { isLoading, withLoading } = useLoading();
   const [exerciseCategories, setExerciseCategories] = useState<ExerciseCategory[]>([]);
@@ -56,14 +58,18 @@ const ExerciseCategoriesPage = () => {
       <Card className="p-5 flex flex-col gap-3">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercise Categories</span>
-          <DialogButton
-            variant="default"
-            title="Create Exercise Category"
-            content={
-              <div className="flex flex-col gap-3">
-                <ExerciseCategoryForm />
-              </div>
-            }>Create Exercise Category</DialogButton>
+          {
+            isUserAdmin && (
+              <DialogButton
+                variant="default"
+                title="Create Exercise Category"
+                content={
+                  <div className="flex flex-col gap-3">
+                    <ExerciseCategoryForm />
+                  </div>
+                }>Create Exercise Category</DialogButton>
+            )
+          }
         </div>
 
         <ExerciseCategoriesTable
@@ -81,7 +87,7 @@ const ExerciseCategoriesPage = () => {
           <DialogHeader>
             <DialogTitle>Edit Exercise Category</DialogTitle>
           </DialogHeader>
-          {selectedEditExerciseCategory ? <ExerciseCategoryForm exerciseCategory={selectedEditExerciseCategory}/> : "No Exercise Category selected!"}
+          {selectedEditExerciseCategory ? <ExerciseCategoryForm exerciseCategory={selectedEditExerciseCategory} /> : "No Exercise Category selected!"}
         </DialogContent>
       </Dialog>
     </>

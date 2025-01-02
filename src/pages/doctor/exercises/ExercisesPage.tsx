@@ -17,14 +17,13 @@ import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
 
 const ExercisesPage = () => {
   const { toast } = useToast();
+  const isUserAdmin = useIsAdmin();
 
   const { isLoading, withLoading } = useLoading();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedEditExercise, setSelectedEditExercise] =
     useState<Exercise | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
-  const isUserAdmin = useIsAdmin();
 
   const getData = async () => {
     const data = await getExercises();
@@ -68,19 +67,21 @@ const ExercisesPage = () => {
       <Card className="p-5 flex flex-col gap-3">
         <div className="flex sm:flex-row flex-col justify-between gap-2">
           <span className="text-xl font-semibold">Exercises</span>
-          {isUserAdmin && (
-            <DialogButton
-              variant="default"
-              title="Create Exercise"
-              content={
-                <div className="flex flex-col gap-3">
-                  <ExerciseForm />
-                </div>
-              }
-            >
-              Create Exercise
-            </DialogButton>
-          )}
+          {
+            isUserAdmin && (
+              <DialogButton
+                variant="default"
+                title="Create Exercise"
+                content={
+                  <div className="flex flex-col gap-3">
+                    <ExerciseForm />
+                  </div>
+                }
+              >
+                Create Exercise
+              </DialogButton>
+            )
+          }
         </div>
 
         <ExercisesTable

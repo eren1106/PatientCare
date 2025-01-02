@@ -53,9 +53,7 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
       }
       else {
         // create exercise
-        await createExercise({
-          ...data,
-        });
+        await createExercise(data);
 
         toast({
           variant: "success",

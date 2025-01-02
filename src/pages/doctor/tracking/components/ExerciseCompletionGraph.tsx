@@ -75,7 +75,7 @@ const ExerciseCompletionGraph = ({ selectedPatientId }: ExerciseCompletionGraphP
         <CardHeader>
           <CardTitle>Exercise Completion Graph</CardTitle>
           <CardDescription>
-            Showing percentage of exercise completion of selected user
+            Showing percentage of exercise completion of selected user for current month
           </CardDescription>
         </CardHeader>
         <CardContent>

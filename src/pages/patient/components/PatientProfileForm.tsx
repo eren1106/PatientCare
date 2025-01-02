@@ -26,9 +26,11 @@ const PatientProfileSchema = z.object({
     )
     .optional(),
   fullname: z.string().min(1),
-  age: z.coerce.number(),
+  age: z.coerce.number()
+    .min(1, "Age must be at least 1")
+    .max(120, "Age must be at most 120"),
   gender: z.string(),
-  ic: z.string(),
+  ic: z.string().length(12, "IC must be exactly 12 characters"),
 });
 
 interface PatientProfileFormProps {
