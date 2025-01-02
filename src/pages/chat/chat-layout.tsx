@@ -26,7 +26,7 @@ export function ChatLayout({
   const resetCount = useMessageStore((state) => state.resetCount);
   const location = useLocation();
 
-  const { chats, selectedUser, setChats, setSelectedUser, updateChatWithNewMessage } = useChatStore();
+  const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
  
   const loadChats = useCallback(async () => {
     const userId = getCurrentUser()?.id;
@@ -42,6 +42,7 @@ export function ChatLayout({
   useEffect(() => {
     const handleNewMessage = (event: CustomEvent) => {
       const message = event.detail;
+      addMessage(message);
       updateChatWithNewMessage(message);
       loadChats();
     };
@@ -51,7 +52,7 @@ export function ChatLayout({
     return () => {
       window.removeEventListener('new-message', handleNewMessage as EventListener);
     };
-  }, [updateChatWithNewMessage, loadChats]);
+  }, [addMessage, updateChatWithNewMessage, loadChats]);
 
   useEffect(() => {
     if (location.pathname.includes('/chat')) {
