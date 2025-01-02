@@ -66,6 +66,7 @@ import useChatStore from "@/hooks/useChatStore.hook";
           });
 
           await loadMessages();
+          
         } catch (error) {
           console.error("Failed to send message:", error);
          

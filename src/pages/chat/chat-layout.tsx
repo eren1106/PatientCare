@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useMessageStore } from '@/stores/messageStore';
 import { useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { refreshPage } from "@/utils";
 
 
 
@@ -25,7 +26,7 @@ export function ChatLayout({
   const resetCount = useMessageStore((state) => state.resetCount);
   const location = useLocation();
 
-  const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
+  const { chats, selectedUser, setChats, setSelectedUser, updateChatWithNewMessage } = useChatStore();
  
   const loadChats = useCallback(async () => {
     const userId = getCurrentUser()?.id;
@@ -41,7 +42,6 @@ export function ChatLayout({
   useEffect(() => {
     const handleNewMessage = (event: CustomEvent) => {
       const message = event.detail;
-      addMessage(message);
       updateChatWithNewMessage(message);
       loadChats();
     };
@@ -51,7 +51,7 @@ export function ChatLayout({
     return () => {
       window.removeEventListener('new-message', handleNewMessage as EventListener);
     };
-  }, [addMessage, updateChatWithNewMessage, loadChats]);
+  }, [updateChatWithNewMessage, loadChats]);
 
   useEffect(() => {
     if (location.pathname.includes('/chat')) {
@@ -60,6 +60,7 @@ export function ChatLayout({
   }, [location, resetCount]);
 
   useEffect(() => {
+   
     loadChats();
   }, []);
 

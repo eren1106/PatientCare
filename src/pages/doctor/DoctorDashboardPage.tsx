@@ -257,10 +257,10 @@ const DoctorDashboardPage = () => {
       <Dialog open={deleteModal} onOpenChange={setDeleteModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Unassign Patient</DialogTitle>
+            <DialogTitle>Remove Patient Record</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            {`Are you sure to remove this patient?`}
+            {`Are you sure to remove this patient record ? This action cannot be undone.`}
           </DialogDescription>
           <div></div>
           <DialogFooter>

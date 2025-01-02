@@ -32,6 +32,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createAssessmentAnalysis } from "@/services/assessment.service";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { toast } from "@/components/ui/use-toast";
 
 const QuestionnaireResult = () => {
   const navigate = useNavigate();
@@ -60,7 +61,12 @@ const QuestionnaireResult = () => {
     try {
       await createAssessmentAnalysis(id);
       await fetchAssessmentResult(id); // Refresh the page
-    } catch (e) {
+    } catch (e : any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to generate assessment analysis",
+        description: `${e.response.data.message}`,
+      });
       console.error("Failed to generate assessment analysis", e);
     } finally {
       setIsLoading(false);
