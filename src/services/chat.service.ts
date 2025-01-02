@@ -9,7 +9,9 @@ let onNewMessage: ((message: Message) => void) | null = null;
 let onMessageDeleted: ((messageId: string) => void) | null = null;
 
 // NOTE : Change this to actual server URL when deploying
-const SOCKET_SERVER_URL = "http://localhost:3000";
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL;
+
+
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
 

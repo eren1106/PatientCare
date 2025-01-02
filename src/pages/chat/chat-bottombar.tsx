@@ -58,6 +58,7 @@ import useChatStore from "@/hooks/useChatStore.hook";
             message: message.trim(),
           });
 
+          
           emitSocketMessage({
             fromUserId: userId,
             toUserId: selectedUserId,
@@ -65,8 +66,10 @@ import useChatStore from "@/hooks/useChatStore.hook";
             createdDatetime: new Date(),
           });
 
+          setMessage("");
+         
           await loadMessages();
-          
+        
         } catch (error) {
           console.error("Failed to send message:", error);
          
