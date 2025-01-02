@@ -9,8 +9,8 @@ let onNewMessage: ((message: Message) => void) | null = null;
 let onMessageDeleted: ((messageId: string) => void) | null = null;
 
 // NOTE : Change this to actual server URL when deploying
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL;
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
@@ -24,7 +24,7 @@ export const initializeSocket = (userId: string): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     try {
-      socket = io(SOCKET_SERVER_URL, {
+      socket = io(serverUrl, {
         path: SOCKET_IO_PATH,
         withCredentials: true,
         transports: ['websocket'],
