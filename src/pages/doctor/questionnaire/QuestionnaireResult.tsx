@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/accordion";
 import { getExerciseById } from "@/services/exercise.service";
 import { Exercise } from "@/interfaces/exercise";
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createAssessmentAnalysis } from "@/services/assessment.service";
@@ -61,7 +61,7 @@ const QuestionnaireResult = () => {
     try {
       await createAssessmentAnalysis(id);
       await fetchAssessmentResult(id); // Refresh the page
-    } catch (e : any) {
+    } catch (e: any) {
       toast({
         variant: "destructive",
         title: "Failed to generate assessment analysis",
@@ -98,24 +98,26 @@ const QuestionnaireResult = () => {
   const recordId = location.state?.recordId;
 
   const handleNavigateBack = () => {
-    console.log(recordId, "recordId")
-    if (recordId){
+    console.log(recordId, "recordId");
+    if (recordId) {
       navigate(`/dashboard/patients/${recordId}`);
-    }else {
+    } else {
       navigate(`/dashboard`);
     }
-  }
+  };
 
   return (
     <Card className="relative p-6 bg-slate-100">
       <Button variant="ghost" className="absolute" onClick={handleNavigateBack}>
         <ArrowLeft className="absolute" />
       </Button>
-      
-      <h1 className="text-2xl font-bold mb-6 text-center">Questionnaire Result</h1>
+
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Questionnaire Result
+      </h1>
       {result ? (
         <div className="space-y-6">
-          <div className="space-y-2">
+          <div className="space-y-2 p-6 bg-white rounded-md shadow-sm border border-gray-200">
             <p>
               <strong>Name:</strong> {result.questionnaireName}
             </p>
@@ -137,7 +139,7 @@ const QuestionnaireResult = () => {
           <h2 className="text-xl font-bold">Result Analysis</h2>
           {result.exerciseSuggestions.length > 0 ? (
             <>
-              <Alert variant="destructive">
+              <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>AI-Generated Content</AlertTitle>
                 <AlertDescription>
@@ -169,9 +171,7 @@ const QuestionnaireResult = () => {
                       <CardContent>
                         <div className="relative aspect-video w-full overflow-hidden rounded-md">
                           <img
-                            src={
-                              s.thumbnailUrl
-                            }
+                            src={s.thumbnailUrl}
                             alt="exercise thumbnail"
                             className="object-cover w-full h-full"
                           />
@@ -195,7 +195,14 @@ const QuestionnaireResult = () => {
                 className="mt-4"
                 disabled={isLoading}
               >
-                {isLoading ? <Spinner /> : "Generate"}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="animate-pulse">Analyzing...</span>
+                  </div>
+                ) : (
+                  "Generate"
+                )}
               </Button>
             </div>
           ) : (
@@ -233,9 +240,9 @@ const QuestionnaireResult = () => {
                         <p className="text-sm">
                           <strong>Response:</strong>{" "}
                           {question.response
-                            ? (question.response.content 
-                               ? `${question.response.scaleValue} - ${question.response.content}`
-                               : question.response.scaleValue)
+                            ? question.response.content
+                              ? `${question.response.scaleValue} - ${question.response.content}`
+                              : question.response.scaleValue
                             : "No response"}
                         </p>
                       </div>

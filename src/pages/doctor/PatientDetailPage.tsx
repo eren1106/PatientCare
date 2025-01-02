@@ -407,10 +407,10 @@ const PatientDetailPage = () => {
                 {record.injuries.map((injury) => (
                   <Card
                     key={injury.id}
-                    className="relative overflow-hidden border-l-4 border-blue-500 hover:border-blue-600 transition-all"
+                    className="relative overflow-hidden"
                   >
                     {/* Header with gradient */}
-                    <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
+                    <div className="absolute top-0 right-0 left-0 h-1 " />
 
                     {/* Edit and Delete Icons */}
                     <div className="absolute top-4 right-4 flex gap-2 z-10">
