@@ -8,6 +8,7 @@ import {
 } from "@/services/call.service";
 import { getCurrentUser } from "@/services/auth.service";
 import { persist } from "zustand/middleware";
+import { toast } from "@/components/ui/use-toast";
 
 interface CallStore {
   device: Device | null;
@@ -68,6 +69,7 @@ const useCallStore = create<CallStore>((set, get) => ({
 
       device.on("error", (error) => {
         console.log("Twilio.Device Error: " + error.message);
+        
       });
 
       device.on("unregistered", () => {
@@ -115,7 +117,7 @@ const useCallStore = create<CallStore>((set, get) => ({
       });
 
       call.on("disconnect", () => {
-        console.log("Call disconnected.");
+
         const endTime = Date.now();
         const duration =
           callStatus === CallStatus.ACCEPTED
@@ -233,7 +235,9 @@ async function storeCallHistory(
 }
 
 // Add auto-initialization attempt on store creation
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' &&
+  !window.location.href.includes(import.meta.env.VITE_CLIENT_URL)
+) {
   const { isInitialized, initializeDevice } = useCallStore.getState();
   if (!isInitialized) {
     initializeDevice().catch(console.error);

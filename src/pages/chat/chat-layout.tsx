@@ -10,6 +10,7 @@ import { useMessageStore } from '@/stores/messageStore';
 import { useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { refreshPage } from "@/utils";
+import useCallStore from "@/hooks/useCallStore.hook";
 
 
 
@@ -25,6 +26,7 @@ export function ChatLayout({
   const incrementCount = useMessageStore((state) => state.incrementCount);
   const resetCount = useMessageStore((state) => state.resetCount);
   const location = useLocation();
+  const { initializeDevice } = useCallStore();
 
   const { chats, selectedUser, setChats, setSelectedUser, addMessage, updateChatWithNewMessage } = useChatStore();
  
@@ -61,8 +63,11 @@ export function ChatLayout({
   }, [location, resetCount]);
 
   useEffect(() => {
-   
-    loadChats();
+    const init = async () => {
+      await initializeDevice();
+      loadChats();
+    };
+    init();
   }, []);
 
   
@@ -111,5 +116,9 @@ export function ChatLayout({
 
     </Card>
   );
+}
+
+function initializeDevice() {
+  throw new Error("Function not implemented.");
 }
 
