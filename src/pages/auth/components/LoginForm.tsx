@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser, loginUser } from "@/services/auth.service"
 import { toast } from "@/components/ui/use-toast"
-import useCallStore from "@/hooks/useCallStore.hook"
 import { UserRole } from "@/enums"
 
 const LoginSchema = z.object({
@@ -20,7 +19,6 @@ const LoginSchema = z.object({
 const LoginForm = () => {
   const navigate = useNavigate();
   const { isLoading, withLoading } = useLoading();
-  const { initializeDevice } = useCallStore();
 
 
   const form = useForm<z.infer<typeof LoginSchema>>({
