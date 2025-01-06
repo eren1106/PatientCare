@@ -70,12 +70,12 @@ const ExerciseCategoriesTable = ({
                           isUserAdmin && (
                             <>
                               <PenBox
-                                size={24}
+                                size={36}
                                 className="hover:bg-muted p-2 rounded-full cursor-pointer"
                                 onClick={() => onEdit?.(exerciseCategory)}
                               />
                               <Trash
-                                size={24}
+                                size={36}
                                 className="hover:bg-muted p-2 rounded-full cursor-pointer"
                                 onClick={() => handleClickDeleteIcon(exerciseCategory)}
                               />
