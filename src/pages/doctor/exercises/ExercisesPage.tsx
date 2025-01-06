@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { useIsAdmin } from "@/hooks/useIsAdmin.hook";
+import { refreshPage } from "@/utils";
 
 const ExercisesPage = () => {
   const { toast } = useToast();
@@ -42,12 +43,14 @@ const ExercisesPage = () => {
         variant: "success",
         title: "Exercise Deleted Successfully",
       });
+
+      refreshPage();
     } catch (e: any) {
       console.error(e);
       toast({
         variant: "destructive",
         title: "Failed",
-        description: `${e.response?.data?.message ?? "Error Occurred. Please try again later."}`,
+        description: `${e ?? "Error Occurred. Please try again later."}`,
       });
     }
   };

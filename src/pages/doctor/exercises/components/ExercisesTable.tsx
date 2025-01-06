@@ -51,9 +51,13 @@ const ExercisesTable = ({
   };
 
   const handleClickConfirmDelete = async () => {
-    await onDelete?.(selectedExercise!.id);
-    setShowConfirmDialog(false);
-    refreshPage();
+    try {
+      await onDelete?.(selectedExercise!.id);
+      setShowConfirmDialog(false);
+    }
+    catch (e) {
+      console.error(e);
+    }
   };
 
   return (
