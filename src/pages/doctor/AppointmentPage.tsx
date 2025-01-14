@@ -108,10 +108,10 @@ const AppointmentPage: React.FC<AppointmentPageProps> = ({ isDoctor = true }) =>
                   // height={"85vh"}
                   plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                   headerToolbar={{
-                    left: "prev,next today",
+                    left: "prev",
                     center: "title",
                     // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-                    right: "dayGridMonth,timeGridDay",
+                    right: "next"
                   }}
                   initialView="dayGridMonth"
                   // editable={true}
