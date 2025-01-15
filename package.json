@@ -43,6 +43,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.2.0",
     "emoji-mart": "^5.5.2",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.376.0",

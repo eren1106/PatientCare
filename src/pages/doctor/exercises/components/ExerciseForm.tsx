@@ -148,7 +148,7 @@ const ExerciseForm = ({ exercise }: ExerciseFormProps) => {
         <GenericFormField
           control={form.control}
           name="videoUrl"
-          label="Video Url"
+          label="Youtube Video Url"
           placeholder="Copy and paste the example exercise video link at here"
         />
 

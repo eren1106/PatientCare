@@ -105,9 +105,9 @@ const TrackingPage = () => {
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
-              left: "prev,next",
+              left: "prev",
               center: "title",
-              right: "",
+              right: "next",
             }}
             initialView="dayGridMonth"
             // editable={true}
