@@ -72,6 +72,7 @@ const AppointmentForm = ({ appointmentId, defaultValues, selectedDate }: Appoint
 
       toast({
         title: `Appointment ${appointmentId ? "updated" : "created"} successfully`,
+        variant: "success"
       });
 
       refreshPage();
