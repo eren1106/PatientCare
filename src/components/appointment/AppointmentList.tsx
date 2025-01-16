@@ -28,6 +28,7 @@ const AppointmentList = ({ appointments, onClick, isDoctor = true }: Appointment
       await confirmAppointment(id, confirm);
       toast({
         title: `Appointment ${confirm ? "confirmed" : "cancelled"} successfully`,
+        variant: "success",
       });
       refreshPage();
     }

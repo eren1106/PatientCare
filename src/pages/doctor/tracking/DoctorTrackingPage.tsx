@@ -44,27 +44,21 @@ const DoctorTrackingPage = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Patient Progress Tracking</CardTitle>
-        </CardHeader>
-        <div className="p-6">
-          <DynamicSelectField
-            options={patients.map((patient) => ({
-              label: patient.fullname,
-              value: patient.id
-            }))}
-            className="w-64"
-            label="Select Patient"
-            onChange={handleSelectPatient}
-            value={selectedPatientId ?? undefined}
-          />
-        </div>
-      </Card>
+      <h2>Patient Progress Tracking</h2>
+      <DynamicSelectField
+        options={patients.map((patient) => ({
+          label: patient.fullname,
+          value: patient.id
+        }))}
+        className="w-64"
+        label="Select Patient"
+        onChange={handleSelectPatient}
+        value={selectedPatientId ?? undefined}
+      />
 
       <div className="grid gap-6">
         <ExerciseCompletionGraph selectedPatientId={selectedPatientId} />
-        <AssessmentScoreGraph selectedPatientId={selectedPatientId}/>
+        <AssessmentScoreGraph selectedPatientId={selectedPatientId} />
 
       </div>
     </div>
