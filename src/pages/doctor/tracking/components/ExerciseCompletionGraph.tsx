@@ -17,15 +17,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import DynamicSelectField from "@/components/DynamicSelectField"
 import { useEffect, useState } from "react"
 import Spinner from "@/components/Spinner"
-import { User } from "@/interfaces/user"
-import { getAllPatientsByDoctorId } from "@/services/user.service"
-import { getCurrentUser } from "@/services/auth.service"
 import { ExerciseCompetionSummary } from "@/interfaces/exercise"
 import { getExerciseCompletionSummaryByPatientId } from "@/services/patientExercise.service"
-import { MOCK_EXERCISE_COMPLETION_SUMMARY } from "@/constants"
 // const chartData = [
 //   { day: "January", percentage: 186 },
 //   { day: "February", percentage: 305 },
@@ -50,10 +45,23 @@ const ExerciseCompletionGraph = ({ selectedPatientId }: ExerciseCompletionGraphP
   const [loading, setLoading] = useState<boolean>(false);
   const [summaries, setSummaries] = useState<ExerciseCompetionSummary[]>([]);
 
+  const getCurrentMonthAsText = (): string => {
+    const date = new Date(); // Get the current date
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const month = monthNames[date.getMonth()]; // Get the month's name
+    const year = date.getFullYear(); // Get the current year
+
+    return `${month} ${year}`; // Combine the month and year
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedPatientId) return;
-      
+
       setLoading(true);
       try {
         const getSummaries = await getExerciseCompletionSummaryByPatientId(selectedPatientId);
@@ -71,55 +79,59 @@ const ExerciseCompletionGraph = ({ selectedPatientId }: ExerciseCompletionGraphP
   if (loading) return <Spinner />;
 
   return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Exercise Completion Graph</CardTitle>
-          <CardDescription>
-            Showing percentage of exercise completion of selected user for current month
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[26rem]">
-            <AreaChart
-              accessibilityLayer
-              data={summaries.map((summary) => ({
-                day: String(summary.day),
-                percentage: summary.percentage,
-              }))}
-              margin={{
-                left: 12,
-                right: 12,
-              }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="day"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickCount={3}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" hideLabel />}
-              />
-              <Area
-                dataKey="percentage"
-                type="linear"
-                fill="hsl(var(--primary))"
-                fillOpacity={0.4}
-                stroke="hsl(var(--primary))"
-              />
-            </AreaChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle>Exercise Completion Graph</CardTitle>
+        <CardDescription>
+          Showing percentage of exercise completion of selected user for current month
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="font-bold mb-6 text-center">
+          Daily Exercise Completion Percentage for {getCurrentMonthAsText()}
+        </CardDescription>
+        <ChartContainer config={chartConfig} className="h-[20rem] w-full">
+          <AreaChart
+            accessibilityLayer
+            data={summaries.map((summary) => ({
+              day: String(summary.day),
+              percentage: summary.percentage,
+            }))}
+            margin={{
+              left: 12,
+              right: 12,
+              top: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickCount={3}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dot" hideLabel />}
+            />
+            <Area
+              dataKey="percentage"
+              type="linear"
+              fill="hsl(var(--primary))"
+              fillOpacity={0.4}
+              stroke="hsl(var(--primary))"
+            />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   )
 }
 
