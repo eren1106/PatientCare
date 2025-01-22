@@ -35,6 +35,8 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
+# expose port 5000
 EXPOSE 5000
 
+# start nginx in foreground mode
 CMD ["nginx", "-g", "daemon off;"]
